@@ -21,7 +21,7 @@ export default class App extends Component {
     const buttons = ['Sign In ', 'Sign Up']
 
     const SignIn = (
-      <View style={{width: '75%', height: '40%'}}>
+      <View style={{width: '75%', height: '40%', justifyContent: 'space-between'}}>
 
           <Input
               style={{width: '95%'}}
@@ -35,12 +35,12 @@ export default class App extends Component {
               leftIcon={{ type: 'font-awesome', name: 'chevron-right' }}
             />
 
-          <Text>Can't acess your account ?</Text>
+          <Text style={{alignSelf: 'flex-end'}}>Can't acess your account ?</Text>
       </View>
     )
 
     const SignUp = (
-      <View style={{width: '75%', height: '40%'}}>
+      <View style={{width: '75%', height: '40%', justifyContent: 'space-between'}}>
           <Text style={styles.label}>Pseudo</Text>
           <Input
               style={{width: '95%'}}
@@ -89,13 +89,13 @@ export default class App extends Component {
             <Text style={{color: 'white', fontSize: 25, marginBottom: 15}}>There's always time to Catch up!</Text>
           </View>
 
-          <View style={{width: '70%'}}>
+          <View style={{width: '70%', justifyContent: 'center', alignItems: 'center'}}>
               <ButtonGroup
                 onPress={this.updateIndex}
                 selectedIndex={selectedIndex}
                 buttons={buttons}
                 innerBorderStyle= {{width: 0}}
-                containerStyle={{width: '100%', padding:0 , margin: 0, height: 40, borderTopLeftRadius: 15, borderTopRightRadius: 15}}
+                containerStyle={{width: '100%', padding:0 , margin: 0, height: 40, backgroundColor: '#ffffffCC', borderTopLeftRadius: 15, borderTopRightRadius: 15}}
               />
               <View style={{backgroundColor: '#ffffffCC', width: '100%', height: 400, borderBottomLeftRadius: 15, borderBottomRightRadius: 15}}>
               {
