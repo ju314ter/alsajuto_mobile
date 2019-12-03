@@ -4,6 +4,8 @@ alsajuto_mobile
     expo-cli (not ejected yet)
     nodejs ( < v12.9.1 )
 
+-Color palette : https://paletton.com/#uid=15v0u0kpgsBfAD6kFv2sOnTvKiZ
+
 React JSX versus Virtual DOM Elements :
 
 const DeleteAccount = () => ({
