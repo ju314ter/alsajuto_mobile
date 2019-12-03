@@ -22,22 +22,22 @@ export default class App extends Component {
 
     const SignIn = (
       <View style={{width: '100%', height: 200, justifyContent: 'space-between'}}>
-        <View>
+        <View style={{margin: 10}}>
           <Input
-              style={{width: '95%'}}
+              inputStyle={{color: 'white'}}
               placeholder='E-mail or pseudo'
             />
           <Input
-              style={{width: '95%'}}
+              inputStyle={{color: 'white'}}
               placeholder='Password'
             />
         </View>
         <View>
-          <Button title="Login" containerStyle={{padding: 5}} titleStyle={{color: 'white'}} buttonStyle={{backgroundColor: '#8D011D'}}/>
-          <Button title="Register" containerStyle={{padding: 5}} titleStyle={{color: 'white'}} buttonStyle={{backgroundColor: '#8D011D'}}/>
+          <Button title="Login" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}} buttonStyle={{backgroundColor: '#8D011D'}}/>
+          <Button title="Get started" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}} buttonStyle={{backgroundColor: '#8D011D'}}/>
         </View>
 
-          <Text style={{alignSelf: 'flex-end', padding: 5}}>Can't acess your account ?</Text>
+          <Text style={{alignSelf: 'flex-end', padding: 5, color: '#eeeeee'}}>Can't acess your account ?</Text>
       </View>
     )
 
