@@ -6,14 +6,19 @@ import { createStackNavigator } from 'react-navigation-stack';
 import SignUp from './views/signUpView';
 import SignIn from './views/signInView';
 
+import TransitionConfiguration from './TransitionsApp';
+import MatcherView from './views/matcherView';
 
-const AppNavigator = createSwitchNavigator(
+
+const AppNavigator = createStackNavigator(
   {
-    SignIn: SignIn,
-    SignUp: SignUp,
+    SignIn: { screen: SignIn},
+    SignUp: { screen: SignUp},
+    Home: { screen: MatcherView},
   },
   {
     initialRouteName: 'SignIn',
+    transitionConfig: TransitionConfiguration,
   }
 );
 
@@ -28,6 +33,7 @@ export default class App extends Component {
   componentWillMount() {
     Font.loadAsync({
       'NotoSans-Bold': require('./assets/fonts/NotoSans-Bold.ttf'),
+      'NotoSans-Italic': require('./assets/fonts/NotoSans-Italic.ttf'),
       'NotoSans-Regular': require('./assets/fonts/NotoSans-Regular.ttf'),
     })
     .then(()=>{this.setState({isLoaded: true})});

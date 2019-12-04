@@ -2,19 +2,17 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
-import { NavigationScreenProp, NavigationState } from 'react-navigation';
-
-interface NavigationParams {
-  my_param: string; // You can change "string" to what you are using
-}
-
-type Navigation = NavigationScreenProp<NavigationState, NavigationParams>;
 
 interface Props {
-  navigation: Navigation;
+  navigation: any
 }
-
 export default class SignIn extends Component<Props> {
+
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerStyle: {display: 'none'}
+    }
+  }
 
   render () {
     return (
@@ -36,7 +34,9 @@ export default class SignIn extends Component<Props> {
               </View>
               <View>
                 <Button title="Login" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}}
-                  buttonStyle={{backgroundColor: '#8D011D'}} />
+                  buttonStyle={{backgroundColor: '#8D011D'}} 
+                  onPress={() => this.props.navigation.navigate('Home')}
+                  />
                 <Button title="Get started" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}}
                   buttonStyle={{backgroundColor: '#8D011D'}}
                   onPress={() => this.props.navigation.navigate('SignUp')}
