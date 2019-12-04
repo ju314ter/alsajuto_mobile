@@ -8,6 +8,14 @@ alsajuto_mobile
 
 React JSX versus Virtual DOM Elements :
 
+const DeleteAccount = () => (
+  <div>
+    <p>Are you sure?</p>
+    <DangerButton>Yep</DangerButton>
+    <Button color='blue'>Cancel</Button>
+  </div>
+);
+
 const DeleteAccount = () => ({
   type: 'div',
   props: {
@@ -30,13 +38,6 @@ const DeleteAccount = () => ({
    }]
 });
 
-const DeleteAccount = () => (
-  <div>
-    <p>Are you sure?</p>
-    <DangerButton>Yep</DangerButton>
-    <Button color='blue'>Cancel</Button>
-  </div>
-);
 
 React composants, elements et classes
 
