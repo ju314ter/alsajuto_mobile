@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as Font from 'expo-font';
+import { StyleSheet, Text, View, Image } from 'react-native';
 
 import { SignInContainer } from './Routes';
 
@@ -20,7 +21,7 @@ export default class App extends Component {
 
   render () {
     if(this.state.isLoaded === true)
-    return ( 
+    return (
         <SignInContainer/>
     ) 
     else {

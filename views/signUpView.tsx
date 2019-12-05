@@ -8,11 +8,11 @@ interface Props {
   }
 export default class SignUp extends Component<Props> {
 
-    static navigationOptions = ({navigation}) => {
-        return {
-            headershown: false
-          }
-      }
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerShown: false
+    }
+  }
 
   render () {
     return (
