@@ -1,13 +1,56 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { StyleSheet, Text, View, PanResponder, Animated, Dimensions } from 'react-native';
+import { Button, Card } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
+import { profiles } from '../App'
+import CardMatch from '../components/Card';
 
 interface Props {
   navigation: any
 }
 
-export default class MatcherView extends Component<Props> {
+interface State {
+    passedProfile: number
+    likedProfile: number
+    index: number
+}
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SWIPE_THRESHOLD = 0.30 * SCREEN_WIDTH;
+const SWIPE_OUT_DURATION = 250;
+
+export default class MatcherView extends Component<Props, State> {
+
+    position;
+    _panResponder;
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            passedProfile: 0,
+            likedProfile: 0,
+            index: 0,
+        }
+
+        this.position = new Animated.ValueXY(); 
+
+        this._panResponder = PanResponder.create({
+            onStartShouldSetPanResponder: (evt, gestureState) => true,
+            onPanResponderMove: (evt, gestureState) => {
+                this.position.setValue({ x: gestureState.dx, y: gestureState.dy });
+            },
+            onPanResponderRelease: (evt, gestureState) => {
+                if (gestureState.dx > SWIPE_THRESHOLD) {
+                    this.forceSwipe('right');
+                } else if (gestureState.dx < -SWIPE_THRESHOLD) {
+                    this.forceSwipe('left');
+                  } else {
+                    this.resetPosition();
+                  }
+            },
+          });
+      }
 
   static navigationOptions = ({navigation}) => {
     return {
@@ -16,18 +59,102 @@ export default class MatcherView extends Component<Props> {
     }
   }
 
+  forceSwipe(direction) {
+    const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
+    Animated.timing(this.position, {
+      toValue: { x, y: 0 },
+      duration: SWIPE_OUT_DURATION
+    }).start(() => this.onSwipeComplete(direction));
+  }
+
+  onSwipeComplete(direction) {
+    const profile = profiles[this.state.index];
+
+    direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
+    this.position.setValue({ x: 0, y: 0 });
+    this.setState({ index: this.state.index + 1 });
+  }
+
+  handleLikedProfile = (profile) => {
+    this.setState(({ passedProfile }) => ({
+        passedProfile: passedProfile + 1
+    }));
+  };
+
+  handlePassedProfile = (profile) => {
+    this.setState(({ likedProfile }) => ({
+        likedProfile: likedProfile + 1
+    }));
+  };
+
+  resetPosition() {
+    Animated.spring(this.position, {
+      toValue: { x: 0, y: 0 }
+    }).start();
+  }
+
+  getCardStyle() {
+    const { position } = this;
+    const rotate = position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
+      outputRange: ['-120deg', '0deg', '120deg']
+    });
+
+    return {
+      ...position.getLayout(),
+      transform: [{ rotate }]
+    };
+  }
+
+  renderCards(){
+    if(profiles.length <= this.state.index) {
+            return (
+            <Card title="No More cards">
+                <Button title='no more cards'/>
+            </Card>
+            )
+    } 
+    else {
+        return profiles.map((profile, index)=>{
+
+            if(index < this.state.index) { return null }
+
+            if(index == this.state.index) {
+                return(
+                    <Animated.View style={[this.getCardStyle(), {position: 'absolute', width: '100%'}]} key={profile.id} {...this._panResponder.panHandlers}>
+                        <CardMatch profile={profile} />
+                    </Animated.View>
+                )
+            }
+            else {
+                return (
+                    <Animated.View  style={[this.getCardStyle(), {position: 'absolute', width: '100%'}]} key={profile.id}>
+                        <CardMatch profile={profile}/>
+                    </Animated.View>
+                )
+            }
+
+         }).reverse();
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>
+          <LinearGradient colors={['#D42D4E', '#B11231' ,'#8D011D']}
+              style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'flex-start'}}>
 
-        <LinearGradient colors={['#D42D4E', '#B11231' ,'#8D011D']}
-          style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'space-around'}}>
-
-          <Text style={{fontFamily:'NotoSans-Regular', color: 'white', fontSize: 10}}>There's always time to Catch
-            up!</Text>
-
-        </LinearGradient>
-
+              <View style={styles.statusStyle}>
+                  <Text style={{ color: 'yellow' }}>Index: {this.state.index}</Text>
+                  <Text style={{ color: 'green' }}>Passed: {this.state.passedProfile}</Text>
+                  <Text style={{ color: 'blue' }}>Like: {this.state.likedProfile}</Text>
+              </View>
+              <View style={{width: '80%'}}>
+                  {
+                    this.renderCards()
+                  }
+              </View>
+          </LinearGradient>
       </View>
     );
   }
@@ -40,4 +167,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     },
+    statusStyle: {
+        padding: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+      },
 });

@@ -1,13 +1,66 @@
 import React, { Component } from 'react';
 import * as Font from 'expo-font';
-import { StyleSheet, Text, View, Image } from 'react-native';
-
+import * as Asset from 'expo-asset';
 import { SignInContainer } from './Routes';
+import { AppLoading } from 'expo';
+import { Profile } from './Models';
+
+export const profiles: Profile[] = [
+  {
+    id: "1",
+    name: "Caroline",
+    age: 24,
+    profile: require("./assets/profiles/1.jpg"),
+  },
+  {
+    id: "2",
+    name: "Jack",
+    age: 30,
+    profile: require("./assets/profiles/2.jpg"),
+  },
+  {
+    id: "3",
+    name: "Anet",
+    age: 21,
+    profile: require("./assets/profiles/3.jpg"),
+  },
+  {
+    id: "4",
+    name: "John",
+    age: 28,
+    profile: require("./assets/profiles/4.jpg"),
+  },
+  {
+    id: "5",
+    name: "Agrid",
+    age: 18,
+    profile: require("./assets/profiles/5.jpg"),
+  },
+  {
+    id: "6",
+    name: "Cha5",
+    age: 28,
+    profile: require("./assets/profiles/6.jpg"),
+  },
+  {
+    id: "7",
+    name: "Sebastien",
+    age: 38,
+    profile: require("./assets/profiles/7.jpg"),
+  },
+  {
+    id: "8",
+    name: "Patrick",
+    age: 24,
+    profile: require("./assets/profiles/8.jpg"),
+  },
+];
 
 export default class App extends Component {
 
     state = {
-      isLoaded: false,
+      fontsLoaded: false,
+      assetsLoaded: false,
     }
 
   componentWillMount() {
@@ -15,17 +68,23 @@ export default class App extends Component {
       'NotoSans-Bold': require('./assets/fonts/NotoSans-Bold.ttf'),
       'NotoSans-Italic': require('./assets/fonts/NotoSans-Italic.ttf'),
       'NotoSans-Regular': require('./assets/fonts/NotoSans-Regular.ttf'),
+    }).then(()=>{
+      this.setState({ fontsLoaded: true });
     })
-    .then(()=>{this.setState({isLoaded: true})});
+  }
+
+  async componentDidMount() {
+    await Promise.all(profiles.map(profile => Asset.Asset.loadAsync(profile.profile)));
+    this.setState({ assetsLoaded: true });
   }
 
   render () {
-    if(this.state.isLoaded === true)
+    if(this.state.assetsLoaded && this.state.fontsLoaded)
     return (
         <SignInContainer/>
     ) 
     else {
-      return null;
+      return <AppLoading/>;
     };
   }
 }

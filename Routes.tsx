@@ -15,6 +15,7 @@ const DrawerNavigator = createDrawerNavigator(
   },
   {
     initialRouteName: 'Matcher',
+    drawerType: 'back',
     navigationOptions: {
       headerLeft: withNavigation(({navigation}) => <Text onPress={()=>{navigation.toggleDrawer()}} style={{color: 'black'}}>Menu</Text>),
     }
