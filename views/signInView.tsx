@@ -6,11 +6,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 interface Props {
   navigation: any
 }
+
 export default class SignIn extends Component<Props> {
 
   static navigationOptions = ({navigation}) => {
     return {
-      headerStyle: {display: 'none'}
+      headerShown: false
     }
   }
 
@@ -35,7 +36,7 @@ export default class SignIn extends Component<Props> {
               <View>
                 <Button title="Login" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}}
                   buttonStyle={{backgroundColor: '#8D011D'}} 
-                  onPress={() => this.props.navigation.navigate('Home')}
+                  onPress={() => this.props.navigation.navigate('LogIn')}
                   />
                 <Button title="Get started" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}}
                   buttonStyle={{backgroundColor: '#8D011D'}}

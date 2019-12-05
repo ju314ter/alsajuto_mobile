@@ -1,28 +1,7 @@
 import React, { Component } from 'react';
 import * as Font from 'expo-font';
 
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import SignUp from './views/signUpView';
-import SignIn from './views/signInView';
-
-import TransitionConfiguration from './TransitionsApp';
-import MatcherView from './views/matcherView';
-
-
-const AppNavigator = createStackNavigator(
-  {
-    SignIn: { screen: SignIn},
-    SignUp: { screen: SignUp},
-    Home: { screen: MatcherView},
-  },
-  {
-    initialRouteName: 'SignIn',
-    transitionConfig: TransitionConfiguration,
-  }
-);
-
-const SignInContainer = createAppContainer(AppNavigator);
+import { SignInContainer } from './Routes';
 
 export default class App extends Component {
 
@@ -39,11 +18,10 @@ export default class App extends Component {
     .then(()=>{this.setState({isLoaded: true})});
   }
 
-
   render () {
     if(this.state.isLoaded === true)
     return ( 
-      <SignInContainer/>
+        <SignInContainer/>
     ) 
     else {
       return null;

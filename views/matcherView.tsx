@@ -11,7 +11,8 @@ export default class MatcherView extends Component<Props> {
 
   static navigationOptions = ({navigation}) => {
     return {
-      headerStyle: {display: 'none'}
+      headerStyle: {display: 'none'},
+      title: 'Matcher'
     }
   }
 

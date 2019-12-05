@@ -10,8 +10,8 @@ export default class SignUp extends Component<Props> {
 
     static navigationOptions = ({navigation}) => {
         return {
-          headerStyle: {display: 'none'}
-        }
+            headershown: false
+          }
       }
 
   render () {
