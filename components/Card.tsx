@@ -10,12 +10,8 @@ import { Profile } from "../Models";
 
 const { Value } = Animated;
 
-type Val = typeof Value | number;
-
 interface CardProps {
   profile: Profile;
-  likeOpacity?: Val;
-  nopeOpacity?: Val;
 }
 
 export default (props: CardProps) => {
@@ -46,8 +42,8 @@ export default (props: CardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
-    height: 500,
+    ...StyleSheet.absoluteFillObject,
+    height: 450,
     margin: 5,
     shadowOffset: {width: 3, height: 3},
     shadowOpacity: 0.75,
