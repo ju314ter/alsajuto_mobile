@@ -8,10 +8,12 @@ import SignIn from './views/signInView';
 
 import { TransitionConfiguration } from './TransitionsApp';
 import MatcherView from './views/matcherView';
+import MatcherTestView from './views/matcherTestView';
 
 const DrawerNavigator = createDrawerNavigator(
   {
     Matcher: { screen: MatcherView},
+    MatcherTest: { screen: MatcherTestView},
   },
   {
     initialRouteName: 'Matcher',

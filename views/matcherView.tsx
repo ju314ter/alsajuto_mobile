@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, PanResponder, Animated, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
 import { Button, Card } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { profiles } from '../App'
@@ -72,18 +72,28 @@ export default class MatcherView extends Component<Props, State> {
 
     direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
     this.position.setValue({ x: 0, y: 0 });
+
+    // Spring Animation on Profile Deck
+    // UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+    // LayoutAnimation.configureNext({
+    //     duration: 600,
+    //     create: { type: 'linear', property: 'opacity' },
+    //     update: { type: 'spring', springDamping: 0.5 },
+    //     delete: { type: 'linear', property: 'opacity' }
+    // })
+
     this.setState({ index: this.state.index + 1 });
   }
 
   handleLikedProfile = (profile) => {
-    this.setState(({ passedProfile }) => ({
-        passedProfile: passedProfile + 1
+    this.setState(({ likedProfile }) => ({
+        likedProfile: likedProfile + 1
     }));
   };
 
   handlePassedProfile = (profile) => {
-    this.setState(({ likedProfile }) => ({
-        likedProfile: likedProfile + 1
+    this.setState(({ passedProfile }) => ({
+        passedProfile: passedProfile + 1
     }));
   };
 
@@ -92,6 +102,7 @@ export default class MatcherView extends Component<Props, State> {
       toValue: { x: 0, y: 0 }
     }).start();
   }
+  
 
   getCardStyle() {
     const { position } = this;
@@ -99,7 +110,6 @@ export default class MatcherView extends Component<Props, State> {
       inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
       outputRange: ['-120deg', '0deg', '120deg']
     });
-
     return {
       ...position.getLayout(),
       transform: [{ rotate }]
@@ -121,15 +131,16 @@ export default class MatcherView extends Component<Props, State> {
 
             if(index == this.state.index) {
                 return(
-                    <Animated.View style={[this.getCardStyle(), {position: 'absolute', width: '100%'}]} key={profile.id} {...this._panResponder.panHandlers}>
-                        <CardMatch profile={profile} />
+                    <Animated.View style={[this.getCardStyle(), {position: 'absolute', width: '100%'}]} key={profile.id} 
+                    {...this._panResponder.panHandlers}>
+                        <CardMatch {...{profile}} />
                     </Animated.View>
                 )
             }
             else {
                 return (
-                    <Animated.View  style={[this.getCardStyle(), {position: 'absolute', width: '100%'}]} key={profile.id}>
-                        <CardMatch profile={profile}/>
+                    <Animated.View style={[{ top: 5 * (index - this.state.index), left: 1 * (index - this.state.index)}, {position: 'absolute', width: '100%'}]} key={profile.id}>
+                        <CardMatch {...{profile}}/>
                     </Animated.View>
                 )
             }

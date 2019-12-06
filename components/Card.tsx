@@ -1,8 +1,10 @@
 // @flow
 import * as React from "react";
 import {
-  Image, StyleSheet, View, Text, Animated
+  Image, StyleSheet, View, Text
 } from "react-native";
+
+import Animated from "react-native-reanimated";
 
 import { Profile } from "../Models";
 
@@ -45,8 +47,12 @@ export default (props: CardProps) => {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    height: 400,
-    margin: 5
+    height: 500,
+    margin: 5,
+    shadowOffset: {width: 3, height: 3},
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: 'black'
   },
   image: {
     ...StyleSheet.absoluteFillObject,
