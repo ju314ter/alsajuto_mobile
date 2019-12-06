@@ -1,10 +1,8 @@
 // @flow
 import * as React from "react";
 import {
-  Image, StyleSheet, View, Text
+  Image, StyleSheet, View, Text, Animated
 } from "react-native";
-
-import Animated from "react-native-reanimated";
 
 import { Profile } from "../Models";
 
@@ -12,6 +10,7 @@ const { Value } = Animated;
 
 interface CardProps {
   profile: Profile;
+  position?: Animated.ValueXY;
 }
 
 export default (props: CardProps) => {
@@ -21,7 +20,7 @@ export default (props: CardProps) => {
     ...props,
   };
   return (
-    <View style={styles.container}>
+    <View style={{height: 450}}>
       <Image style={styles.image} source={profile.profile} />
       <View style={styles.overlay}>
         <View style={styles.header}>
@@ -41,15 +40,6 @@ export default (props: CardProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    height: 450,
-    margin: 5,
-    shadowOffset: {width: 3, height: 3},
-    shadowOpacity: 0.75,
-    shadowRadius: 5,
-    shadowColor: 'black'
-  },
   image: {
     ...StyleSheet.absoluteFillObject,
     width: undefined,

@@ -13,7 +13,7 @@ import MatcherTestView from './views/matcherTestView';
 const DrawerNavigator = createDrawerNavigator(
   {
     Matcher: { screen: MatcherView},
-    MatcherTest: { screen: MatcherTestView},
+    // MatcherTest: { screen: MatcherTestView},
   },
   {
     initialRouteName: 'Matcher',

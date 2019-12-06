@@ -113,7 +113,7 @@ export default class MatcherTestView extends Component<MatcherProps, MatcherStat
     velocityX.setValue(0);
     gestureState.setValue(State.UNDETERMINED);
 
-    const snapPoint: Animated.Value = cond(
+    const snapPoint = cond(
                           and( lessThan(translationX, 0), lessThan(velocityX, -10)),
                           -widthRotated,
                           cond(
@@ -197,7 +197,7 @@ export default class MatcherTestView extends Component<MatcherProps, MatcherStat
               onGestureEvent={_onGestureEvent}
               onHandlerStateChange={_onGestureEvent}>
               <Animated.View {...{style}}>
-                <CardMatch profile={lastProfile} {...{likeOpacity, nopeOpacity}} />
+                <CardMatch profile={lastProfile} />
               </Animated.View>
             </PanGestureHandler>
           </View>

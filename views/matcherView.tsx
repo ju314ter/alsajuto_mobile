@@ -16,6 +16,7 @@ interface State {
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const CARD_WIDTH = SCREEN_WIDTH * 0.8;
 const SWIPE_THRESHOLD = 0.30 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 
@@ -108,11 +109,22 @@ export default class MatcherView extends Component<Props, State> {
     const { position } = this;
     const rotate = position.x.interpolate({
       inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
-      outputRange: ['-120deg', '0deg', '120deg']
+      outputRange: ['120deg', '0deg', '-120deg']
     });
     return {
       ...position.getLayout(),
       transform: [{ rotate }]
+    };
+  }
+
+  getOpacityStyle() {
+    const { position } = this;
+    const opacity = position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH /4, 0, SCREEN_WIDTH /4],
+      outputRange: [1, 0, 1]
+    });
+    return {
+      opacity: opacity
     };
   }
 
@@ -133,13 +145,18 @@ export default class MatcherView extends Component<Props, State> {
                 return(
                     <Animated.View style={[this.getCardStyle(), {position: 'absolute', width: '100%'}]} key={profile.id} 
                     {...this._panResponder.panHandlers}>
-                        <CardMatch {...{profile}} />
+                      <View style={{position: 'relative'}}>
+                        <Animated.View style={[this.getOpacityStyle(), styles.overlay]}>
+                          <Text style={{fontSize: 40, color: 'white'}}>HELLO MOTHERFUCKER</Text>
+                        </Animated.View>
+                        <CardMatch position={this.position} {...{profile}} />
+                      </View>
                     </Animated.View>
                 )
             }
             else {
                 return (
-                    <Animated.View style={[{ top: 5 * (index - this.state.index), left: 1 * (index - this.state.index)}, {position: 'absolute', width: '100%'}]} key={profile.id}>
+                    <Animated.View style={[{ top: 5 * (index - this.state.index), left: 2 * (index - this.state.index)}, {position: 'absolute', width: '100%'}]} key={profile.id}>
                         <CardMatch {...{profile}}/>
                     </Animated.View>
                 )
@@ -173,14 +190,18 @@ export default class MatcherView extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     container: {
-    flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
+      flex: 1,
+      backgroundColor: '#000',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     statusStyle: {
-        padding: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-around'
-      },
+      padding: 15,
+      flexDirection: 'row',
+      justifyContent: 'space-around'
+    },
+    overlay: {
+      position: 'absolute',
+      zIndex: 200,
+    }
 });
