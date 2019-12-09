@@ -23,14 +23,6 @@ export default (props: CardProps) => {
     <View style={{height: 450}}>
       <Image style={styles.image} source={profile.profile} />
       <View style={styles.overlay}>
-        <View style={styles.header}>
-          <Animated.View style={[styles.like, { opacity: likeOpacity }]}>
-            <Text style={styles.likeLabel}>LIKE</Text>
-          </Animated.View>
-          <Animated.View style={[styles.nope, { opacity: nopeOpacity }]}>
-            <Text style={styles.nopeLabel}>NOPE</Text>
-          </Animated.View>
-        </View>
         <View style={styles.footer}>
           <Text style={styles.name}>{profile.name}</Text>
         </View>
@@ -48,7 +40,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     padding: 16,
   },
   header: {

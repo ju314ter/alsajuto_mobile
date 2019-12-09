@@ -117,11 +117,22 @@ export default class MatcherView extends Component<Props, State> {
     };
   }
 
-  getOpacityStyle() {
+  getLikeOpacityStyle() {
     const { position } = this;
     const opacity = position.x.interpolate({
-      inputRange: [-SCREEN_WIDTH /4, 0, SCREEN_WIDTH /4],
-      outputRange: [1, 0, 1]
+      inputRange: [0, SCREEN_WIDTH /4],
+      outputRange: [0, 1]
+    });
+    return {
+      opacity: opacity
+    };
+  }
+
+  getNopeOpacityStyle() {
+    const { position } = this;
+    const opacity = position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH/4, 0],
+      outputRange: [1, 0]
     });
     return {
       opacity: opacity
@@ -146,9 +157,12 @@ export default class MatcherView extends Component<Props, State> {
                     <Animated.View style={[this.getCardStyle(), {position: 'absolute', width: '100%'}]} key={profile.id} 
                     {...this._panResponder.panHandlers}>
                       <View style={{position: 'relative'}}>
-                        <Animated.View style={[this.getOpacityStyle(), styles.overlay]}>
-                          <Text style={{fontSize: 40, color: 'white'}}>HELLO MOTHERFUCKER</Text>
-                        </Animated.View>
+                          <Animated.View style={[this.getNopeOpacityStyle(), styles.nope]}>
+                            <Text style={styles.nopeLabel}>NOPE</Text>
+                          </Animated.View>
+                          <Animated.View style={[this.getLikeOpacityStyle(), styles.like]}>
+                            <Text style={styles.likeLabel}>LIKE</Text>
+                          </Animated.View> 
                         <CardMatch position={this.position} {...{profile}} />
                       </View>
                     </Animated.View>
@@ -200,8 +214,36 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-around'
     },
-    overlay: {
+    like: {
+      zIndex: 2,
+      borderWidth: 4,
       position: 'absolute',
-      zIndex: 200,
-    }
+      top: 100,
+      left : CARD_WIDTH/2-10,
+      transform: [{ rotate: '35deg'}],
+      borderRadius: 5,
+      padding: 8,
+      borderColor: "#6ee3b4",
+    },
+    likeLabel: {
+      fontSize: 32,
+      color: "#6ee3b4",
+      fontWeight: "bold",
+    },
+    nope: {
+      zIndex: 2,
+      borderWidth: 4,
+      transform: [{ rotate: '-35deg'}],
+      position: 'absolute',
+      top: 100,
+      left : CARD_WIDTH/2-10,                                                                    
+      borderRadius: 5,
+      padding: 8,
+      borderColor: "#ec5288",
+    },
+    nopeLabel: {
+      fontSize: 32,
+      color: "#ec5288",
+      fontWeight: "bold",
+    },
 });
