@@ -1,21 +1,16 @@
 // @flow
 import * as React from "react";
 import {
-  Image, StyleSheet, View, Text
+  Image, StyleSheet, View, Text, Animated
 } from "react-native";
-
-import Animated from "react-native-reanimated";
 
 import { Profile } from "../Models";
 
 const { Value } = Animated;
 
-type Val = typeof Value | number;
-
 interface CardProps {
   profile: Profile;
-  likeOpacity?: Val;
-  nopeOpacity?: Val;
+  position?: Animated.ValueXY;
 }
 
 export default (props: CardProps) => {
@@ -25,17 +20,9 @@ export default (props: CardProps) => {
     ...props,
   };
   return (
-    <View style={styles.container}>
+    <View style={{height: 450}}>
       <Image style={styles.image} source={profile.profile} />
       <View style={styles.overlay}>
-        <View style={styles.header}>
-          <Animated.View style={[styles.like, { opacity: likeOpacity }]}>
-            <Text style={styles.likeLabel}>LIKE</Text>
-          </Animated.View>
-          <Animated.View style={[styles.nope, { opacity: nopeOpacity }]}>
-            <Text style={styles.nopeLabel}>NOPE</Text>
-          </Animated.View>
-        </View>
         <View style={styles.footer}>
           <Text style={styles.name}>{profile.name}</Text>
         </View>
@@ -45,15 +32,6 @@ export default (props: CardProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    height: 500,
-    margin: 5,
-    shadowOffset: {width: 3, height: 3},
-    shadowOpacity: 0.75,
-    shadowRadius: 5,
-    shadowColor: 'black'
-  },
   image: {
     ...StyleSheet.absoluteFillObject,
     width: undefined,
@@ -62,7 +40,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     padding: 16,
   },
   header: {
