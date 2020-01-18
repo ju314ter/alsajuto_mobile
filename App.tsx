@@ -50,9 +50,33 @@ export const profiles: Profile[] = [
   },
   {
     id: "8",
-    name: "Patrick",
+    name: "Robert",
     age: 24,
     profile: require("./assets/profiles/8.jpg"),
+  },
+  {
+    id: "9",
+    name: "Patrick",
+    age: 24,
+    profile: require("./assets/profiles/9.jpg"),
+  },
+  {
+    id: "10",
+    name: "Patrick",
+    age: 24,
+    profile: require("./assets/profiles/10.jpg"),
+  },
+  {
+    id: "11",
+    name: "Patrick",
+    age: 24,
+    profile: require("./assets/profiles/11.jpg"),
+  },
+  {
+    id: "12",
+    name: "Patrick",
+    age: 24,
+    profile: require("./assets/profiles/12.jpg"),
   },
 ];
 
