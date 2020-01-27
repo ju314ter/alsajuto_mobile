@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { State } from 'react-native-gesture-handler';
+import * as Helpers from '../helpers';
 
 interface Props {
   navigation: any
@@ -38,6 +39,7 @@ export default class SignIn extends Component<Props> {
         console.log(res);
           if (res.token) {
             alert('Sucess ! you will be logged in !');
+            Helpers.storeDataLocally('userAccountToken', res.token).catch((err)=>console.log(err));
             this.props.navigation.navigate('LogIn');
           }
           else {
@@ -45,6 +47,12 @@ export default class SignIn extends Component<Props> {
           }
       })
       .catch((err)=>{console.log(err)});
+  }
+
+  componentWillMount() {
+    Helpers.getDataLocally('userAccountToken').then((res) => {
+      this.props.navigation.navigate('LogIn');
+    }).catch(err=>console.log(err));
   }
 
   render () {
