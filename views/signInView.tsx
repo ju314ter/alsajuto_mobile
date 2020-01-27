@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
+import { State } from 'react-native-gesture-handler';
 
 interface Props {
   navigation: any
@@ -9,10 +10,42 @@ interface Props {
 
 export default class SignIn extends Component<Props> {
 
+  state = {
+    email: '',
+    password: ''
+  }
+
   static navigationOptions = ({navigation}) => {
     return {
       headerShown: false
     }
+  }
+  5
+
+
+  login = () => {
+      fetch('https://alsatoju-dev.herokuapp.com/login', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.password,
+        }),
+      })
+      .then((res)=>{
+        console.log(res);
+          if (res.token) {
+            alert('Sucess ! you will be logged in !');
+            this.props.navigation.navigate('LogIn');
+          }
+          else {
+            alert('Something went wrong...')
+          }
+      })
+      .catch((err)=>{console.log(err)});
   }
 
   render () {

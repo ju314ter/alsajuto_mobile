@@ -8,9 +8,48 @@ interface Props {
   }
 export default class SignUp extends Component<Props> {
 
+  state = {
+    pseudonyme: 'Stranger',
+    email: 'ReactTestRegister@gmail.com',
+    emailConf: '',
+    password: '',
+    passwordConf: '',
+    redirectToReferrer: false,
+    error: '',
+  }
+
   static navigationOptions = ({navigation}) => {
     return {
       headerShown: false
+    }
+  }
+
+  register = () => {
+    if (this.state.email 
+        && this.state.password 
+        && this.state.password == this.state.passwordConf 
+        && this.state.email == this.state.emailConf) {
+      fetch('https://alsatoju-dev.herokuapp.com/api/app_users', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.password,
+        }),
+      })
+      .then((res)=>{
+          if (res.id) {
+            alert('Sucess ! you will be logged in !');
+            this.props.navigation.navigate('LogIn');
+          }
+          else {
+            alert('Something went wrong...')
+          }
+      })
+      .catch((err)=>{console.log(err)});
     }
   }
 
@@ -30,23 +69,28 @@ export default class SignUp extends Component<Props> {
 
                 <View style={{width: '80%', height: 400, justifyContent: 'space-between'}}>
                     <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Choose a pseudonyme'
+                        label='Choose a pseudonyme' onChangeText={(pseudonyme) => this.setState({pseudonyme})}
+                        value={this.state.pseudonyme}
                         leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
                     <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='E-mail'
+                        label='E-mail' onChangeText={(email) => this.setState({email})}
+                        value={this.state.email}
                         leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
                     <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Confirm E-mail'
+                        label='Confirm E-mail' onChangeText={(emailConf) => this.setState({emailConf})}
+                        value={this.state.emailConf}
                         leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
                     <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Password'
+                        label='Password' onChangeText={(password) => this.setState({password})}
+                        value={this.state.password}
                         leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
                     <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Confirm Password'
+                        label='Confirm Password' onChangeText={(passwordConf) => this.setState({passwordConf})}
+                        value={this.state.passwordConf}
                         leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
 
                     <Button title="Register" containerStyle={{padding: 5}} titleStyle={{color: 'black'}}
-                  buttonStyle={{backgroundColor: '#eeeeee'}}/>
+                  buttonStyle={{backgroundColor: '#eeeeee'}} onPress={() => {this.register();}}/>
                     <Button title="Back" onPress={()=> this.props.navigation.navigate('SignIn')} 
                     containerStyle={{padding: 5}} titleStyle={{color: 'black'}}
                   buttonStyle={{backgroundColor: '#eeeeee'}}/>
