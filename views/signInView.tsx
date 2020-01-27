@@ -20,7 +20,6 @@ export default class SignIn extends Component<Props> {
       headerShown: false
     }
   }
-  5
 
 
   login = () => {
@@ -63,13 +62,13 @@ export default class SignIn extends Component<Props> {
           <View style={{width: '80%', justifyContent: 'center', alignItems: 'center'}}>
             <View style={{width: '100%', height: 200, justifyContent: 'space-between'}}>
               <View style={{margin: 10}}>
-                <Input inputStyle={{color: 'white'}} placeholder='E-mail or pseudo' />
-                <Input inputStyle={{color: 'white'}} placeholder='Password' />
+                <Input inputStyle={{color: 'white'}} placeholder='E-mail or pseudo' onChangeText={(email) => this.setState({email})}/>
+                <Input inputStyle={{color: 'white'}} placeholder='Password' onChangeText={(password) => this.setState({password})}/>
               </View>
               <View>
                 <Button title="Login" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}}
                   buttonStyle={{backgroundColor: '#8D011D'}} 
-                  onPress={() => this.props.navigation.navigate('LogIn')}
+                  onPress={() => this.login()}
                   />
                 <Button title="Get started" containerStyle={{padding: 5}} titleStyle={{color: '#eeeeee'}}
                   buttonStyle={{backgroundColor: '#8D011D'}}

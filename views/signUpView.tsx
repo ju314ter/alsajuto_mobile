@@ -9,11 +9,11 @@ interface Props {
 export default class SignUp extends Component<Props> {
 
   state = {
-    pseudonyme: 'Stranger',
-    email: 'ReactTestRegister@gmail.com',
-    emailConf: '',
-    password: '',
-    passwordConf: '',
+    pseudonyme: 'Jupi',
+    email: 'ReactJuTestRegister@gmail.com',
+    emailConf: 'ReactJuTestRegister@gmail.com',
+    password: 'testtest',
+    passwordConf: 'testtest',
     redirectToReferrer: false,
     error: '',
   }
@@ -41,6 +41,7 @@ export default class SignUp extends Component<Props> {
         }),
       })
       .then((res)=>{
+        console.log(res);
           if (res.id) {
             alert('Sucess ! you will be logged in !');
             this.props.navigation.navigate('LogIn');

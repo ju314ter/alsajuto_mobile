@@ -8,13 +8,12 @@ import SignIn from './views/signInView';
 
 import { TransitionConfiguration } from './TransitionsApp';
 import MatcherView from './views/matcherView';
-import WheelOfFortune from './components/WheelOfFortune'
-import MatcherTestView from './views/matcherTestView';
+// import WheelOfFortune from './components/WheelOfFortune'
 
 const DrawerNavigator = createDrawerNavigator(
   {
     Matcher: { screen: MatcherView},
-    WheelOfFortune: { screen: WheelOfFortune},
+    // WheelOfFortune: { screen: WheelOfFortune},
     // MatcherTest: { screen: MatcherTestView},
   },
   {
