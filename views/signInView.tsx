@@ -26,6 +26,7 @@ export default class SignIn extends Component<Props> {
 
   login = () => {
     this.setState({ isLoading: true });
+    this.props.navigation.navigate('LogIn'); // DELETE WHEN LOGIN OPERATIONNAL
     fetch('https://alsatoju-dev.herokuapp.com/login', {
       method: 'POST',
       headers: {
