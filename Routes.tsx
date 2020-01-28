@@ -8,11 +8,17 @@ import SignIn from './views/signInView';
 
 import { TransitionConfiguration } from './TransitionsApp';
 import MatcherView from './views/matcherView';
+import SettingsView from './views/settingsView';
+import ProposalsView from './views/proposalsView';
+import NotificationsView from './views/notificationsView';
 // import WheelOfFortune from './components/WheelOfFortune'
 
 const DrawerNavigator = createDrawerNavigator(
   {
-    Matcher: { screen: MatcherView},
+    Matcher: { screen: MatcherView },
+    Profile: { screen: SettingsView },
+    Proposals: { screen: ProposalsView },
+    Notifications: { screen: NotificationsView },
     // WheelOfFortune: { screen: WheelOfFortune},
     // MatcherTest: { screen: MatcherTestView},
   },
@@ -20,16 +26,16 @@ const DrawerNavigator = createDrawerNavigator(
     initialRouteName: 'Matcher',
     drawerType: 'back',
     navigationOptions: {
-      headerLeft: withNavigation(({navigation}) => <Text onPress={()=>{navigation.toggleDrawer()}} style={{color: 'black'}}>Menu</Text>),
+      headerLeft: withNavigation(({ navigation }) => <Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>),
     }
   }
 )
-  
+
 const AppNavigator = createStackNavigator(
   {
-    SignIn: { screen: SignIn},
-    SignUp: { screen: SignUp},
-    LogIn: { screen: DrawerNavigator},
+    SignIn: { screen: SignIn },
+    SignUp: { screen: SignUp },
+    LogIn: { screen: DrawerNavigator },
   },
   {
     initialRouteName: 'SignIn',

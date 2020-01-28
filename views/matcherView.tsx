@@ -104,7 +104,6 @@ export default class MatcherView extends Component<Props, State> {
     }).start();
   }
   
-
   getCardStyle() {
     const { position } = this;
     const rotate = position.x.interpolate({

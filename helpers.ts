@@ -1,25 +1,25 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import { AsyncStorage } from 'react-native';
 
-export const storeDataLocally =  async (storage_key: string, valueToStore: string) => {
-    try {
-      await AsyncStorage.setItem('@' + storage_key, valueToStore)
-    } catch (e) {
-      alert('Couldn\'nt store value to local store');
-      throw new Error(e);
-    }
+export const storeDataLocally = async (storage_key: string, valueToStore: string) => {
+  try {
+    await AsyncStorage.setItem('@' + storage_key, valueToStore)
+  } catch (e) {
+    alert('Couldn\'nt store value to local store');
+    throw new Error(e);
   }
+}
 
 export const getDataLocally = async (storage_key: string) => {
-    try {
-      const value = await AsyncStorage.getItem('@' + storage_key)
-      if(value !== null) {
-          if(storage_key == 'userAccountToken') {
-            console.log("token number : ", value);
-          }
-        // value previously stored
+  try {
+    const value = await AsyncStorage.getItem('@' + storage_key)
+    if (value !== null) {
+      if (storage_key == 'userAccountToken') {
+        console.log("token number : ", value);
       }
-    } catch(e) {
-      // error reading value
-      throw new Error(e);
+      // value previously stored
     }
+  } catch (e) {
+    // error reading value
+    throw new Error(e);
   }
+}
