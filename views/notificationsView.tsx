@@ -7,6 +7,7 @@ export default function NotificationsView() {
     return (
         <View style={styles.container}>
             <Text>Notifications works !</Text>
+            <Text>Message list component !</Text>
         </View>
     )
 }

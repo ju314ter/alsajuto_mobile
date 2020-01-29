@@ -27,30 +27,30 @@ export default class SignIn extends Component<Props> {
   login = () => {
     this.setState({ isLoading: true });
     this.props.navigation.navigate('LogIn'); // DELETE WHEN LOGIN OPERATIONNAL
-    fetch('https://alsatoju-dev.herokuapp.com/login', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password,
-      }),
-    })
-      .then((res) => {
-        this.setState({ isLoading: false });
-        console.log(res);
-        if (res.token) {
-          alert('Sucess ! you will be logged in !');
-          Helpers.storeDataLocally('userAccountToken', res.token).catch((err) => console.log(err));
-          this.props.navigation.navigate('LogIn');
-        }
-        else {
-          alert('Something went wrong...')
-        }
-      })
-      .catch((err) => { console.log(err) });
+    // fetch('https://alsatoju-dev.herokuapp.com/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     email: this.state.email,
+    //     password: this.state.password,
+    //   }),
+    // })
+    //   .then((res) => {
+    //     this.setState({ isLoading: false });
+    //     console.log(res);
+    //     if (res.token) {
+    //       alert('Sucess ! you will be logged in !');
+    //       Helpers.storeDataLocally('userAccountToken', res.token).catch((err) => console.log(err));
+    //       this.props.navigation.navigate('LogIn');
+    //     }
+    //     else {
+    //       alert('Something went wrong...')
+    //     }
+    //   })
+    //   .catch((err) => { console.log(err) });
   }
 
   componentWillMount() {
