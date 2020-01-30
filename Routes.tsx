@@ -10,15 +10,34 @@ import RecoverAccount from './views/recoverAccountView';
 
 import { TransitionConfiguration } from './TransitionsApp';
 import MatcherView from './views/matcherView';
-import SettingsView from './views/settingsView';
+import SettingsView from './views/settings/settingsView';
 import ProposalsView from './views/proposalsView';
 import NotificationsView from './views/notificationsView';
+import prefsView from './views/settings/prefView';
+import paramsView from './views/settings/paramsView';
+import displayedParamsView from './views/settings/displayedView';
 // import WheelOfFortune from './components/WheelOfFortune'
+
+const ProfileNavigator = createStackNavigator(
+  {
+    Profile: { screen: SettingsView },
+    DisplayedParams: { screen: displayedParamsView },
+    Params: { screen: paramsView },
+    Prefs: { screen: prefsView },
+  },
+  {
+    initialRouteName: 'Profile',
+    transitionConfig: TransitionConfiguration,
+    defaultNavigationOptions: {
+      headerShown: false
+    }
+  }
+)
 
 const DrawerNavigator = createDrawerNavigator(
   {
     Matcher: { screen: MatcherView },
-    Profile: { screen: SettingsView },
+    Settings: { screen: ProfileNavigator },
     Proposals: { screen: ProposalsView },
     Notifications: { screen: NotificationsView },
     // WheelOfFortune: { screen: WheelOfFortune},
