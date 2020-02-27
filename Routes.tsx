@@ -10,6 +10,8 @@ import RecoverAccount from './views/recoverAccountView';
 
 import { TransitionConfiguration } from './TransitionsApp';
 import MatcherView from './views/matcherView';
+import GamesView from './views/games/gamesView';
+import Quizz from './views/games/quizz';
 import SettingsView from './views/settings/settingsView';
 import ProposalsView from './views/proposalsView';
 import NotificationsView from './views/notificationsView';
@@ -34,16 +36,31 @@ const ProfileNavigator = createStackNavigator(
   }
 )
 
+const GamesNavigator = createStackNavigator(
+  {
+    GameChoice: { screen: GamesView },
+    Quizz: { screen: Quizz },
+  },
+  {
+    initialRouteName: 'Quizz',
+    transitionConfig: TransitionConfiguration,
+    defaultNavigationOptions: {
+      headerShown: false
+    }
+  }
+)
+
 const DrawerNavigator = createDrawerNavigator(
   {
     Matcher: { screen: MatcherView },
     Settings: { screen: ProfileNavigator },
     Proposals: { screen: ProposalsView },
+    Games: { screen: GamesNavigator },
     Notifications: { screen: NotificationsView },
     // WheelOfFortune: { screen: WheelOfFortune},
   },
   {
-    initialRouteName: 'Matcher',
+    initialRouteName: 'Games',
     drawerType: 'back',
     navigationOptions: {
       headerLeft: withNavigation(({ navigation }) => (<Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>)),
@@ -59,7 +76,7 @@ const AppNavigator = createStackNavigator(
     LogIn: { screen: DrawerNavigator },
   },
   {
-    initialRouteName: 'SignIn',
+    initialRouteName: 'LogIn',
     transitionConfig: TransitionConfiguration,
   }
 );
