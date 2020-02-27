@@ -11,6 +11,7 @@ export default function QuizzDisplayer(props) {
     const [score, setScore] = useState(0);
 
     const quizzTemplate = {
+        idTemplate: 0,
         // theme : 'sport',
         // difficulty : 'medium',
         questions: [
@@ -28,13 +29,34 @@ export default function QuizzDisplayer(props) {
                 label: 'Montréal est la capitale du Canada ?',
                 answers: ['Vrai', 'Faux', 'Peut-être'],
                 correctAnswer: 1
+            },
+            {
+                label: 'La bite a thomas est elle ?',
+                answers: ['Vrai', 'Faux', 'Peut-être'],
+                correctAnswer: 1
+            },
+            {
+                label: 'Sais-tu que tu ne sais pas ?',
+                answers: ['Vrai', 'Faux', 'Peut-être'],
+                correctAnswer: 3
+            },
+            {
+                label: 'Satisfait de ce quizz ?',
+                answers: ['Vrai', 'Faux', 'Peut-être'],
+                correctAnswer: 2
             }
         ]
     }
 
-    const currentQuestion = quizzTemplate.questions[index - 1];
+    const quizzRecap = {
+        quizzTemplateId: quizzTemplate.idTemplate,
+        quizzId: 45876,
+        userScore: [1, 0], //utilisateur a répondu a deux question, bon a la première, faux a la deuxième
+    }
 
-    let correctionDisplay = null;
+    const currentQuestion = quizzTemplate.questions[index - 1]; //Alias for current question
+
+    let correctionDisplay = null; //Component to display when correcting answer
     if (showAnswer == true) {
         correctionDisplay = (
             <React.Fragment>
@@ -52,9 +74,9 @@ export default function QuizzDisplayer(props) {
         correctionDisplay = null;
     }
 
-    let questionComponent = null;
+    let questionDisplay = null; // Component to display when answering question
     if (showAnswer == false && index !== 0 && index <= quizzTemplate.questions.length) {
-        questionComponent = (
+        questionDisplay = (
             <React.Fragment>
                 <Text>{currentQuestion.label}</Text>
                 <SegmentedControls
@@ -65,7 +87,7 @@ export default function QuizzDisplayer(props) {
             </React.Fragment>
         )
     } else {
-        questionComponent = null;
+        questionDisplay = null;
     }
 
     function checkAnswers(answerIndex) {
@@ -73,10 +95,21 @@ export default function QuizzDisplayer(props) {
         if (answerIndex == currentQuestion.correctAnswer) {
             setScore(score + 1);
             setAnswer('Correct !')
+            quizzRecap.userScore.push(1);
         } else {
             setAnswer(`Wrong ! Correct answer was ${currentQuestion.answers[currentQuestion.correctAnswer]}`)
+            quizzRecap.userScore.push(0);
         }
     }
+
+    function continueProgress() {
+        setIndex(quizzRecap.userScore.length + 1) // Nombre de questions déjà répondues
+        setScore(quizzRecap.userScore.filter(x => x == 1).length);  // Nombre de bonne réponse  = score
+    }
+
+    useEffect(() => {
+        continueProgress();
+    }, []); // No dependancies => similar to component will mount
 
     return (
         <View style={styles.container}>
@@ -84,7 +117,7 @@ export default function QuizzDisplayer(props) {
                 index !== 0 && index <= quizzTemplate.questions.length ? (
                     <View style={styles.answersWrapper}>
                         <Text>Score : {score}</Text>
-                        {questionComponent}
+                        {questionDisplay}
                         {correctionDisplay}
                         <Text>{index} / {quizzTemplate.questions.length}</Text>
                     </View>
@@ -98,7 +131,7 @@ export default function QuizzDisplayer(props) {
                                     <Text>Start your Quizz !!</Text>
                                     <Button title="Start !" containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
                                         buttonStyle={{ backgroundColor: '#8D011D' }}
-                                        onPress={() => setIndex(1)}
+                                        onPress={() => continueProgress()}
                                     />
                                 </View>
                             )
@@ -110,7 +143,7 @@ export default function QuizzDisplayer(props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -118,6 +151,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     answersWrapper: {
-        width: '50%'
+        width: '80%',
     }
 })

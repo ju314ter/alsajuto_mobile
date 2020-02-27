@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 import QuizzDisplayer from '../../components/quizzDisplayer'
 
 export default function Qcm(props) {
@@ -9,15 +10,17 @@ export default function Qcm(props) {
 
     return (
         <View style={styles.container}>
-            {
-                isLoading ? (<ActivityIndicator />) : (
-                    <React.Fragment>
-                        <Text>Quizz Work !</Text>
+            <LinearGradient colors={['#D42D4E', '#B11231', '#8D011D']}>
+                {
+                    isLoading ? (<ActivityIndicator />) : (
+                        <React.Fragment>
+                            <Text>Quizz Work !</Text>
 
-                        <QuizzDisplayer></QuizzDisplayer>
-                    </React.Fragment>
-                )
-            }
+                            <QuizzDisplayer></QuizzDisplayer>
+                        </React.Fragment>
+                    )
+                }
+            </LinearGradient>
         </View>
     )
 }
