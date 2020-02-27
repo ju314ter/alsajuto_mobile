@@ -42,7 +42,7 @@ const GamesNavigator = createStackNavigator(
     Quizz: { screen: Quizz },
   },
   {
-    initialRouteName: 'Quizz',
+    initialRouteName: 'GameChoice',
     transitionConfig: TransitionConfiguration,
     defaultNavigationOptions: {
       headerShown: false
@@ -60,7 +60,7 @@ const DrawerNavigator = createDrawerNavigator(
     // WheelOfFortune: { screen: WheelOfFortune},
   },
   {
-    initialRouteName: 'Games',
+    initialRouteName: 'Settings',
     drawerType: 'back',
     navigationOptions: {
       headerLeft: withNavigation(({ navigation }) => (<Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>)),
