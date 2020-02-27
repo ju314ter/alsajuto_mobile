@@ -20,7 +20,7 @@ export default (props: CardProps) => {
     ...props,
   };
   return (
-    <View style={{height: 450}}>
+    <View style={{ height: 450 }}>
       <Image style={styles.image} source={profile.profile} />
       <View style={styles.overlay}>
         <View style={styles.footer}>
@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: "#6ee3b4",
     fontWeight: "bold",
-
   },
   nope: {
     borderWidth: 4,

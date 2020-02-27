@@ -11,20 +11,12 @@ const prefsView = (props) => {
     const [prefAgeMax, setPrefAgeMax] = useState(35);
     const [positionRange, setPositionRange] = useState(35);
 
-    const optionsGender = [
-        "Homme",
-        "Femme",
-        "Non binaire",
-    ];
     const optionsSexuality = [
         "Hetero",
         "Homo",
         "Genderfluid",
     ];
 
-    function setSelectedOptionPrefGender(selectedOption) {
-        setPrefGender(selectedOption);
-    }
     function setSelectedOptionPrefSexuality(selectedOption) {
         setPrefSex(selectedOption);
     }
@@ -36,13 +28,6 @@ const prefsView = (props) => {
     return (
         <React.Fragment>
             <Text style={styles.sectionTitle}>Preferences settings</Text>
-
-            <Text style={styles.label}>Prefered gender : M/F/NB</Text>
-            <SegmentedControls
-                options={optionsGender}
-                onSelection={(selectedOptions) => { setSelectedOptionPrefGender(selectedOptions) }}
-                selectedOption={prefGender}
-            />
 
             <Text style={styles.label}>Sexuality : H/H/GF</Text>
             <SegmentedControls

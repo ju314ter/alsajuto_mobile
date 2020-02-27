@@ -4,8 +4,8 @@ import { Button, Input } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface Props {
-    navigation: any
-  }
+  navigation: any
+}
 export default class SignUp extends Component<Props> {
 
   state = {
@@ -18,17 +18,17 @@ export default class SignUp extends Component<Props> {
     error: '',
   }
 
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     return {
       headerShown: false
     }
   }
 
   register = () => {
-    if (this.state.email 
-        && this.state.password 
-        && this.state.password == this.state.passwordConf 
-        && this.state.email == this.state.emailConf) {
+    if (this.state.email
+      && this.state.password
+      && this.state.password == this.state.passwordConf
+      && this.state.email == this.state.emailConf) {
       fetch('https://alsatoju-dev.herokuapp.com/api/app_users', {
         method: 'POST',
         headers: {
@@ -40,8 +40,8 @@ export default class SignUp extends Component<Props> {
           password: this.state.password,
         }),
       })
-      .then((res)=>{
-        console.log(res);
+        .then((res: any) => {
+          console.log(res);
           if (res.id) {
             alert('Sucess ! you will be logged in !');
             this.props.navigation.navigate('LogIn');
@@ -49,75 +49,75 @@ export default class SignUp extends Component<Props> {
           else {
             alert('Something went wrong...')
           }
-      })
-      .catch((err)=>{console.log(err)});
+        })
+        .catch((err) => { console.log(err) });
     }
   }
 
-  render () {
+  render() {
     return (
 
-        <View style={styles.container}>
-            <Image source={require('../assets/landingBackground.jpg')} style={styles.backgroundImage}
-            resizeMode='cover' blurRadius={4} />
+      <View style={styles.container}>
+        <Image source={require('../assets/landingBackground.jpg')} style={styles.backgroundImage}
+          resizeMode='cover' blurRadius={4} />
 
-            <LinearGradient colors={['#d6a9b2aa', '#baa6aaaa' ,'#968d8faa']}
-                style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'space-around'}}>
+        <LinearGradient colors={['#d6a9b2aa', '#baa6aaaa', '#968d8faa']}
+          style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'space-around' }}>
 
-                <Text style={{position: 'absolute', color: 'black', fontFamily: 'NotoSans-Bold', fontSize: 20, top: '10%'}}>There's always time to
-                    Catch
+          <Text style={{ position: 'absolute', color: 'black', fontFamily: 'NotoSans-Bold', fontSize: 20, top: '10%' }}>There's always time to
+              Catch
                     up!</Text>
 
-                <View style={{width: '80%', height: 400, justifyContent: 'space-between'}}>
-                    <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Choose a pseudonyme' onChangeText={(pseudonyme) => this.setState({pseudonyme})}
-                        value={this.state.pseudonyme}
-                        leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
-                    <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='E-mail' onChangeText={(email) => this.setState({email})}
-                        value={this.state.email}
-                        leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
-                    <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Confirm E-mail' onChangeText={(emailConf) => this.setState({emailConf})}
-                        value={this.state.emailConf}
-                        leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
-                    <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Password' onChangeText={(password) => this.setState({password})}
-                        value={this.state.password}
-                        leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
-                    <Input inputStyle={{fontFamily: 'NotoSans-Italic'}} labelStyle={{color: 'black', fontFamily: 'NotoSans-Regular'}}
-                        label='Confirm Password' onChangeText={(passwordConf) => this.setState({passwordConf})}
-                        value={this.state.passwordConf}
-                        leftIconContainerStyle={{paddingRight: 10}} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black'}} />
+          <View style={{ width: '80%', height: 400, justifyContent: 'space-between' }}>
+            <Input inputStyle={{ fontFamily: 'NotoSans-Italic' }} labelStyle={{ color: 'black', fontFamily: 'NotoSans-Regular' }}
+              label='Choose a pseudonyme' onChangeText={(pseudonyme) => this.setState({ pseudonyme })}
+              value={this.state.pseudonyme}
+              leftIconContainerStyle={{ paddingRight: 10 }} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black' }} />
+            <Input inputStyle={{ fontFamily: 'NotoSans-Italic' }} labelStyle={{ color: 'black', fontFamily: 'NotoSans-Regular' }}
+              label='E-mail' onChangeText={(email) => this.setState({ email })}
+              value={this.state.email}
+              leftIconContainerStyle={{ paddingRight: 10 }} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black' }} />
+            <Input inputStyle={{ fontFamily: 'NotoSans-Italic' }} labelStyle={{ color: 'black', fontFamily: 'NotoSans-Regular' }}
+              label='Confirm E-mail' onChangeText={(emailConf) => this.setState({ emailConf })}
+              value={this.state.emailConf}
+              leftIconContainerStyle={{ paddingRight: 10 }} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black' }} />
+            <Input inputStyle={{ fontFamily: 'NotoSans-Italic' }} labelStyle={{ color: 'black', fontFamily: 'NotoSans-Regular' }}
+              label='Password' onChangeText={(password) => this.setState({ password })}
+              value={this.state.password}
+              leftIconContainerStyle={{ paddingRight: 10 }} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black' }} />
+            <Input inputStyle={{ fontFamily: 'NotoSans-Italic' }} labelStyle={{ color: 'black', fontFamily: 'NotoSans-Regular' }}
+              label='Confirm Password' onChangeText={(passwordConf) => this.setState({ passwordConf })}
+              value={this.state.passwordConf}
+              leftIconContainerStyle={{ paddingRight: 10 }} leftIcon={{ type: 'font-awesome', name: 'chevron-right', size: 10, color: 'black' }} />
 
-                    <Button title="Register" containerStyle={{padding: 5}} titleStyle={{color: 'black'}}
-                  buttonStyle={{backgroundColor: '#eeeeee'}} onPress={() => {this.register();}}/>
-                    <Button title="Back" onPress={()=> this.props.navigation.navigate('SignIn')} 
-                    containerStyle={{padding: 5}} titleStyle={{color: 'black'}}
-                  buttonStyle={{backgroundColor: '#eeeeee'}}/>
-                </View>
+            <Button title="Register" containerStyle={{ padding: 5 }} titleStyle={{ color: 'black' }}
+              buttonStyle={{ backgroundColor: '#eeeeee' }} onPress={() => { this.register(); }} />
+            <Button title="Back" onPress={() => this.props.navigation.navigate('SignIn')}
+              containerStyle={{ padding: 5 }} titleStyle={{ color: 'black' }}
+              buttonStyle={{ backgroundColor: '#eeeeee' }} />
+          </View>
 
-            </LinearGradient>
+        </LinearGradient>
 
-        </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#000',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    backgroundImage: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%'
-    },
-    label : {
-      color: 'black',
-      fontFamily: 'NotoSans-Regular'
-    }
-  });
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
+  },
+  label: {
+    color: 'black',
+    fontFamily: 'NotoSans-Regular'
+  }
+});

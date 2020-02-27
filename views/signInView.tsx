@@ -38,7 +38,7 @@ export default class SignIn extends Component<Props> {
     //     password: this.state.password,
     //   }),
     // })
-    //   .then((res) => {
+    //   .then((res: any) => {
     //     this.setState({ isLoading: false });
     //     console.log(res);
     //     if (res.token) {
