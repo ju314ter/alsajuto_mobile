@@ -23,3 +23,42 @@ export const getDataLocally = async (storage_key: string) => {
     throw new Error(e);
   }
 }
+
+export function CrudService(endpoint, method, body = {}, token = null) {
+  let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
+
+  if (token) {
+    return new Promise((resolve, reject) => {
+      fetch(BaseUrl + endpoint, {
+        method: method,
+        body: JSON.stringify(body),
+        headers: {
+          Authorization: "Bearer " + token,
+          'Content-Type': 'application/json',
+        },
+      }).then((response) => {
+        return response.json()
+      }).then((responseJson) => {
+        resolve(responseJson)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  } else {
+    return new Promise((resolve, reject) => {
+      fetch(BaseUrl + endpoint, {
+        method: method,
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((response) => {
+        resolve(response.json())
+      }).then((responseJson) => {
+        resolve(responseJson)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  }
+}

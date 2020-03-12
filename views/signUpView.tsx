@@ -29,7 +29,7 @@ export default class SignUp extends Component<Props> {
       && this.state.password
       && this.state.password == this.state.passwordConf
       && this.state.email == this.state.emailConf) {
-      fetch('https://alsatoju-dev.herokuapp.com/api/app_users', {
+      fetch('https://alsatoju-dev.herokuapp.com/app_users', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

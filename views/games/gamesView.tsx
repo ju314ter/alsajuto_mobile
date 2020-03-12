@@ -15,7 +15,7 @@ export default function GamesView({ navigation }) {
                         <Text>Games Work !</Text>
                         <Button title="Get started" containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
                             buttonStyle={{ backgroundColor: '#8D011D' }}
-                            onPress={() => navigation.navigate('QCM')}
+                            onPress={() => navigation.navigate('Quizz')}
                         />
                     </React.Fragment>
                 )
