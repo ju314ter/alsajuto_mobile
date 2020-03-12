@@ -24,7 +24,7 @@ export const getDataLocally = async (storage_key: string) => {
   }
 }
 
-export function CrudService(endpoint, method, body = {}, token = null) {
+export function requestService(endpoint, method, body = {}, token = null) {
   let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
 
   if (token) {

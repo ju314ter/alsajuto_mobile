@@ -9,11 +9,11 @@ import RecoverAccount from './views/recoverAccountView';
 
 
 import { TransitionConfiguration } from './TransitionsApp';
-import MatcherView from './views/matcherView';
+import MatcherView from './views/matching/matcherView';
 import GamesView from './views/games/gamesView';
 import Quizz from './views/games/quizz';
 import SettingsView from './views/settings/settingsView';
-import ProposalsView from './views/proposalsView';
+import ProposalsView from './views/dating/proposalsView';
 import NotificationsView from './views/notificationsView';
 import prefsView from './views/settings/prefView';
 import paramsView from './views/settings/paramsView';

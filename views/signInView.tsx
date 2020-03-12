@@ -33,30 +33,7 @@ export default class SignIn extends Component<Props> {
     // this.props.navigation.navigate('LogIn'); // DELETE WHEN LOGIN OPERATIONNAL
     console.log(this.state.email, this.state.password, payload)
 
-    Helpers.CrudService('login', 'POST', payload).then(res => console.log(res));
-
-    // fetch('https://alsatoju-dev.herokuapp.com/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: payload,
-    // })
-    //   .then((res: any) => {
-    //     // this.setState({ isLoading: false });
-    //     return res.json()
-    //     // if (res.token) {
-    //     //   alert('Sucess ! you will be logged in !');
-    //     //   Helpers.storeDataLocally('userAccountToken', res.token).catch((err) => console.log(err));
-    //     //   this.props.navigation.navigate('LogIn');
-    //     // }
-    //     // else {
-    //     //   alert('Something went wrong...')
-    //     // }
-    //   })
-    //   .then((responsJson) => console.log(responsJson))
-    //   .catch((err) => { console.log(err) });
+    Helpers.requestService('login', 'POST', payload).then(res => console.log(res));
   }
 
   componentWillMount() {
