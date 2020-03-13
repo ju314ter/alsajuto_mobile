@@ -53,7 +53,7 @@ export function requestService(endpoint, method, body = {}, token = null) {
           'Content-Type': 'application/json',
         },
       }).then((response) => {
-        resolve(response.json())
+        return response.json();
       }).then((responseJson) => {
         resolve(responseJson)
       }).catch((error) => {
