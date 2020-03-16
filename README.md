@@ -1,13 +1,14 @@
-alsajuto_mobile
+# alsajuto_mobile
 
--Dépendances :
-    expo-cli (not ejected yet)
-    nodejs ( < v12.9.1 )
+- Dépendances :  
+expo-cli (not ejected yet)  
+nodejs ( < v12.9.1 )
 
--Color palette : https://paletton.com/#uid=15v0u0kpgsBfAD6kFv2sOnTvKiZ
+- Color palette :  https://paletton.com/#uid=15v0u0kpgsBfAD6kFv2sOnTvKiZ
 
-React JSX versus Virtual DOM Elements :
+## React JSX versus Virtual DOM Elements
 
+```Javascript
 const DeleteAccount = () => (
   <div>
     <p>Are you sure?</p>
@@ -92,3 +93,4 @@ class Button extends React.Component {
     };
   }
 }
+```
