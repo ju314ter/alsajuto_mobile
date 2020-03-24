@@ -86,6 +86,8 @@ export default class MatcherView extends Component<Props, State> {
     this.setState({ index: this.state.index + 1 });
   }
 
+
+  // TODO : send patch to back
   handleLikedProfile = (profile) => {
     this.setState(({ likedProfile }) => ({
         likedProfile: likedProfile + 1
@@ -97,6 +99,7 @@ export default class MatcherView extends Component<Props, State> {
         passedProfile: passedProfile + 1
     }));
   };
+
 
   resetPosition() {
     Animated.spring(this.position, {
