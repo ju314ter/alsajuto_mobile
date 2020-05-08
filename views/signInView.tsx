@@ -48,7 +48,6 @@ export default class SignIn extends Component<Props> {
       // if(tokenisvalid) {
       //   this.props.navigation.navigate('LogIn');
       // }
-      console.log('response from local store : ', res);
     }).catch(err => console.log(err));
   }
 

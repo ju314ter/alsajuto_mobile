@@ -13,7 +13,7 @@ import MatcherView from './views/matching/matcherView';
 import GamesView from './views/games/gamesView';
 import Quizz from './views/games/quizz';
 import SettingsView from './views/settings/settingsView';
-import ProposalsView from './views/dating/proposalsView';
+import MatchlistView from './views/matching/matchlistView';
 import NotificationsView from './views/notificationsView';
 import prefsView from './views/settings/prefView';
 import paramsView from './views/settings/paramsView';
@@ -54,7 +54,7 @@ const DrawerNavigator = createDrawerNavigator(
   {
     Matcher: { screen: MatcherView },
     Settings: { screen: ProfileNavigator },
-    Proposals: { screen: ProposalsView },
+    Matchlist: { screen: MatchlistView },
     Games: { screen: GamesNavigator },
     Notifications: { screen: NotificationsView },
     // WheelOfFortune: { screen: WheelOfFortune},

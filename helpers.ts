@@ -15,6 +15,7 @@ export const getDataLocally = async (storage_key: string) => {
     if (value !== null) {
       if (storage_key == 'userAccountToken') {
         console.log("token number : ", value);
+        return value;
       }
       // value previously stored
     }
