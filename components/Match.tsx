@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
-import { Button, Card } from 'react-native-elements';
+import { Icon, Button, Avatar } from 'react-native-elements';
 
 interface Props {
     navigation: any
@@ -8,7 +8,7 @@ interface Props {
 }
 
 interface State {
-    index: number
+    status: string
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -25,7 +25,7 @@ export default class Match extends Component<Props, State> {
         super(props);
 
         this.state = {
-            index: 0,
+            status: 'Lancez votre challenge !',
         }
 
         this.position = new Animated.ValueXY();
@@ -59,12 +59,7 @@ export default class Match extends Component<Props, State> {
         Animated.timing(this.position, {
             toValue: { x, y: 0 },
             duration: SWIPE_OUT_DURATION
-        }).start(() => this.onSwipeComplete(direction));
-    }
-
-    onSwipeComplete(direction) {
-        // direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
-        // this.position.setValue({ x: 0, y: 0 });
+        }).start(() => console.log('swiped completed'));
     }
 
     resetPosition() {
@@ -73,25 +68,54 @@ export default class Match extends Component<Props, State> {
         }).start();
     }
 
-    getCardStyle() {
-        const { position } = this;
-        return {
-            ...position.getLayout()
-        };
-    }
-
     render() {
         const { name } = this.props;
+        const { status } = this.state;
 
         return (
             <View style={styles.container}>
-                <Text style={{ position: 'absolute', left: 0 }}>Left Options</Text>
-                <Text style={{ position: 'absolute', right: 0 }}>Right Options</Text>
-                <Animated.View style={[this.getCardStyle(), { position: 'absolute', width: '100%' }]}
+                <View style={styles.leftContainer}>
+                    <Icon
+                        iconStyle={{ fontSize: 40 }}
+                        containerStyle={{ margin: 15 }}
+                        name='trash'
+                        color='red'
+                        type='font-awesome'
+                        onPress={() => { console.log('match deleted') }} />
+                    <Icon
+                        iconStyle={{ fontSize: 40 }}
+                        containerStyle={{ margin: 15 }}
+                        name='exclamation-triangle'
+                        color='yellow'
+                        type='font-awesome'
+                        onPress={() => { console.log('match signalé') }} />
+                </View>
+                <View style={styles.rightContainer}>
+                    <Text>Où en êtes-vous ?</Text>
+                    <Button title={status} />
+                </View>
+                <Animated.View style={[{ ...this.position.getLayout() }, { position: 'absolute', width: '100%' }]}
                     {...this._panResponder.panHandlers}>
                     <View style={{ position: 'relative' }}>
-                        <View style={{ width: '100%', height: 80, backgroundColor: 'red', borderRadius: 5 }}>
-                            <Text style={{ fontSize: 15, fontWeight: '500', color: 'white' }}>{name}</Text>
+                        <View style={styles.slidableContent}>
+                            <Icon
+                                name='caret-left'
+                                type='font-awesome'
+                                onPress={() => { this.forceSwipe('right') }} />
+                            <Avatar
+                                rounded
+                                size='medium'
+                                source={{
+                                    uri:
+                                        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                                }}
+                            />
+                            <Text style={{ fontSize: 15, fontWeight: '500', color: 'black' }}>{name}</Text>
+                            <Icon
+                                name='caret-right'
+                                type='font-awesome'
+                                onPress={() => { this.forceSwipe('left') }} />
+
                         </View>
                     </View>
                 </Animated.View>
@@ -112,5 +136,44 @@ const styles = StyleSheet.create({
         padding: 15,
         flexDirection: 'row',
         justifyContent: 'space-around'
+    },
+    leftContainer: {
+        position: 'absolute',
+        left: 0,
+        width: '50%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        height: 80,
+        overflow: 'hidden'
+    },
+    rightContainer: {
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 0,
+        width: '50%',
+        height: 80,
+        overflow: 'hidden'
+    },
+    slidableContent: {
+        width: '100%',
+        height: 80,
+        backgroundColor: 'white',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 2,
+        borderRadius: 5,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
     }
 });

@@ -3,9 +3,11 @@ alsajuto_mobile
 -Dépendances :
     expo-cli (not ejected yet)
     nodejs ( < v12.9.1 )
+
+-For styling and style elements : https://react-native-elements.github.io/
     
  -Build bug :
-    -si Expo feature bug : https://stackoverflow.com/questions/58120990/how-to-resolve-the-error-on-react-native-start/58199866#58199866
+    -si Expo feature bug invalid expression : https://stackoverflow.com/questions/58120990/how-to-resolve-the-error-on-react-native-start/58199866#58199866
 
 -Color palette : https://paletton.com/#uid=15v0u0kpgsBfAD6kFv2sOnTvKiZ
 
