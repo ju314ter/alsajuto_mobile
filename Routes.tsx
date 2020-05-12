@@ -13,7 +13,7 @@ import MatcherView from './views/matching/matcherView';
 import GamesView from './views/games/gamesView';
 import Quizz from './views/games/quizz';
 import SettingsView from './views/settings/settingsView';
-import MatchlistView from './views/matching/matchlistView';
+import MatchListView from './views/matching/matchListView';
 import NotificationsView from './views/notificationsView';
 import prefsView from './views/settings/prefView';
 import paramsView from './views/settings/paramsView';
@@ -54,13 +54,13 @@ const DrawerNavigator = createDrawerNavigator(
   {
     Matcher: { screen: MatcherView },
     Settings: { screen: ProfileNavigator },
-    Matchlist: { screen: MatchlistView },
+    Matchlist: { screen: MatchListView },
     Games: { screen: GamesNavigator },
     Notifications: { screen: NotificationsView },
     // WheelOfFortune: { screen: WheelOfFortune},
   },
   {
-    initialRouteName: 'Games',
+    initialRouteName: 'Matchlist',
     drawerType: 'back',
     navigationOptions: {
       headerLeft: withNavigation(({ navigation }) => (<Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>)),
@@ -76,7 +76,7 @@ const AppNavigator = createStackNavigator(
     LogIn: { screen: DrawerNavigator },
   },
   {
-    initialRouteName: 'SignIn',
+    initialRouteName: 'LogIn',
     transitionConfig: TransitionConfiguration,
   }
 );

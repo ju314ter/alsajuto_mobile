@@ -4,9 +4,9 @@ import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-import Match from '../../components/Match'
+import Match from '../../components/Match';
 
-export default function GamesView({ navigation }) {
+export default function MatchListView({ navigation }) {
     const [isLoading, setLoading] = useState(false);
 
     return (
@@ -14,7 +14,10 @@ export default function GamesView({ navigation }) {
             {
                 isLoading ? (<ActivityIndicator />) : (
                     <React.Fragment>
-                        <Match navigation={navigation} proposal='julien' proposalId={1}></Match>
+                        {/* <Match navigation={navigation} proposal='julien' proposalId={1}></Match>
+                        <Match navigation={navigation} proposal='alan' proposalId={2}></Match> */}
+                        <Match navigation={navigation} name='Catherine'></Match>
+                        <Match navigation={navigation} name='Jennyfer'></Match>
                     </React.Fragment>
                 )
             }

@@ -1,25 +1,22 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
 import { Button, Card } from 'react-native-elements';
-import { LinearGradient } from 'expo-linear-gradient';
 
 interface Props {
     navigation: any
-    proposal: string
-    proposalId: number
+    name: string;
 }
 
 interface State {
-    proposal: string
-    proposalId: number
+    index: number
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const PROPOSAL_WIDTH = SCREEN_WIDTH * 0.9;
-const SWIPE_THRESHOLD = 0.50 * SCREEN_WIDTH;
+const CARD_WIDTH = SCREEN_WIDTH * 0.8;
+const SWIPE_THRESHOLD = 0.30 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 
-export default class MatchView extends Component<Props, State> {
+export default class Match extends Component<Props, State> {
 
     position;
     _panResponder;
@@ -28,8 +25,7 @@ export default class MatchView extends Component<Props, State> {
         super(props);
 
         this.state = {
-            proposal: 'Julien',
-            proposalId: 1
+            index: 0,
         }
 
         this.position = new Animated.ValueXY();
@@ -37,7 +33,7 @@ export default class MatchView extends Component<Props, State> {
         this._panResponder = PanResponder.create({
             onStartShouldSetPanResponder: (evt, gestureState) => true,
             onPanResponderMove: (evt, gestureState) => {
-                this.position.setValue({ x: gestureState.dx });
+                this.position.setValue({ x: gestureState.dx, y: 0 });
             },
             onPanResponderRelease: (evt, gestureState) => {
                 if (gestureState.dx > SWIPE_THRESHOLD) {
@@ -54,7 +50,7 @@ export default class MatchView extends Component<Props, State> {
     static navigationOptions = ({ navigation }) => {
         return {
             headerStyle: { display: 'none' },
-            title: 'Matcher'
+            title: 'Match'
         }
     }
 
@@ -67,30 +63,9 @@ export default class MatchView extends Component<Props, State> {
     }
 
     onSwipeComplete(direction) {
-
-        direction === 'right' ? this.showRightOptions() : this.showLeftOptions();
+        // direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
         // this.position.setValue({ x: 0, y: 0 });
-
-        // Spring Animation on reset
-        // UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-        // LayoutAnimation.configureNext({
-        //     duration: 600,
-        //     create: { type: 'linear', property: 'opacity' },
-        //     update: { type: 'spring', springDamping: 0.5 },
-        //     delete: { type: 'linear', property: 'opacity' }
-        // })
     }
-
-
-    // TODO : send patch to back
-    showRightOptions = () => {
-
-    };
-
-    showLeftOptions = () => {
-
-    };
-
 
     resetPosition() {
         Animated.spring(this.position, {
@@ -98,29 +73,26 @@ export default class MatchView extends Component<Props, State> {
         }).start();
     }
 
-    // getProposalStyle() {
-    //     const { position } = this;
-    //     const rotate = position.x.interpolate({
-    //         inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
-    //         outputRange: ['120deg', '0deg', '-120deg']
-    //     });
-    //     return {
-    //         ...position.getLayout(),
-    //         transform: [{ rotate }]
-    //     };
-    // }
+    getCardStyle() {
+        const { position } = this;
+        return {
+            ...position.getLayout()
+        };
+    }
 
     render() {
+        const { name } = this.props;
+
         return (
             <View style={styles.container}>
-                <View style={{ ...StyleSheet.absoluteFillObject, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', backgroundColor: '#cfc6c8', borderRadius: 25 }}>
-                    <Text>option bar left</Text>
-                    <Text>option bar right</Text>
-                </View>
-                <Animated.View style={[...this.position.getLayout(), { ...StyleSheet.absoluteFillObject, width: '100%', backgroundColor: '#c99da6', borderRadius: 25 }]}
+                <Text style={{ position: 'absolute', left: 0 }}>Left Options</Text>
+                <Text style={{ position: 'absolute', right: 0 }}>Right Options</Text>
+                <Animated.View style={[this.getCardStyle(), { position: 'absolute', width: '100%' }]}
                     {...this._panResponder.panHandlers}>
                     <View style={{ position: 'relative' }}>
-                        <Text>This is my slidable component</Text>
+                        <View style={{ width: '100%', height: 80, backgroundColor: 'red', borderRadius: 5 }}>
+                            <Text style={{ fontSize: 15, fontWeight: '500', color: 'white' }}>{name}</Text>
+                        </View>
                     </View>
                 </Animated.View>
             </View>
@@ -130,10 +102,15 @@ export default class MatchView extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        position: 'relative',
-        backgroundColor: '#000',
+        display: 'flex',
+        height: 80,
+        margin: 5,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    statusStyle: {
+        padding: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     }
 });
