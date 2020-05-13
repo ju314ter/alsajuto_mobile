@@ -1,5 +1,10 @@
 import { AsyncStorage } from 'react-native';
 
+/**
+ * used to store locally some data
+ * @param storage_key 
+ * @param valueToStore 
+ */
 export const storeDataLocally = async (storage_key: string, valueToStore: string) => {
   try {
     await AsyncStorage.setItem('@' + storage_key, valueToStore)
@@ -9,24 +14,25 @@ export const storeDataLocally = async (storage_key: string, valueToStore: string
   }
 }
 
+/**
+ * used to retrieve data stored locally
+ * @param storage_key 
+ */
 export const getDataLocally = async (storage_key: string) => {
+    let value = null;
   try {
-    const value = await AsyncStorage.getItem('@' + storage_key)
-    if (value !== null) {
-      if (storage_key == 'userAccountToken') {
-        console.log("token number : ", value);
-      }
-      // value previously stored
-    }
+    value = await AsyncStorage.getItem('@' + storage_key) || null;
   } catch (e) {
-    // error reading value
     throw new Error(e);
   }
+  return value;
 }
 
-export function requestService(endpoint, method, body = {}, token = null) {
+/** 
+ * Used to call the api
+ */
+export function requestService(endpoint: string, method: string, body = {}, token = getDataLocally('userAccountToken')) {
   let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
-
   if (token) {
     return new Promise((resolve, reject) => {
       fetch(BaseUrl + endpoint, {
@@ -53,6 +59,8 @@ export function requestService(endpoint, method, body = {}, token = null) {
           'Content-Type': 'application/json',
         },
       }).then((response) => {
+        console.log('-----------response-------------')
+          console.log(response)
         return response.json();
       }).then((responseJson) => {
         resolve(responseJson)
