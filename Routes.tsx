@@ -74,7 +74,7 @@ const AppNavigator = createStackNavigator(
     LogIn: { screen: DrawerNavigator }
   },
   {
-    initialRouteName: 'SignIn',
+    initialRouteName: 'LogIn',
     transitionConfig: TransitionConfiguration
   }
 )
