@@ -14,6 +14,7 @@ interface State {
   likedProfile: number
   index: number
   profiles: Array<any>
+  isLoading: boolean
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -33,7 +34,8 @@ export default class MatcherView extends Component<Props, State> {
       passedProfile: 0,
       likedProfile: 0,
       index: 0,
-      profiles: []
+      profiles: [],
+      isLoading: false
     }
 
     this.position = new Animated.ValueXY();
@@ -63,7 +65,11 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   componentDidMount() {
-
+    this.setState({ isLoading: true })
+    Helpers.requestService('app_users', 'GET').then((res: Array<any>) => {
+      this.setState({ profiles: res })
+      this.setState({ isLoading: false })
+    })
   }
 
   forceSwipe(direction) {
@@ -106,7 +112,6 @@ export default class MatcherView extends Component<Props, State> {
     }));
   };
 
-
   resetPosition() {
     Animated.spring(this.position, {
       toValue: { x: 0, y: 0 }
@@ -148,11 +153,11 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   renderCards() {
-    if (this.state.profiles.length <= this.state.index) {
+    if (this.state.profiles.length <= this.state.index && this.state.isLoading === false) {
       return (
         <Card title="No More cards">
           <Button title='no more cards' onPress={() => {
-            Helpers.requestService('app_users', 'GET').then(res => console.log(res))
+            console.log(this.state.profiles)
           }} />
         </Card>
       )

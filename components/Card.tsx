@@ -9,7 +9,7 @@ import { Profile } from "../Models";
 const { Value } = Animated;
 
 interface CardProps {
-  profile: Profile;
+  profile: any;
   position?: Animated.ValueXY;
 }
 
@@ -24,7 +24,8 @@ export default (props: CardProps) => {
       <Image style={styles.image} source={profile.profile} />
       <View style={styles.overlay}>
         <View style={styles.footer}>
-          <Text style={styles.name}>{profile.name}</Text>
+          <Text style={styles.name}>{profile.firstName}</Text>
+          <Text style={styles.gender}>{profile.gender}</Text>
         </View>
       </View>
     </View>
@@ -53,6 +54,10 @@ const styles = StyleSheet.create({
   name: {
     color: "white",
     fontSize: 32,
+  },
+  gender: {
+    color: "white",
+    fontSize: 28,
   },
   like: {
     borderWidth: 4,
