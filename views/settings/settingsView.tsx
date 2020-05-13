@@ -1,13 +1,33 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import { StyleSheet, Text, Image, View, ScrollView, ActivityIndicator } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button, Icon } from 'react-native-elements'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LinearGradient } from 'expo-linear-gradient'
+import * as Helpers from '../../helpers'
 
-export default function SettingsView (props) {
+export default function SettingsView(props) {
     const [isLoading, setLoading] = useState(false)
-    const [name, setUserName] = useState(profiles[1].name)
-    const [age, setUserAge] = useState(profiles[1].age)
+    const [name, setUserName] = useState('julien')
+    const [age, setUserAge] = useState(27)
+
+    useEffect(() => {
+        /* 
+            Remplacer le call a l'id en dur par un id dynamique, recuperer toutes les infos et les passer aux vues appropriées
+            Dans chaque vue passer un appel en put pour patch le user avec les nouveaux inputs
+        */
+        Helpers.requestService('app_users/3', 'GET').then((res: any) => {
+            setUserName(res.firstName)
+        })
+    }, [])
+
+    const navigationOptions = {
+        drawerLabel: <Icon
+            name='user-cog'
+            iconStyle={{ fontSize: 40, margin: 10 }}
+            size={40}
+            type='font-awesome'
+            color='red' />
+    };
 
     const submit = (form) => {
         console.log(form)
@@ -21,7 +41,7 @@ export default function SettingsView (props) {
                         <React.Fragment>
                             <View style={{ height: '70%', backgroundColor: '#eee', marginLeft: '10%', marginRight: '10%', marginTop: 10, justifyContent: 'flex-end', alignItems: 'flex-start' }}>
                                 <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', position: 'absolute', overflow: 'hidden' }}>
-                                    <Image style={styles.image} source={profiles[1].profile} />
+                                    {/* <Image style={styles.image} source={profiles[1].profile} /> */}
                                 </View>
                                 <View>
                                     <Text style={styles.sectionTitle}>{name}, {age}</Text>

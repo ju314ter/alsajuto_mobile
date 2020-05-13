@@ -19,7 +19,7 @@ export const storeDataLocally = async (storage_key: string, valueToStore: string
  * @param storage_key 
  */
 export const getDataLocally = async (storage_key: string) => {
-    let value = null;
+  let value: string = null;
   try {
     value = await AsyncStorage.getItem('@' + storage_key) || null;
   } catch (e) {
@@ -31,11 +31,30 @@ export const getDataLocally = async (storage_key: string) => {
 /** 
  * Used to call the api
  */
-export function requestService(endpoint: string, method: string, body = {}, token = getDataLocally('userAccountToken')) {
+export const requestService = async (endpoint: string, method: string, params?: string, body = {}, token?: string) => {
+  token = await getDataLocally('token');
+  console.log(endpoint, method, token)
   let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
   if (token) {
+    if (method === 'GET') {
+      return new Promise((resolve, reject) => {
+        fetch(BaseUrl + endpoint, {
+          method: 'GET',
+          headers: {
+            Authorization: "Bearer " + token,
+            'Content-Type': 'application/json',
+          },
+        }).then((response) => {
+          return response.json()
+        }).then((responseJson) => {
+          resolve(responseJson)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    }
     return new Promise((resolve, reject) => {
-      fetch(BaseUrl + endpoint, {
+      fetch(BaseUrl + endpoint + params, {
         method: method,
         body: JSON.stringify(body),
         headers: {
@@ -60,7 +79,7 @@ export function requestService(endpoint: string, method: string, body = {}, toke
         },
       }).then((response) => {
         console.log('-----------response-------------')
-          console.log(response)
+        console.log(response)
         return response.json();
       }).then((responseJson) => {
         resolve(responseJson)

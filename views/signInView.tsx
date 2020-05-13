@@ -46,8 +46,8 @@ export default class SignIn extends Component<Props> {
         });
     }
 
-    componentWillMount() {
-        Helpers.getDataLocally('-token').then((res) => {
+    componentDidMount() {
+        Helpers.getDataLocally('token').then((res) => {
             console.log('local store : ', res);
             if (res) {
                 this.props.navigation.navigate('LogIn');

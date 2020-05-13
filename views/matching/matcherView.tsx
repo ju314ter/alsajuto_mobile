@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
-import { Button, Card } from 'react-native-elements';
+import { Button, Card, Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import CardMatch from '../../components/Card';
+import * as Helpers from '../../helpers';
 
 interface Props {
   navigation: any
@@ -12,6 +13,8 @@ interface State {
   passedProfile: number
   likedProfile: number
   index: number
+  profiles: Array<any>
+  isLoading: boolean
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -31,6 +34,8 @@ export default class MatcherView extends Component<Props, State> {
       passedProfile: 0,
       likedProfile: 0,
       index: 0,
+      profiles: [],
+      isLoading: false
     }
 
     this.position = new Animated.ValueXY();
@@ -52,11 +57,21 @@ export default class MatcherView extends Component<Props, State> {
     });
   }
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerStyle: { display: 'none' },
-      title: 'Matcher'
-    }
+  static navigationOptions = {
+    drawerLabel: <Icon
+      name='connectdevelop'
+      iconStyle={{ fontSize: 40, margin: 10 }}
+      size={40}
+      type='font-awesome'
+      color='red' />,
+  };
+
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    Helpers.requestService('app_users', 'GET').then((res: Array<any>) => {
+      this.setState({ profiles: res })
+      this.setState({ isLoading: false })
+    })
   }
 
   forceSwipe(direction) {
@@ -68,7 +83,7 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   onSwipeComplete(direction) {
-    const profile = profiles[this.state.index];
+    const profile = this.state.profiles[this.state.index];
 
     direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
     this.position.setValue({ x: 0, y: 0 });
@@ -98,7 +113,6 @@ export default class MatcherView extends Component<Props, State> {
       passedProfile: passedProfile + 1
     }));
   };
-
 
   resetPosition() {
     Animated.spring(this.position, {
@@ -141,15 +155,17 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   renderCards() {
-    if (profiles.length <= this.state.index) {
+    if (this.state.profiles.length <= this.state.index && this.state.isLoading === false) {
       return (
         <Card title="No More cards">
-          <Button title='no more cards' />
+          <Button title='no more cards' onPress={() => {
+            console.log(this.state.profiles)
+          }} />
         </Card>
       )
     }
     else {
-      return profiles.map((profile, index) => {
+      return this.state.profiles.map((profile, index) => {
 
         if (index < this.state.index) { return null }
 

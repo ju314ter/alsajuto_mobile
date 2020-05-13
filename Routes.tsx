@@ -6,19 +6,19 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 import SignUp from './views/signUpView';
 import SignIn from './views/signInView';
 import RecoverAccount from './views/recoverAccountView';
-
+import { Icon } from 'react-native-elements';
+import { Dimensions } from 'react-native';
 
 import { TransitionConfiguration } from './TransitionsApp';
 import MatcherView from './views/matching/matcherView';
 import GamesView from './views/games/gamesView';
-import Quizz from './views/games/quizz';
+import QuizzView from './views/games/quizzView';
 import SettingsView from './views/settings/settingsView';
 import MatchListView from './views/matching/matchListView';
 import NotificationsView from './views/notificationsView';
 import prefsView from './views/settings/prefView';
 import paramsView from './views/settings/paramsView';
 import displayedParamsView from './views/settings/displayedView';
-// import WheelOfFortune from './components/WheelOfFortune'
 
 const ProfileNavigator = createStackNavigator(
   {
@@ -39,7 +39,7 @@ const ProfileNavigator = createStackNavigator(
 const GamesNavigator = createStackNavigator(
   {
     GameChoice: { screen: GamesView },
-    Quizz: { screen: Quizz }
+    Quizz: { screen: QuizzView }
   },
   {
     initialRouteName: 'GameChoice',
@@ -52,18 +52,92 @@ const GamesNavigator = createStackNavigator(
 
 const DrawerNavigator = createDrawerNavigator(
   {
-    Matcher: { screen: MatcherView },
-    Settings: { screen: ProfileNavigator },
-    Matchlist: { screen: MatchListView },
-    Games: { screen: GamesNavigator },
-    Notifications: { screen: NotificationsView }
-    // WheelOfFortune: { screen: WheelOfFortune},
+    Matcher: {
+      screen: MatcherView,
+      navigationOptions: {
+        drawerLabel: (
+          <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+            <Icon
+              name='users'
+              iconStyle={{ fontSize: 40, margin: 10 }}
+              size={40}
+              type='font-awesome'
+              color='red' />
+          </View>),
+      }
+    },
+    Settings: {
+      screen: ProfileNavigator,
+      navigationOptions: {
+        drawerLabel: (
+          <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+            <Icon
+              name='cogs'
+              iconStyle={{ fontSize: 40, margin: 10 }}
+              size={40}
+              type='font-awesome'
+              color='red' />
+          </View>),
+      }
+    },
+    Matchlist: {
+      screen: MatchListView,
+      navigationOptions: {
+        drawerLabel: (
+          <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+            <Icon
+              name='trophy'
+              iconStyle={{ fontSize: 40, margin: 10 }}
+              size={40}
+              type='font-awesome'
+              color='red' />
+          </View>),
+      }
+    },
+    Games: {
+      screen: GamesNavigator,
+    },
+    Notifications: {
+      screen: NotificationsView,
+      navigationOptions: {
+        drawerLabel: (
+          <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+            <Icon
+              name='bell'
+              iconStyle={{ fontSize: 40, margin: 10 }}
+              size={40}
+              type='font-awesome'
+              color='red' />
+          </View>),
+      }
+    }
   },
   {
     initialRouteName: 'Matchlist',
     drawerType: 'back',
+    drawerWidth: Dimensions.get('screen').width / 4,
     navigationOptions: {
-      headerLeft: withNavigation(({ navigation }) => (<Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>))
+      headerLeft: withNavigation(({ navigation, props }) => (
+        <View style={{
+          width: Dimensions.get('screen').width,
+          height: '100%',
+          backgroundColor: 'red',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }}>
+          <Icon
+            raised
+            name='heartbeat'
+            iconStyle={{ fontSize: 20 }}
+            containerStyle={{ marginLeft: 10 }}
+            size={20}
+            type='font-awesome'
+            color='#f50'
+            onPress={() => { navigation.toggleDrawer() }} />
+          <Text style={{ fontSize: 35, color: 'white', marginRight: 10 }}>Love On</Text>
+        </View>
+      ))
     }
   }
 )
@@ -76,7 +150,7 @@ const AppNavigator = createStackNavigator(
     LogIn: { screen: DrawerNavigator }
   },
   {
-    initialRouteName: 'LogIn',
+    initialRouteName: 'SignIn',
     transitionConfig: TransitionConfiguration,
   }
 )
