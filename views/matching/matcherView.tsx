@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
 import { Button, Card } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
-import { profiles } from '../../App'
 import CardMatch from '../../components/Card';
 
 interface Props {

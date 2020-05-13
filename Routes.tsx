@@ -25,7 +25,7 @@ const ProfileNavigator = createStackNavigator(
     Profile: { screen: SettingsView },
     DisplayedParams: { screen: displayedParamsView },
     Params: { screen: paramsView },
-    Prefs: { screen: prefsView },
+    Prefs: { screen: prefsView }
   },
   {
     initialRouteName: 'Profile',
@@ -39,7 +39,7 @@ const ProfileNavigator = createStackNavigator(
 const GamesNavigator = createStackNavigator(
   {
     GameChoice: { screen: GamesView },
-    Quizz: { screen: Quizz },
+    Quizz: { screen: Quizz }
   },
   {
     initialRouteName: 'GameChoice',
@@ -56,14 +56,14 @@ const DrawerNavigator = createDrawerNavigator(
     Settings: { screen: ProfileNavigator },
     Matchlist: { screen: MatchListView },
     Games: { screen: GamesNavigator },
-    Notifications: { screen: NotificationsView },
+    Notifications: { screen: NotificationsView }
     // WheelOfFortune: { screen: WheelOfFortune},
   },
   {
     initialRouteName: 'Matchlist',
     drawerType: 'back',
     navigationOptions: {
-      headerLeft: withNavigation(({ navigation }) => (<Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>)),
+      headerLeft: withNavigation(({ navigation }) => (<Text onPress={() => { navigation.toggleDrawer() }} style={{ color: 'black' }}>Menu</Text>))
     }
   }
 )
@@ -73,13 +73,12 @@ const AppNavigator = createStackNavigator(
     SignIn: { screen: SignIn },
     SignUp: { screen: SignUp },
     RecoverPwd: { screen: RecoverAccount },
-    LogIn: { screen: DrawerNavigator },
+    LogIn: { screen: DrawerNavigator }
   },
   {
     initialRouteName: 'LogIn',
     transitionConfig: TransitionConfiguration,
   }
-);
+)
 
-export const SignInContainer = createAppContainer(AppNavigator);
-
+export const SignInContainer = createAppContainer(AppNavigator)
