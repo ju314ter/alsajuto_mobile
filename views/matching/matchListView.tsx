@@ -1,28 +1,37 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator } from 'react-native';
-import { Button } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import * as Helpers from '../../helpers';
+
 
 import Match from '../../components/Match';
 
 export default function MatchListView({ navigation }) {
     const [isLoading, setLoading] = useState(false);
+    const [matchList, setMatchList] = useState([]);
 
-    return (
-        <View style={styles.container}>
-            {
-                isLoading ? (<ActivityIndicator />) : (
-                    <React.Fragment>
-                        {/* <Match navigation={navigation} proposal='julien' proposalId={1}></Match>
-                        <Match navigation={navigation} proposal='alan' proposalId={2}></Match> */}
-                        <Match navigation={navigation} name='Catherine'></Match>
-                        <Match navigation={navigation} name='Jennyfer'></Match>
-                    </React.Fragment>
-                )
+    useEffect(() => {
+        Helpers.getDataLocally('token').then((token) => {
+            // Fetch Match list here
+            if (token) {
+                // Helpers.requestService('GET', 'matchings').then((res) => {
+                //     console.log(res)
+                // })
             }
-        </View>
-    )
+        })
+    }, []);
+
+    if (!isLoading) {
+        return (
+            <View style={styles.container}>
+                <React.Fragment>
+                    <Match navigation={navigation} name='Catherine'></Match>
+                    <Match navigation={navigation} name='Jennyfer'></Match>
+                </React.Fragment>
+            </View>
+        )
+    } else {
+        return <ActivityIndicator />
+    }
 }
 
 const styles = StyleSheet.create({

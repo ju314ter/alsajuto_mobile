@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, 
 import { Button, Card } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import CardMatch from '../../components/Card';
+import * as Helpers from '../../helpers';
 
 interface Props {
   navigation: any
@@ -12,6 +13,7 @@ interface State {
   passedProfile: number
   likedProfile: number
   index: number
+  profiles: Array<any>
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -31,6 +33,7 @@ export default class MatcherView extends Component<Props, State> {
       passedProfile: 0,
       likedProfile: 0,
       index: 0,
+      profiles: []
     }
 
     this.position = new Animated.ValueXY();
@@ -59,6 +62,10 @@ export default class MatcherView extends Component<Props, State> {
     }
   }
 
+  componentDidMount() {
+
+  }
+
   forceSwipe(direction) {
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.position, {
@@ -68,7 +75,7 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   onSwipeComplete(direction) {
-    const profile = profiles[this.state.index];
+    const profile = this.state.profiles[this.state.index];
 
     direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
     this.position.setValue({ x: 0, y: 0 });
@@ -141,15 +148,17 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   renderCards() {
-    if (profiles.length <= this.state.index) {
+    if (this.state.profiles.length <= this.state.index) {
       return (
         <Card title="No More cards">
-          <Button title='no more cards' />
+          <Button title='no more cards' onPress={() => {
+            Helpers.requestService('app_users', 'GET').then(res => console.log(res))
+          }} />
         </Card>
       )
     }
     else {
-      return profiles.map((profile, index) => {
+      return this.state.profiles.map((profile, index) => {
 
         if (index < this.state.index) { return null }
 

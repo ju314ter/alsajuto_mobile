@@ -11,7 +11,7 @@ import RecoverAccount from './views/recoverAccountView';
 import { TransitionConfiguration } from './TransitionsApp';
 import MatcherView from './views/matching/matcherView';
 import GamesView from './views/games/gamesView';
-import Quizz from './views/games/quizz';
+import QuizzView from './views/games/quizzView';
 import SettingsView from './views/settings/settingsView';
 import MatchListView from './views/matching/matchListView';
 import NotificationsView from './views/notificationsView';
@@ -39,7 +39,7 @@ const ProfileNavigator = createStackNavigator(
 const GamesNavigator = createStackNavigator(
   {
     GameChoice: { screen: GamesView },
-    Quizz: { screen: Quizz }
+    Quizz: { screen: QuizzView }
   },
   {
     initialRouteName: 'GameChoice',
@@ -76,7 +76,7 @@ const AppNavigator = createStackNavigator(
     LogIn: { screen: DrawerNavigator }
   },
   {
-    initialRouteName: 'LogIn',
+    initialRouteName: 'SignIn',
     transitionConfig: TransitionConfiguration,
   }
 )

@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import QuizzDisplayer from '../../components/quizzDisplayer'
 
-export default function Qcm(props) {
+export default function QuizzView(props) {
     const [isLoading, setLoading] = useState(false);
 
     return (
