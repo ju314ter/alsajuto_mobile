@@ -5,6 +5,7 @@ import { SignInContainer } from './Routes';
 import { AppLoading } from 'expo';
 import { Profile } from './Models';
 
+// Remove this export
 export const profiles: Profile[] = [
   {
     id: "1",
