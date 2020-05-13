@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useReducer } from 'react';
-import { StyleSheet, Text, Image, View, ScrollView, ActivityIndicator } from 'react-native';
-import { Button } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState, useEffect, useReducer } from 'react'
+import { StyleSheet, Text, Image, View, ScrollView, ActivityIndicator } from 'react-native'
+import { Button } from 'react-native-elements'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { LinearGradient } from 'expo-linear-gradient'
 
-import { profiles } from '../../App'
-
-
-export default function SettingsView(props) {
-    const [isLoading, setLoading] = useState(false);
-    const [name, setUserName] = useState(profiles[1].name);
-    const [age, setUserAge] = useState(profiles[1].age);
+export default function SettingsView (props) {
+    const [isLoading, setLoading] = useState(false)
+    const [name, setUserName] = useState(profiles[1].name)
+    const [age, setUserAge] = useState(profiles[1].age)
 
     const submit = (form) => {
         console.log(form)
@@ -96,7 +93,7 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         padding: 5,
         width: 80,
-        height: 80,
+        height: 80
     },
     buttonOverlay: {
         backgroundColor: '#e3e3e3',
