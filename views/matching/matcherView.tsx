@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
-import { Button, Card } from 'react-native-elements';
+import { Button, Card, Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import CardMatch from '../../components/Card';
 import * as Helpers from '../../helpers';
@@ -57,12 +57,14 @@ export default class MatcherView extends Component<Props, State> {
     });
   }
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerStyle: { display: 'none' },
-      title: 'Matcher'
-    }
-  }
+  static navigationOptions = {
+    drawerLabel: <Icon
+      name='connectdevelop'
+      iconStyle={{ fontSize: 40, margin: 10 }}
+      size={40}
+      type='font-awesome'
+      color='red' />,
+  };
 
   componentDidMount() {
     this.setState({ isLoading: true })

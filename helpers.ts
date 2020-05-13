@@ -31,7 +31,7 @@ export const getDataLocally = async (storage_key: string) => {
 /** 
  * Used to call the api
  */
-export const requestService = async (endpoint: string, method: string, body = {}, token?: string) => {
+export const requestService = async (endpoint: string, method: string, params?: string, body = {}, token?: string) => {
   token = await getDataLocally('token');
   console.log(endpoint, method, token)
   let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
@@ -54,7 +54,7 @@ export const requestService = async (endpoint: string, method: string, body = {}
       })
     }
     return new Promise((resolve, reject) => {
-      fetch(BaseUrl + endpoint, {
+      fetch(BaseUrl + endpoint + params, {
         method: method,
         body: JSON.stringify(body),
         headers: {
