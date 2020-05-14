@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
+import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, ActivityIndicator } from 'react-native';
 import { Button, Card, Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import CardMatch from '../../components/Card';
@@ -10,11 +10,10 @@ interface Props {
 }
 
 interface State {
-  passedProfile: number
-  likedProfile: number
   index: number
   potentialMatchs: Array<any>
   isLoading: boolean
+  userId: string
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -31,11 +30,10 @@ export default class MatcherView extends Component<Props, State> {
     super(props);
 
     this.state = {
-      passedProfile: 0,
-      likedProfile: 0,
       index: 0,
       potentialMatchs: [],
-      isLoading: false
+      isLoading: true,
+      userId: '0'
     }
 
     this.position = new Animated.ValueXY();
@@ -59,8 +57,8 @@ export default class MatcherView extends Component<Props, State> {
 
   componentDidMount() {
     this.setState({ isLoading: true })
+    Helpers.getDataLocally('userId').then((id) => { this.setState({ userId: id }) })
     Helpers.requestService('matchings', 'GET').then((res: Array<any>) => {
-      console.log(res)
       this.setState({ potentialMatchs: res })
       this.setState({ isLoading: false })
     })
@@ -92,20 +90,21 @@ export default class MatcherView extends Component<Props, State> {
     this.setState({ index: this.state.index + 1 });
   }
 
-
   // TODO : send patch to back
   handleLikedProfile = (match) => {
-    this.setState(({ likedProfile }) => ({
-      likedProfile: likedProfile + 1
-    }));
-    //Patch relation to match
-    Helpers.requestService('matchings/' + match.id, 'PATCH', '', {})
+    let body = {
+      id: this.state.userId,
+      response: true
+    }
+    Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
   };
 
-  handlePassedProfile = (promatchfile) => {
-    this.setState(({ passedProfile }) => ({
-      passedProfile: passedProfile + 1
-    }));
+  handlePassedProfile = (match) => {
+    let body = {
+      id: this.state.userId,
+      response: false
+    }
+    Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
   };
 
   resetPosition() {
@@ -149,45 +148,46 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   renderCards() {
-    if (this.state.potentialMatchs.length <= this.state.index && this.state.isLoading === false) {
-      return (
-        <Card title="No More cards">
-          <Button title='no more cards' onPress={() => {
-            console.log(this.state.potentialMatchs)
-          }} />
-        </Card>
-      )
-    }
-    else {
-      return this.state.potentialMatchs.map((match, index) => {
+    if (this.state.potentialMatchs) {
+      if (this.state.potentialMatchs.length <= this.state.index && this.state.isLoading === false) {
+        return (
+          <Card title="No More cards">
+            <Button title='no more cards' onPress={() => {
+              console.log(this.state.potentialMatchs)
+            }} />
+          </Card>
+        )
+      }
+      else {
+        return this.state.potentialMatchs.map((match, index) => {
 
-        if (index < this.state.index) { return null }
+          if (index < this.state.index) { return null }
 
-        if (index == this.state.index) {
-          return (
-            <Animated.View style={[this.getCardStyle(), { position: 'absolute', width: '100%' }]} key={match.id}
-              {...this._panResponder.panHandlers}>
-              <View style={{ position: 'relative' }}>
-                <Animated.View style={[this.getNopeOpacityStyle(), styles.nope]}>
-                  <Text style={styles.nopeLabel}>NOPE</Text>
-                </Animated.View>
-                <Animated.View style={[this.getLikeOpacityStyle(), styles.like]}>
-                  <Text style={styles.likeLabel}>LIKE</Text>
-                </Animated.View>
+          if (index == this.state.index) {
+            return (
+              <Animated.View style={[this.getCardStyle(), { position: 'absolute', width: '100%' }]} key={match.id}
+                {...this._panResponder.panHandlers}>
+                <View style={{ position: 'relative' }}>
+                  <Animated.View style={[this.getNopeOpacityStyle(), styles.nope]}>
+                    <Text style={styles.nopeLabel}>NOPE</Text>
+                  </Animated.View>
+                  <Animated.View style={[this.getLikeOpacityStyle(), styles.like]}>
+                    <Text style={styles.likeLabel}>LIKE</Text>
+                  </Animated.View>
+                  <CardMatch {...{ match }} />
+                </View>
+              </Animated.View>
+            )
+          }
+          else {
+            return (
+              <Animated.View style={[{ top: 5 * (index - this.state.index), left: 2 * (index - this.state.index) }, { position: 'absolute', width: '100%' }]} key={profile.id}>
                 <CardMatch {...{ match }} />
-              </View>
-            </Animated.View>
-          )
-        }
-        else {
-          return (
-            <Animated.View style={[{ top: 5 * (index - this.state.index), left: 2 * (index - this.state.index) }, { position: 'absolute', width: '100%' }]} key={profile.id}>
-              <CardMatch {...{ match }} />
-            </Animated.View>
-          )
-        }
-
-      }).reverse();
+              </Animated.View>
+            )
+          }
+        }).reverse();
+      }
     }
   }
 
@@ -203,9 +203,9 @@ export default class MatcherView extends Component<Props, State> {
             <Text style={{ color: 'blue' }}>Like: {this.state.likedProfile}</Text>
           </View>
           <View style={{ width: '80%' }}>
-            {
+            {this.state.isLoading ? (<ActivityIndicator />) : (
               this.renderCards()
-            }
+            )}
           </View>
         </LinearGradient>
       </View>

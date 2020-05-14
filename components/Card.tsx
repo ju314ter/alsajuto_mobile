@@ -15,13 +15,11 @@ export default function CardMatch(props: CardProps) {
   const [firstName, setRelationFirstName] = useState('');
   const [gender, setRelationGender] = useState('');
   const [height, setRelationHeight] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true)
-    console.log(props)
     Helpers.requestService('app_users/' + props.match.userTwo, 'GET').then((res: any) => {
-      console.log(res);
       setRelationFirstName(res.firstName)
       setRelationGender(res.gender)
       setRelationHeight(res.height)

@@ -36,12 +36,25 @@ export default class SignIn extends Component<Props> {
             if (res.token) {
                 alert('Sucess ! You\'re logged in !');
                 // token saved in locally
-                Helpers.storeDataLocally('token', res.token).catch((err) => console.log(err));
-                Helpers.requestService('app_users/myUserProfile', 'GET').then((user: any) => {
-                    Helpers.storeDataLocally('userID', user.id).catch((err) => console.log(err)); //Store userID
-                })
-                // redirect to ->
-                this.props.navigation.navigate('LogIn');
+                Helpers
+                    .storeDataLocally('token', res.token)
+                    .then(() => {
+                        Helpers
+                            .requestService('app_users/myProfile', 'GET')
+                            .then((user: any) => {
+                                if (user) {
+                                    console.log(user)
+                                    Helpers.storeDataLocally('userId', user.id.toString()).catch((err) => console.log(err)); //Store userID
+                                    console.log('stored :', user.id.toString())
+                                } else {
+                                    console.log('trouble fetching user profile at SignInView.tsx')
+                                }
+                            })
+                            .catch(err => console.log(err))
+                        // redirect to ->
+                        this.props.navigation.navigate('LogIn');
+                    })
+                    .catch((err) => console.log(err));
             }
             else {
                 alert('Something went wrong...')
@@ -51,8 +64,20 @@ export default class SignIn extends Component<Props> {
 
     componentDidMount() {
         Helpers.getDataLocally('token').then((res) => {
-            console.log('local store : ', res);
+            console.log('stored JWT : ', res);
             if (res) {
+                Helpers
+                    .requestService('app_users/myProfile', 'GET')
+                    .then((user: any) => {
+                        if (user) {
+                            Helpers.storeDataLocally('userId', user.id.toString()).catch((err) => console.log(err)); //Store userID
+                            console.log('stored userId :', user.id.toString())
+                        } else {
+                            console.log('trouble fetching user profile at SignInView.tsx')
+                        }
+                    })
+                    .catch(err => console.log(err))
+                // redirect to ->
                 this.props.navigation.navigate('LogIn');
             }
         }).catch(err => {
