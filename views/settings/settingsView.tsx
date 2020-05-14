@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useReducer } from 'react'
-import { StyleSheet, Text, Image, View, ScrollView, ActivityIndicator } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
+import { Button } from 'react-native-elements'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as Helpers from '../../helpers'
 
-export default function SettingsView(props) {
+export default function SettingsView (props) {
   const [isLoading, setLoading] = useState(false)
-  const [name, setUserName] = useState('julien')
+  const [name, setUserName] = useState('Julien')
   const [age, setUserAge] = useState(27)
 
   useEffect(() => {
@@ -16,23 +16,13 @@ export default function SettingsView(props) {
      */
 
     Helpers.requestService('app_users/3', 'GET').then((res) => {
-      setUserName(res.firstName)
+      setUserName(res.firstName ?? 'N/A')
     })
   }, [])
 
-  const navigationOptions = {
-    drawerLabel: <Icon
-      name='user-cog'
-      iconStyle={{ fontSize: 40, margin: 10 }}
-      size={40}
-      type='font-awesome'
-      color='red'
-    />
-  }
-
-  const submit = (form) => {
-    console.log(form)
-  }
+  // const submit = (form) => {
+  //   console.log(form)
+  // }
 
   return (
     <View style={styles.container}>
@@ -58,7 +48,7 @@ export default function SettingsView(props) {
                 <Button
                   title='Paramètres' containerStyle={{ padding: 3 }} titleStyle={{ color: 'crimson' }}
                   buttonStyle={{ backgroundColor: 'white' }}
-                  onPress={() => props.navigation.navigate('Params')}
+                  onPress={() => props.navigation.navigate('Profile')}
                 />
               </View>
 
@@ -66,15 +56,7 @@ export default function SettingsView(props) {
                 <Button
                   title='Préférences' containerStyle={{ padding: 3 }} titleStyle={{ color: 'crimson' }}
                   buttonStyle={{ backgroundColor: 'white' }}
-                  onPress={() => props.navigation.navigate('Prefs')}
-                />
-              </View>
-
-              <View style={styles.button}>
-                <Button
-                  title='Paramètres 2' containerStyle={{ padding: 3 }} titleStyle={{ color: 'crimson' }}
-                  buttonStyle={{ backgroundColor: 'white' }}
-                  onPress={() => props.navigation.navigate('DisplayedParams')}
+                  onPress={() => props.navigation.navigate('Preference')}
                 />
               </View>
             </View>
@@ -137,6 +119,6 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: '5%',
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    padding: '8%'
   }
 })
