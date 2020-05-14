@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import { createAppContainer, withNavigation } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -12,20 +12,18 @@ import { TransitionConfiguration } from './TransitionsApp'
 import MatcherView from './views/matching/matcherView'
 import GamesView from './views/games/gamesView'
 import QuizzView from './views/games/quizzView'
-import SettingsView from './views/settings/settingsView'
 import MatchListView from './views/matching/matchListView'
 import NotificationsView from './views/notificationsView'
-import prefsView from './views/settings/prefView'
-import paramsView from './views/settings/paramsView'
-import displayedParamsView from './views/settings/displayedView'
+import SettingsView from './views/settings/SettingsView'
+import Preference from './views/settings/PreferenceView'
+import ProfileView from './views/settings/ProfileView'
 
 const ProfileNavigator = createStackNavigator({
-  Profile: { screen: SettingsView },
-  DisplayedParams: { screen: displayedParamsView },
-  Params: { screen: paramsView },
-  Prefs: { screen: prefsView }
+  Settings: { screen: SettingsView },
+  Profile: { screen: ProfileView },
+  Preference: { screen: Preference }
 }, {
-  initialRouteName: 'Profile',
+  initialRouteName: 'Settings',
   transitionConfig: TransitionConfiguration,
   defaultNavigationOptions: {
     headerShown: false
