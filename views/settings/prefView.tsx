@@ -1,83 +1,72 @@
-import React, { useState, useEffect, useReducer } from 'react';
-import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator } from 'react-native';
-import { Button, Input, Slider } from 'react-native-elements';
-import RangeSlider from 'rn-range-slider';
+import React, { useState } from 'react'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Button, Input, Slider } from 'react-native-elements'
+
 import { SegmentedControls } from 'react-native-radio-buttons'
 
 const prefsView = (props) => {
-    const [prefSex, setPrefSex] = useState("Femme");
-    const [prefGender, setPrefGender] = useState("Hetero");
-    const [prefAgeMin, setPrefAgeMin] = useState(25);
-    const [prefAgeMax, setPrefAgeMax] = useState(35);
-    const [positionRange, setPositionRange] = useState(35);
+  const [prefSex, setPrefSex] = useState('Femme')
+  const [prefGender, setPrefGender] = useState('Hetero')
+  const [prefAgeMin, setPrefAgeMin] = useState(25)
+  const [prefAgeMax, setPrefAgeMax] = useState(35)
+  const [positionRange, setPositionRange] = useState(35)
 
-    const optionsSexuality = [
-        "Hetero",
-        "Homo",
-        "Genderfluid",
-    ];
+  const optionsSexuality = [
+    'Hetero',
+    'Homo',
+    'Genderfluid'
+  ]
 
-    function setSelectedOptionPrefSexuality(selectedOption) {
-        setPrefSex(selectedOption);
-    }
+  function setSelectedOptionPrefSexuality (selectedOption) {
+    setPrefSex(selectedOption)
+  }
 
-    const submit = (form) => {
-        console.log(form)
-    }
+  const submit = (form) => {
+    console.log(form)
+  }
 
-    return (
-        <React.Fragment>
-            <Text style={styles.sectionTitle}>Preferences settings</Text>
+  return (
+    <>
+      <View style={styles.MainView}>
+        <Text style={styles.sectionTitle}>Preferences settings</Text>
+        <Text style={styles.label}>Sexuality : H/H/GF</Text>
+        <SegmentedControls
+          options={optionsSexuality} selectedOption={prefSex}
+          onSelection={(selectedOptions) => { setSelectedOptionPrefSexuality(selectedOptions) }}
+        />
+        {/* On a pas prévu de faire comme tinder avec la prise en compte de la distance ? */}
+        {/* <Text style={styles.label}>Position range</Text>
+        <Slider value={positionRange} onValueChange={value => setPositionRange(value)} /> */}
 
-            <Text style={styles.label}>Sexuality : H/H/GF</Text>
-            <SegmentedControls
-                options={optionsSexuality}
-                onSelection={(selectedOptions) => { setSelectedOptionPrefSexuality(selectedOptions) }}
-                selectedOption={prefSex}
-            />
-
-            {/* <Text style={styles.label}>Age range</Text>
-                        <RangeSlider
-                            style={{ width: 160, height: 80 }}
-                            gravity={'center'}
-                            min={18}
-                            max={98}
-                            step={1}
-                            selectionColor="#3df"
-                            blankColor="#f618"
-                            onValueChanged={(low, high, fromUser) => {
-                                this.setPrefAgeMin(low)
-                                this.setPrefAgeMax(high)
-                            }} /> */}
-
-            <Text style={styles.label}>Position range</Text>
-            <Slider
-                value={positionRange}
-                onValueChange={value => setPositionRange(value)}
-            />
-
-            <Button title="Modifier" containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
-                buttonStyle={{ backgroundColor: '#8D011D' }} onPress={() => { submit('preferencesSettings') }} />
-        </React.Fragment>
-    )
+        <Button
+          title='Modififer' containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
+          buttonStyle={{ backgroundColor: '#8D011D' }} onPress={() => { submit('preferencesSettings') }}
+        />
+      </View>
+    </>
+  )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        padding: 5,
-        height: '100%',
-        width: '100%',
-    },
-    label: {
-        color: 'lightgrey',
-        fontSize: 16
-    },
-    sectionTitle: {
-        margin: 10,
-        color: 'blue',
-        fontSize: 18
-    }
+  MainView: {
+    width: '90%',
+    height: '70%',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+    marginTop: '10%',
+    padding: '10%',
+    borderWidth: 5
+  },
+  label: {
+    color: 'black',
+    fontSize: 16
+  },
+  sectionTitle: {
+    margin: '8%',
+    color: 'black',
+    fontSize: 18,
+    textAlign: 'center'
+  }
 })
 
-export default prefsView;
+export default prefsView
