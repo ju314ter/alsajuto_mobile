@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import SignUp from './views/signUpView';
 import SignIn from './views/signInView';
+import Logout from './logout';
 import RecoverAccount from './views/recoverAccountView';
 import { Icon } from 'react-native-elements';
 import { Dimensions } from 'react-native';
@@ -110,7 +111,21 @@ const DrawerNavigator = createDrawerNavigator(
               color='red' />
           </View>),
       }
-    }
+    },
+    Logout: {
+      screen: Logout,
+      navigationOptions: {
+        drawerLabel: (
+          <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+            <Icon
+              name='logout-variant'
+              iconStyle={{ fontSize: 40, margin: 10 }}
+              size={40}
+              type='material-community'
+              color='red' />
+          </View>),
+      }
+    },
   },
   {
     initialRouteName: 'Matchlist',

@@ -28,6 +28,18 @@ export const getDataLocally = async (storage_key: string) => {
   return value;
 }
 
+/**
+ * used to clear local data
+ */
+export const clearLocalData = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (e) {
+    throw new Error(e);
+  }
+  return { message: 'store cleared' };
+}
+
 /** 
  * Used to call the api
  */
@@ -78,8 +90,6 @@ export const requestService = async (endpoint: string, method: string, params?: 
           'Content-Type': 'application/json',
         },
       }).then((response) => {
-        console.log('-----------response-------------')
-        console.log(response)
         return response.json();
       }).then((responseJson) => {
         resolve(responseJson)
