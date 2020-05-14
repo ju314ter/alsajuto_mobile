@@ -121,10 +121,10 @@ const DrawerNavigator = createDrawerNavigator({
           containerStyle={{ marginLeft: 10 }}
           size={20}
           type='font-awesome'
-          color='#f50'
+          color='red'
           onPress={() => { navigation.toggleDrawer() }}
         />
-        <Text style={{ fontSize: 35, color: 'white', marginRight: 10 }}>Love On</Text>
+        <Text style={styles.HeaderLoveOn}>Love On</Text>
       </View>
     ))
   }
@@ -148,10 +148,15 @@ const styles = StyleSheet.create({
   MatchListStyle: {
     width: Dimensions.get('screen').width,
     height: '100%',
-    backgroundColor: 'red',
+    backgroundColor: 'crimson',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  HeaderLoveOn: {
+    fontSize: 35,
+    color: 'white',
+    marginRight: '3%'
   }
 })
 

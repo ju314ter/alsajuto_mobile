@@ -38,7 +38,7 @@ export default class SignIn extends Component<Props> {
                 // token saved in locally
                 Helpers.storeDataLocally('token', res.token).catch((err) => console.log(err));
                 // redirect to ->
-                this.props.navigation.navigate('LogIn');
+                this.props.navigation.navigate('Profile');
             }
             else {
                 alert('Something went wrong...')
