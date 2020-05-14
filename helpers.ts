@@ -33,7 +33,7 @@ export const getDataLocally = async (storage_key: string) => {
  */
 export const requestService = async (endpoint: string, method: string, params?: string, body = {}, token?: string) => {
   token = await getDataLocally('token');
-  console.log(endpoint, method, token)
+  console.log(endpoint, method)
   let BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
   if (token) {
     if (method === 'GET') {
