@@ -76,6 +76,7 @@ export default class Match extends Component<Props, State> {
             <View style={styles.container}>
                 <View style={styles.leftContainer}>
                     <Icon
+                        raised
                         iconStyle={{ fontSize: 40 }}
                         containerStyle={{ margin: 15 }}
                         name='trash'
@@ -83,6 +84,7 @@ export default class Match extends Component<Props, State> {
                         type='font-awesome'
                         onPress={() => { console.log('match deleted') }} />
                     <Icon
+                        raised
                         iconStyle={{ fontSize: 40 }}
                         containerStyle={{ margin: 15 }}
                         name='exclamation-triangle'

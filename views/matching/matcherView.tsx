@@ -181,7 +181,7 @@ export default class MatcherView extends Component<Props, State> {
           }
           else {
             return (
-              <Animated.View style={[{ top: 5 * (index - this.state.index), left: 2 * (index - this.state.index) }, { position: 'absolute', width: '100%' }]} key={profile.id}>
+              <Animated.View style={[{ top: 5 * (index - this.state.index), left: 2 * (index - this.state.index) }, { position: 'absolute', width: '100%' }]} key={match.id}>
                 <CardMatch {...{ match }} />
               </Animated.View>
             )
@@ -199,8 +199,6 @@ export default class MatcherView extends Component<Props, State> {
 
           <View style={styles.statusStyle}>
             <Text style={{ color: 'yellow' }}>Index: {this.state.index}</Text>
-            <Text style={{ color: 'green' }}>Passed: {this.state.passedProfile}</Text>
-            <Text style={{ color: 'blue' }}>Like: {this.state.likedProfile}</Text>
           </View>
           <View style={{ width: '80%' }}>
             {this.state.isLoading ? (<ActivityIndicator />) : (
