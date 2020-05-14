@@ -1,35 +1,51 @@
 // @flow
-import * as React from "react";
+import React, { useState, useEffect, useReducer } from 'react';
 import {
-  Image, StyleSheet, View, Text, Animated
+  Image, StyleSheet, View, Text, ActivityIndicator
 } from "react-native";
+import * as Helpers from '../helpers'
 
 import { Profile } from "../Models";
 
-const { Value } = Animated;
-
 interface CardProps {
-  profile: any;
-  position?: Animated.ValueXY;
+  match: any;
 }
 
-export default (props: CardProps) => {
-  const { profile, likeOpacity, nopeOpacity } = {
-    likeOpacity: 0,
-    nopeOpacity: 0,
-    ...props,
-  };
-  return (
-    <View style={{ height: 450 }}>
-      <Image style={styles.image} source={profile.profile} />
-      <View style={styles.overlay}>
-        <View style={styles.footer}>
-          <Text style={styles.name}>{profile.firstName}</Text>
-          <Text style={styles.gender}>{profile.gender}</Text>
+export default function CardMatch(props: CardProps) {
+  const [firstName, setRelationFirstName] = useState('');
+  const [gender, setRelationGender] = useState('');
+  const [height, setRelationHeight] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true)
+    console.log(props)
+    Helpers.requestService('app_users/' + props.match.userTwo, 'GET').then((res: any) => {
+      console.log(res);
+      setRelationFirstName(res.firstName)
+      setRelationGender(res.gender)
+      setRelationHeight(res.height)
+      setIsLoading(false)
+    })
+  }, [])
+
+  if (isLoading) {
+    return <ActivityIndicator />
+  } else {
+    return (
+      <View style={{ height: 450 }}>
+        <Image style={styles.image} source={{ uri: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' }} />
+        <View style={styles.overlay}>
+          <View style={styles.footer}>
+            <Text style={styles.name}>{firstName}</Text>
+            <Text style={styles.gender}>{gender}</Text>
+            <Text style={styles.height}>{height}</Text>
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  }
+
 };
 
 const styles = StyleSheet.create({
@@ -59,26 +75,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 28,
   },
-  like: {
-    borderWidth: 4,
-    borderRadius: 5,
-    padding: 8,
-    borderColor: "#6ee3b4",
-  },
-  likeLabel: {
-    fontSize: 32,
-    color: "#6ee3b4",
-    fontWeight: "bold",
-  },
-  nope: {
-    borderWidth: 4,
-    borderRadius: 5,
-    padding: 8,
-    borderColor: "#ec5288",
-  },
-  nopeLabel: {
-    fontSize: 32,
-    color: "#ec5288",
-    fontWeight: "bold",
-  },
+  height: {
+    color: "white",
+    fontSize: 24,
+  }
 });

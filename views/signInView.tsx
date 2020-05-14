@@ -31,12 +31,15 @@ export default class SignIn extends Component<Props> {
         };
 
         // Call API
-        Helpers.requestService('login', 'POST', payload).then((res: any) => {
+        Helpers.requestService('login', 'POST', '', payload).then((res: any) => {
             // if token retrieve
             if (res.token) {
                 alert('Sucess ! You\'re logged in !');
                 // token saved in locally
                 Helpers.storeDataLocally('token', res.token).catch((err) => console.log(err));
+                Helpers.requestService('app_users/myUserProfile', 'GET').then((user: any) => {
+                    Helpers.storeDataLocally('userID', user.id).catch((err) => console.log(err)); //Store userID
+                })
                 // redirect to ->
                 this.props.navigation.navigate('LogIn');
             }

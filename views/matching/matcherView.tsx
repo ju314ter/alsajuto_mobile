@@ -13,7 +13,7 @@ interface State {
   passedProfile: number
   likedProfile: number
   index: number
-  profiles: Array<any>
+  potentialMatchs: Array<any>
   isLoading: boolean
 }
 
@@ -34,7 +34,7 @@ export default class MatcherView extends Component<Props, State> {
       passedProfile: 0,
       likedProfile: 0,
       index: 0,
-      profiles: [],
+      potentialMatchs: [],
       isLoading: false
     }
 
@@ -57,19 +57,11 @@ export default class MatcherView extends Component<Props, State> {
     });
   }
 
-  static navigationOptions = {
-    drawerLabel: <Icon
-      name='connectdevelop'
-      iconStyle={{ fontSize: 40, margin: 10 }}
-      size={40}
-      type='font-awesome'
-      color='red' />,
-  };
-
   componentDidMount() {
     this.setState({ isLoading: true })
-    Helpers.requestService('app_users', 'GET').then((res: Array<any>) => {
-      this.setState({ profiles: res })
+    Helpers.requestService('matchings', 'GET').then((res: Array<any>) => {
+      console.log(res)
+      this.setState({ potentialMatchs: res })
       this.setState({ isLoading: false })
     })
   }
@@ -83,9 +75,9 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   onSwipeComplete(direction) {
-    const profile = this.state.profiles[this.state.index];
+    const match = this.state.potentialMatchs[this.state.index];
 
-    direction === 'right' ? this.handleLikedProfile(profile) : this.handlePassedProfile(profile);
+    direction === 'right' ? this.handleLikedProfile(match) : this.handlePassedProfile(match);
     this.position.setValue({ x: 0, y: 0 });
 
     // Spring Animation on Profile Deck
@@ -102,13 +94,15 @@ export default class MatcherView extends Component<Props, State> {
 
 
   // TODO : send patch to back
-  handleLikedProfile = (profile) => {
+  handleLikedProfile = (match) => {
     this.setState(({ likedProfile }) => ({
       likedProfile: likedProfile + 1
     }));
+    //Patch relation to match
+    Helpers.requestService('matchings/' + match.id, 'PATCH', '', {})
   };
 
-  handlePassedProfile = (profile) => {
+  handlePassedProfile = (promatchfile) => {
     this.setState(({ passedProfile }) => ({
       passedProfile: passedProfile + 1
     }));
@@ -155,23 +149,23 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   renderCards() {
-    if (this.state.profiles.length <= this.state.index && this.state.isLoading === false) {
+    if (this.state.potentialMatchs.length <= this.state.index && this.state.isLoading === false) {
       return (
         <Card title="No More cards">
           <Button title='no more cards' onPress={() => {
-            console.log(this.state.profiles)
+            console.log(this.state.potentialMatchs)
           }} />
         </Card>
       )
     }
     else {
-      return this.state.profiles.map((profile, index) => {
+      return this.state.potentialMatchs.map((match, index) => {
 
         if (index < this.state.index) { return null }
 
         if (index == this.state.index) {
           return (
-            <Animated.View style={[this.getCardStyle(), { position: 'absolute', width: '100%' }]} key={profile.id}
+            <Animated.View style={[this.getCardStyle(), { position: 'absolute', width: '100%' }]} key={match.id}
               {...this._panResponder.panHandlers}>
               <View style={{ position: 'relative' }}>
                 <Animated.View style={[this.getNopeOpacityStyle(), styles.nope]}>
@@ -180,7 +174,7 @@ export default class MatcherView extends Component<Props, State> {
                 <Animated.View style={[this.getLikeOpacityStyle(), styles.like]}>
                   <Text style={styles.likeLabel}>LIKE</Text>
                 </Animated.View>
-                <CardMatch {...{ profile }} />
+                <CardMatch {...{ match }} />
               </View>
             </Animated.View>
           )
@@ -188,7 +182,7 @@ export default class MatcherView extends Component<Props, State> {
         else {
           return (
             <Animated.View style={[{ top: 5 * (index - this.state.index), left: 2 * (index - this.state.index) }, { position: 'absolute', width: '100%' }]} key={profile.id}>
-              <CardMatch {...{ profile }} />
+              <CardMatch {...{ match }} />
             </Animated.View>
           )
         }
