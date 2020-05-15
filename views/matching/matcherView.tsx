@@ -58,7 +58,7 @@ export default class MatcherView extends Component<Props, State> {
   componentDidMount() {
     this.setState({ isLoading: true })
     Helpers.getDataLocally('userId').then((id) => { this.setState({ userId: id }) })
-    Helpers.requestService('matchings', 'GET').then((res: Array<any>) => {
+    Helpers.requestService('matchings/refresh', 'GET').then((res: Array<any>) => {
       this.setState({ potentialMatchs: res })
       this.setState({ isLoading: false })
     })
