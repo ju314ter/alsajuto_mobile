@@ -36,54 +36,52 @@ export default class SignIn extends Component<Props> {
       if (res.token) {
         alert('Sucess ! You\'re logged in !');
         // token saved in locally
-        Helpers.storeDataLocally('token', res.token).catch((err) => console.log(err));
-                    .then(() => {
-                        Helpers
-                            .requestService('app_users/myProfile', 'GET')
-                            .then((user: any) => {
-                                if (user) {
-                                    console.log(user)
-                                    Helpers.storeDataLocally('userId', user.id.toString()).catch((err) => console.log(err)); //Store userID
-                                    console.log('stored :', user.id.toString())
-                                } else {
-                                    console.log('trouble fetching user profile at SignInView.tsx')
-                                }
-                            })
-                            .catch(err => console.log(err))
-                        // redirect to ->
-                        this.props.navigation.navigate('LogIn');
-                    })
-                    .catch((err) => console.log(err));
-            }
-            else {
-                alert('Something went wrong...')
-            }
-        });
-    }
+        Helpers.storeDataLocally('token', res.token).then(() => {
+          Helpers.requestService('app_users/myProfile', 'GET').then((user: any) => {
+              if (user) {
+                //Store User infos
+                Helpers.storeDataLocally('user', user.toString()).catch((err) => console.log(err));
+                console.log('stored :', user.toString())
+              } else {
+                console.log('trouble fetching user profile at SignInView.tsx')
+                alert('Oops, Something Went wrong ...')
+              }
+            })
+            .catch(err => console.log(err))
+          // redirect to ->
+          this.props.navigation.navigate('LogIn');
+        })
+          .catch((err) => console.log(err));
+      }
+      else {
+        alert('Something went wrong...')
+      }
+    });
+  }
 
-    componentDidMount() {
-        Helpers.getDataLocally('token').then((res) => {
-            console.log('stored JWT : ', res);
-            if (res) {
-                Helpers
-                    .requestService('app_users/myProfile', 'GET')
-                    .then((user: any) => {
-                        if (user) {
-                            Helpers.storeDataLocally('userId', user.id.toString()).catch((err) => console.log(err)); //Store userID
-                            console.log('stored userId :', user.id.toString())
-                        } else {
-                            console.log('trouble fetching user profile at SignInView.tsx')
-                        }
-                    })
-                    .catch(err => console.log(err))
-                // redirect to ->
-                this.props.navigation.navigate('LogIn');
+  componentDidMount() {
+    Helpers.getDataLocally('token').then((res) => {
+      console.log('stored JWT : ', res);
+      if (res) {
+        Helpers
+          .requestService('app_users/myProfile', 'GET')
+          .then((user: any) => {
+            if (user) {
+              Helpers.storeDataLocally('userId', user.id.toString()).catch((err) => console.log(err)); //Store userID
+              console.log('stored userId :', user.id.toString())
+            } else {
+              console.log('trouble fetching user profile at SignInView.tsx')
             }
-        }).catch(err => {
-            console.log(err)
-            // Handle the error case.
-        });
-    }
+          })
+          .catch(err => console.log(err))
+        // redirect to ->
+        this.props.navigation.navigate('LogIn');
+      }
+    }).catch(err => {
+      console.log(err)
+      // Handle the error case.
+    });
+  }
 
   render() {
     const isLoading = this.state.isLoading;
