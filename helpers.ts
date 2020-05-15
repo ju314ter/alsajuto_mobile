@@ -43,7 +43,7 @@ export const clearLocalData = async () => {
   return { message: 'store cleared' };
 }
 
-/** 
+/**
  * Used to call the api
  * @param endpoint
  * @param method
@@ -51,9 +51,9 @@ export const clearLocalData = async () => {
  * @param body
  * @param token
  */
-  const BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
-  token = await getDataLocally('token')
 export const requestService = async (endpoint, method, params = null, body = {}, token = null) => {
+  token = await getDataLocally('token')
+  const BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
   if (token) {
     if (method === 'GET') {
       return new Promise((resolve, reject) => {
