@@ -51,6 +51,7 @@ export default class SignIn extends Component<Props> {
           Helpers.storeDataLocally('user', userStringify).catch((e) => console.log({ message: 'Error', detail: e }));
           console.log('stored :', userStringify)
           // redirect to ->
+          this.setState({ isLoading: false })
           this.props.navigation.navigate('LogIn');
         } else {
           console.log('trouble fetching user profile at SignInView.tsx')
@@ -87,6 +88,7 @@ export default class SignIn extends Component<Props> {
           Helpers.storeDataLocally('user', userStringify).catch((err) => console.log(err));
           console.log('stored user :', userStringify)
           // redirect to ->
+          this.setState({ isLoading: false })
           this.props.navigation.navigate('LogIn');
         } else {
           console.log('trouble fetching user profile at SignInView.tsx')
