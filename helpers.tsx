@@ -62,11 +62,11 @@ export function LoginCall (credentials) {
 
   return new Promise((resolve, reject) => {
     fetch(endpoint, { method: method, headers: headers, body: JSON.stringify(credentials) }).then((response) => {
-      console.log(JSON.stringify(response))
       if (response.status === 200) {
         return response.json()
       } else {
         console.log('stauts !== 200')
+        console.log(JSON.stringify(response))
       }
     }).catch(
       e => console.log({ message: 'Error Fetch', detail: e })
