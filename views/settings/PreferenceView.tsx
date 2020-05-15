@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button, Input } from 'react-native-elements'
 import { SegmentedControls } from 'react-native-radio-buttons'
 import { ScrollView } from 'react-native-gesture-handler'
 import * as Helpers from '../../helpers'
@@ -26,7 +26,9 @@ const PreferenceView = (props) => {
       } else {
         setSexuality('Genderfluid')
       }
-      // setUserAge(user.birthday)
+      const ageTargeted = user.ageTargeted.split('-')
+      setPrefAgeMin(ageTargeted[0])
+      setPrefAgeMax(ageTargeted[1])
     })
   })
 
@@ -42,19 +44,31 @@ const PreferenceView = (props) => {
     <>
       <View style={styles.MainView}>
         <ScrollView style={styles.scrollView}>
-          <Text style={styles.Title}>Préférence</Text>
-          <Text style={styles.label}>Sexuality :</Text>
+          <Text style={styles.Title}>Préférences</Text>
           <SegmentedControls
             options={optionsSexuality}
             onSelection={(selectedOptions) => { setSelectedOptionsSexuality(selectedOptions) }}
             selectedOption={sexuality}
           />
           {/* On a pas prévu de faire comme tinder avec la prise en compte de la distance ? */}
+          {/* Alan: Trop long à faire c'est une tanasse et on a même pas encore fini */}
           {/* <Text style={styles.label}>Position range</Text> */}
 
-          <View>
-            .
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              <Input
+                inputStyle={{ color: 'black' }} placeholder={'Age min : ' + (prefAgeMin ?? '18')} placeholderTextColor='black' keyboardType='numeric'
+                onChangeText={(value) => setPrefAgeMin(value)}
+              />
+            </View>
+            <View style={styles.inputWrap}>
+              <Input
+                inputStyle={{ color: 'black' }} placeholder={'Age Max: ' + (prefAgeMax ?? '100')} placeholderTextColor='black' keyboardType='numeric'
+                onChangeText={(value) => setPrefAgeMax(value)}
+              />
+            </View>
           </View>
+
         </ScrollView>
         <Button
           title='Modififer' containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
@@ -78,17 +92,20 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: '5%'
   },
-  rangeSlider: {
+  row: {
     flex: 1,
     flexDirection: 'row',
-    margin: '3%'
+    marginTop: '5%'
+  },
+  inputWrap: {
+    flex: 1
   },
   label: {
     color: 'black',
     margin: '5%'
   },
   Title: {
-    margin: '8%',
+    margin: '10%',
     color: 'black',
     fontSize: 18,
     textAlign: 'center'
