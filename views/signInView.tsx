@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
-import { State } from 'react-native-gesture-handler';
 import * as Helpers from '../helpers';
 
 interface Props {
@@ -24,63 +23,83 @@ export default class SignIn extends Component<Props> {
   }
 
   login = () => {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true })
     const payload = {
       email: this.state.email,
       password: this.state.password,
-    };
+    }
 
     // Call API
-    Helpers.requestService('login', 'POST', payload).then((res: any) => {
+    Helpers.LoginCall(payload).then((res: any) => {
       // if token retrieve
-      if (res.token) {
-        alert('Sucess ! You\'re logged in !');
-        // token saved in locally
-        Helpers.storeDataLocally('token', res.token).then(() => {
-          Helpers.requestService('app_users/myProfile', 'GET').then((user: any) => {
-              if (user) {
-                //Store User infos
-                Helpers.storeDataLocally('user', user.toString()).catch((err) => console.log(err));
-                console.log('stored :', user.toString())
-              } else {
-                console.log('trouble fetching user profile at SignInView.tsx')
-                alert('Oops, Something Went wrong ...')
-              }
-            })
-            .catch(err => console.log(err))
+      if (!res.token) {
+        alert('Something went wrong...')
+        this.setState({ isLoading: false })
+        return ;
+      }
+      alert('Sucess ! You\'re logged in !');
+      // token saved in locally
+      Helpers.storeDataLocally('token', res.token).then().catch((e) => {
+        console.log({ message: 'Error', detail: e })
+        this.setState({ isLoading: false })
+      })
+      Helpers.getMyProfile(res.token).then((user: any) => {
+        // We try a param of the object to be sure
+        if (user.id) {
+          //Store User infos
+          const userStringify = JSON.stringify(user)
+          Helpers.storeDataLocally('user', userStringify).catch((e) => console.log({ message: 'Error', detail: e }));
+          console.log('stored :', userStringify)
           // redirect to ->
           this.props.navigation.navigate('LogIn');
-        })
-          .catch((err) => console.log(err));
-      }
-      else {
-        alert('Something went wrong...')
-      }
-    });
+        } else {
+          console.log('trouble fetching user profile at SignInView.tsx')
+          alert('Oops, Something Went wrong ...')
+          this.setState({ isLoading: false })
+        }
+      }).catch(e => {
+        console.log({ message: 'Error', detail: e })
+        this.setState({ isLoading: false })
+      })
+    })
   }
 
+  /**
+   * If token stored
+   *    get the user
+   *    if the user is retrieve
+   *      you can go on
+   *    else
+   *      the token might be dead so we won't let you continue.
+   *      you need to login again
+   */
   componentDidMount() {
     Helpers.getDataLocally('token').then((res) => {
-      console.log('stored JWT : ', res);
-      if (res) {
-        Helpers
-          .requestService('app_users/myProfile', 'GET')
-          .then((user: any) => {
-            if (user) {
-              Helpers.storeDataLocally('userId', user.id.toString()).catch((err) => console.log(err)); //Store userID
-              console.log('stored userId :', user.id.toString())
-            } else {
-              console.log('trouble fetching user profile at SignInView.tsx')
-            }
-          })
-          .catch(err => console.log(err))
-        // redirect to ->
-        this.props.navigation.navigate('LogIn');
+      console.log('stored TOKEN : ', res);
+      if (!res) {
+        this.setState({ isLoading: false })
+        return;
       }
+      Helpers.getMyProfile(res).then((user: any) => {
+        if (user) {
+          //Store userID
+          const userStringify = JSON.stringify(user)
+          Helpers.storeDataLocally('user', userStringify).catch((err) => console.log(err));
+          console.log('stored user :', userStringify)
+          // redirect to ->
+          this.props.navigation.navigate('LogIn');
+        } else {
+          console.log('trouble fetching user profile at SignInView.tsx')
+          this.setState({ isLoading: false })
+        }
+      }).catch(err => {
+        console.log(err)
+        this.setState({ isLoading: false })
+      })
     }).catch(err => {
       console.log(err)
-      // Handle the error case.
-    });
+      this.setState({ isLoading: false })
+    })
   }
 
   render() {
@@ -97,7 +116,7 @@ export default class SignIn extends Component<Props> {
               <React.Fragment>
                 <View style={{ margin: 10 }}>
                   <Input inputStyle={{ color: 'white' }} placeholderTextColor="#FFF" placeholder='E-mail' onChangeText={(email) => this.setState({ email })} />
-                  <Input inputStyle={{ color: 'white' }} placeholderTextColor="#FFF" placeholder='Password' onChangeText={(password) => this.setState({ password })} />
+                  <Input inputStyle={{ color: 'white' }} placeholderTextColor="#FFF" placeholder='Password' onChangeText={(password) => this.setState({ password })} secureTextEntry />
                 </View>
                 <View>
                   <Button title="Login" containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
