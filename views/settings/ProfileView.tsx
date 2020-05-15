@@ -1,18 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, TextInput } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import { SegmentedControls } from 'react-native-radio-buttons'
 import { ScrollView } from 'react-native-gesture-handler'
+import * as Helpers from '../../helpers'
 
 const ProfileView = (props) => {
-  const [pseudo, setPseudo] = useState('Jupi')
-  const [gender, setGender] = useState('Homme')
-  const [email, setEmail] = useState('jupi@gmail.com')
+  const [pseudo, setPseudo] = useState(null)
+  const [gender, setGender] = useState(null)
+  const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(true)
-  const [age, setAge] = useState(27)
-  const [size, setSize] = useState('178')
-  const [description, setDescription] = useState('Lorem Ispum ... ici la description')
+  const [age, setAge] = useState(null)
+  const [size, setSize] = useState(null)
+  const [description, setDescription] = useState(null)
   const [avatarID, setavatarID] = useState(5)
+
+  const getAge = function (birthDate) {
+    return Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+  }
 
   const optionsGender = [
     'Homme',
@@ -23,6 +28,28 @@ const ProfileView = (props) => {
   function setSelectedOptionsGender (selectedOption) {
     setGender(selectedOption)
   }
+
+  useEffect(() => {
+    Helpers.getDataLocally('user').then(user => {
+      user = JSON.parse(user)
+      setPseudo(user.username)
+      switch (user.gender) {
+        case 'Male':
+          setGender('Homme')
+          break
+        case 'Female':
+          setGender('Femme')
+          break
+        default :
+          setGender('Non binaire')
+          break
+      }
+      setEmail(user.email)
+      setAge(getAge(user.birthdayDate))
+      setSize(user.heightInCentimeter)
+      setDescription(user.description)
+    })
+  })
 
   // check how to use it.
   function checkPassword (value, checkValue) {

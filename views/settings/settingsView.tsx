@@ -6,19 +6,19 @@ import * as Helpers from '../../helpers'
 
 export default function SettingsView (props) {
   const [isLoading, setLoading] = useState(false)
-  const [name, setUserName] = useState('Julien')
-  const [age, setUserAge] = useState(27)
+  const [name, setUserName] = useState(null)
+  const [age, setUserAge] = useState(null)
+  const getAge = function (birthDate) {
+    return Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+  }
 
   useEffect(() => {
-    /**
-     * Remplacer le call a l'id en dur par un id dynamique, recuperer toutes les infos et les passer aux vues appropriées
-     * Dans chaque vue passer un appel en put pour patch le user avec les nouveaux inputs
-     */
-
-    Helpers.requestService('app_users/3', 'GET').then((res) => {
-      setUserName(res.firstName ?? 'N/A')
+    Helpers.getDataLocally('user').then(user => {
+      user = JSON.parse(user)
+      setUserName(user.username)
+      setUserAge(getAge(user.birthdayDate))
     })
-  }, [])
+  })
 
   // const submit = (form) => {
   //   console.log(form)
@@ -39,7 +39,7 @@ export default function SettingsView (props) {
 
               {/* Below the image, name and age section */}
               <View>
-                <Text style={styles.sectionTitle}>{name ?? 'Name'}, {age ?? 'age'}</Text>
+                <Text style={styles.sectionTitle}>{name ?? 'Name'}, {age ? age + ' ans' : 'age'}</Text>
               </View>
             </View>
             <View style={styles.ButtonContainer}>
