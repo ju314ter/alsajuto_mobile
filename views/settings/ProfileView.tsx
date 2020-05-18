@@ -4,6 +4,7 @@ import { Button, Input } from 'react-native-elements'
 import { SegmentedControls } from 'react-native-radio-buttons'
 import { ScrollView } from 'react-native-gesture-handler'
 import * as Helpers from '../../helpers'
+import * as constant from '../../Utils/constant'
 
 const ProfileView = (props) => {
   const [pseudo, setPseudo] = useState(null)
@@ -14,6 +15,8 @@ const ProfileView = (props) => {
   const [size, setSize] = useState(null)
   const [description, setDescription] = useState(null)
   const [avatarID, setavatarID] = useState(5)
+  const [userSaved, setUserSaved] = useState(null)
+  const [tokenSaved, setTokenSaved] = useState(null)
 
   const getAge = function (birthDate) {
     return Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
@@ -32,11 +35,14 @@ const ProfileView = (props) => {
   useEffect(() => {
     Helpers.getDataLocally('user').then(user => {
       user = JSON.parse(user)
+      setUserSaved(user)
       setPseudo(user.username)
       switch (user.gender) {
+        case 'Homme':
         case 'Male':
           setGender('Homme')
           break
+        case 'Femme':
         case 'Female':
           setGender('Femme')
           break
@@ -49,7 +55,10 @@ const ProfileView = (props) => {
       setSize(user.heightInCentimeter)
       setDescription(user.description)
     })
-  })
+    Helpers.getDataLocally('token').then(token => {
+      setTokenSaved(token)
+    })
+  }, [])
 
   // check how to use it.
   function checkPassword (value, checkValue) {
@@ -71,7 +80,41 @@ const ProfileView = (props) => {
   }
 
   const submit = (form) => {
+    console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+    console.log('FORM : ')
     console.log(form)
+    console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+    Helpers.requestService(constant.USERS, constant.PATCH, userSaved.id, form, tokenSaved).then(user => {
+      console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+      console.log(1)
+      console.log(user)
+      console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+      Helpers.storeDataLocally('user', user).then(() => {
+        console.log('user updated !')
+      }).catch(e => console.log(e))
+      user = JSON.parse(user)
+      console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+      console.log(2)
+      console.log(user)
+      console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+      setUserSaved(user)
+      setPseudo(user.username)
+      switch (user.gender) {
+        case 'Male':
+          setGender('Homme')
+          break
+        case 'Female':
+          setGender('Femme')
+          break
+        default :
+          setGender('Non binaire')
+          break
+      }
+      setEmail(user.email)
+      setAge(getAge(user.birthdayDate))
+      setSize(user.heightInCentimeter)
+      setDescription(user.description)
+    }).catch(e => console.log(e))
   }
 
   return (
@@ -132,7 +175,7 @@ const ProfileView = (props) => {
 
         <Button
           title='Modifier' containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
-          buttonStyle={{ backgroundColor: '#8D011D' }} onPress={() => { submit('profileSettings') }}
+          buttonStyle={{ backgroundColor: '#8D011D' }} onPress={() => { submit({ pseudo, gender, email, password, age, size, description, avatarID }) }}
         />
       </View>
     </>

@@ -9,6 +9,7 @@ const PreferenceView = (props) => {
   const [sexuality, setSexuality] = useState(null)
   const [prefAgeMin, setPrefAgeMin] = useState(null)
   const [prefAgeMax, setPrefAgeMax] = useState(null)
+  const [likes, setLikes] = useState(null)
 
   const optionsSexuality = [
     'Heterosexual',
@@ -30,7 +31,17 @@ const PreferenceView = (props) => {
       setPrefAgeMin(ageTargeted[0])
       setPrefAgeMax(ageTargeted[1])
     })
-  })
+    Helpers.getDataLocally('token').then(token => {
+      Helpers.getLikes(token).then(likes => {
+        setLikes(likes.rows)
+        console.log(likes.rows)
+      }).catch(e => console.log(e))
+    })
+  }, [])
+
+  function handleUpdatePreference () {
+    // TODO
+  }
 
   function setSelectedOptionsSexuality (selectedOption) {
     setSexuality(selectedOption)
@@ -38,6 +49,9 @@ const PreferenceView = (props) => {
 
   const submit = (form) => {
     console.log(form)
+    // the form is the payload
+    // recréer le champ age
+    // patch les likes
   }
 
   return (
@@ -69,10 +83,28 @@ const PreferenceView = (props) => {
             </View>
           </View>
 
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              {/* {
+                likes.forEach(like => {
+                  console.log(like)
+                  console.log('-----------------------')
+                })
+              } */}
+              {/* AJOUTER ICI LA MUSIQUE */}
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              {/* AJOUTER ICI LES FILMS */}
+            </View>
+          </View>
+
         </ScrollView>
         <Button
           title='Modififer' containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
-          buttonStyle={{ backgroundColor: '#8D011D' }} onPress={() => { submit('preferencesSettings') }}
+          buttonStyle={{ backgroundColor: '#8D011D' }} onPress={() => { submit({ sexuality, prefAgeMin, prefAgeMax }) }}
         />
       </View>
     </>

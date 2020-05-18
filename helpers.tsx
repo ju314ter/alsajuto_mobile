@@ -50,7 +50,7 @@ export const clearLocalData = async () => {
  */
 export function LoginCall (credentials) {
   const endpoint = constant.LOGIN
-  const method = 'POST'
+  const method = constant.POST
   const headers = { 'Content-Type': 'application/json' }
 
   console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
@@ -66,7 +66,7 @@ export function LoginCall (credentials) {
         return response.json()
       } else {
         console.log('stauts !== 200')
-        console.log(JSON.stringify(response))
+        reject(response)
       }
     }).catch(
       e => console.log({ message: 'Error Fetch', detail: e })
@@ -85,7 +85,7 @@ export function LoginCall (credentials) {
  */
 export const getLikes = async function (token) {
   const endpoint = constant.LIKES
-  const method = 'GET'
+  const method = constant.GET
   const headers = { Authorization: 'Bearer ' + token }
 
   console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
@@ -123,13 +123,13 @@ export const getLikes = async function (token) {
  */
 export function getMyProfile (tokenParam = null) {
   const endpoint = constant.USERS + '/myProfile'
-  const method = 'GET'
+  const method = constant.GET
   if (!tokenParam) {
     this.getDataLocally('token').then(token => {
       const headers = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }
 
       console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
-      console.log('Login variables ')
+      console.log('MyProfile variables ')
       console.log('endpoint : ' + endpoint)
       console.log('method : ' + method)
       console.log('headers : ' + JSON.stringify(headers))
@@ -160,10 +160,35 @@ export function getMyProfile (tokenParam = null) {
   const headers = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }
 
   console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
-  console.log('Login variables ')
+  console.log('MyProfile variables ')
   console.log('endpoint : ' + endpoint)
   console.log('method : ' + method)
   console.log('headers : ' + JSON.stringify(headers))
+
+  return new Promise((resolve, reject) => {
+    fetch(endpoint, { method: method, headers: headers }).then((response) => {
+      if (response.status === 200) {
+        return response.json()
+      } else {
+        console.log('stauts !== 200')
+        console.log(JSON.stringify(response))
+        console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+      }
+    }).catch(
+      e => console.log({ message: 'Error Fetch', detail: e })
+    ).then(
+      resToReturn => { resolve(resToReturn) }
+    ).catch(e => {
+      console.log({ message: 'Error', detail: e })
+      reject(e)
+    })
+  })
+}
+
+export const getMyProfilePicture = async function (token) {
+  const endpoint = constant.PROFILE_PICTURE
+  const method = constant.GET
+  const headers = { Authorization: 'Bearer ' + token }
 
   return new Promise((resolve, reject) => {
     fetch(endpoint, { method: method, headers: headers }).then((response) => {
@@ -196,6 +221,8 @@ export function getMyProfile (tokenParam = null) {
 export const requestService = async (endpoint, method, params = null, body = {}, token = null) => {
   token = await getDataLocally('token')
   const BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
+  console.log(method)
+  console.log(BaseUrl + endpoint)
   if (token) {
     switch (method) {
       case 'GET':

@@ -90,6 +90,12 @@ export default class SignIn extends Component<Props> {
           // redirect to ->
           this.setState({ isLoading: false })
           this.props.navigation.navigate('LogIn');
+          Helpers.getMyProfilePicture(res).then(profilPicture => {
+            if (profilPicture) {
+              const profilPictureStringify = JSON.stringify(profilPicture)
+              Helpers.storeDataLocally('profilPicutre', profilPictureStringify).catch(e => console.log(e));
+            }
+          })
         } else {
           console.log('trouble fetching user profile at SignInView.tsx')
           this.setState({ isLoading: false })

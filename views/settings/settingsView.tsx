@@ -5,20 +5,29 @@ import { LinearGradient } from 'expo-linear-gradient'
 import * as Helpers from '../../helpers'
 
 export default function SettingsView (props) {
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(true)
   const [name, setUserName] = useState(null)
   const [age, setUserAge] = useState(null)
   const getAge = function (birthDate) {
-    return Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+    return Math.floor((new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e+10)
   }
 
   useEffect(() => {
     Helpers.getDataLocally('user').then(user => {
       user = JSON.parse(user)
-      setUserName(user.username)
+      setUserName(user.username || user.firstName)
       setUserAge(getAge(user.birthdayDate))
+      setLoading(false)
     })
   })
+
+  // function fetchProfilePicture() {
+  //   Helpers.getDataLocally('token').then(token => {
+  //     Helpers.getMyProfilePicture(token).then(profilePicture => {
+  //       return profilePicture
+  //     })
+  //   })
+  // }
 
   // const submit = (form) => {
   //   console.log(form)
@@ -34,7 +43,7 @@ export default function SettingsView (props) {
 
               {/* Image View */}
               <View style={styles.ImageContent}>
-                {/* <Image style={styles.image} source={profiles[1].profile} /> */}
+                {/* <Image style={styles.image} source={)} /> */}
               </View>
 
               {/* Below the image, name and age section */}
