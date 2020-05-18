@@ -80,6 +80,41 @@ export function LoginCall (credentials) {
 }
 
 /**
+ * Used exclusively for getting userLikes purposes.
+ * @param credentials
+ */
+export const getLikes = async function (token) {
+  const endpoint = constant.LIKES
+  const method = 'GET'
+  const headers = { Authorization: 'Bearer ' + token }
+
+  console.log('----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ')
+  console.log('Call API (likes) variables ')
+  console.log('endpoint : ' + endpoint)
+  console.log('method : ' + method)
+  console.log('headers : ' + JSON.stringify(headers))
+  console.log('token : ' + token)
+
+  return new Promise((resolve, reject) => {
+    fetch(endpoint, { method: method, headers: headers }).then((response) => {
+      if (response.status === 200) {
+        return response.json()
+      } else {
+        console.log('stauts !== 200')
+        console.log(JSON.stringify(response))
+      }
+    }).catch(
+      e => console.log({ message: 'Error Fetch', detail: e })
+    ).then(
+      resToReturn => { resolve(resToReturn) }
+    ).catch(e => {
+      console.log({ message: 'Error', detail: e })
+      reject(e)
+    })
+  })
+}
+
+/**
  * Used exclusively for retrieving the profil of the current user.
  * @param tokenParam
  * The token is nullable in the param because there's 2 possibilities :

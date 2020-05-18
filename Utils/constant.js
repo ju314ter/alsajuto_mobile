@@ -6,3 +6,4 @@ export const MATCHS = `${API_URL}/matchings`
 export const REFRESH = `${API_URL}/matchings/refresh`
 export const GAMES = `${API_URL}/games`
 export const USERS = `${API_URL}/app_users`
+export const LIKES = `${API_URL}/likes`
