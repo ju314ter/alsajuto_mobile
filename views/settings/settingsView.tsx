@@ -8,6 +8,7 @@ export default function SettingsView (props) {
   const [isLoading, setLoading] = useState(true)
   const [name, setUserName] = useState(null)
   const [age, setUserAge] = useState(null)
+  const [user, setUser] = useState(null)
   const getAge = function (birthDate) {
     return Math.floor((new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e+10)
   }
@@ -15,6 +16,7 @@ export default function SettingsView (props) {
   useEffect(() => {
     Helpers.getDataLocally('user').then(user => {
       user = JSON.parse(user)
+      setUser(user)
       setUserName(user.username || user.firstName)
       setUserAge(getAge(user.birthdayDate))
       setLoading(false)
@@ -57,7 +59,7 @@ export default function SettingsView (props) {
                 <Button
                   title='Paramètres' containerStyle={{ padding: 3 }} titleStyle={{ color: 'crimson' }}
                   buttonStyle={{ backgroundColor: 'white' }}
-                  onPress={() => props.navigation.navigate('Profile')}
+                  onPress={() => props.navigation.navigate('Profile', { user: user })}
                 />
               </View>
 

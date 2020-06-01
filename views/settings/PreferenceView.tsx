@@ -49,9 +49,27 @@ const PreferenceView = (props) => {
 
   const submit = (form) => {
     console.log(form)
-    // the form is the payload
-    // recréer le champ age
-    // patch les likes
+    // Helpers.requestService(constant.LIKES, constant.PATCH, userSaved.id, form, tokenSaved).then(user => {
+    //   Helpers.storeDataLocally('user', user).then(() => console.log('user updated !')).catch(e => console.log(e))
+    //   user = JSON.parse(user)
+    //   setUserSaved(user)
+    //   setPseudo(user.username)
+    //   switch (user.gender) {
+    //     case 'Male':
+    //       setGender('Homme')
+    //       break
+    //     case 'Female':
+    //       setGender('Femme')
+    //       break
+    //     default :
+    //       setGender('Non binaire')
+    //       break
+    //   }
+    //   setEmail(user.email)
+    //   setAge(getAge(user.birthdayDate))
+    //   setSize(user.heightInCentimeter)
+    //   setDescription(user.description)
+    // })
   }
 
   return (

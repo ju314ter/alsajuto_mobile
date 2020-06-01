@@ -222,7 +222,7 @@ export const requestService = async (endpoint, method, params = null, body = {},
   token = await getDataLocally('token')
   const BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
   console.log(method)
-  console.log(BaseUrl + endpoint)
+  console.log(BaseUrl + endpoint + params)
   if (token) {
     switch (method) {
       case 'GET':
@@ -244,13 +244,19 @@ export const requestService = async (endpoint, method, params = null, body = {},
             method: method,
             body: JSON.stringify(body),
             headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }
-          }).then(
-            (response) => { return response.json() }
+          }).then(res => res.json()
           ).catch(
             (error) => { console.log(error) }
           ).then(
-            (responseJson) => { resolve(responseJson) }
-          ).catch((error) => { reject(error) })
+            (responseJson) => {
+              console.log('Réponse : ')
+              console.log(responseJson)
+              resolve(responseJson)
+            }
+          ).catch((error) => {
+            console.log(error)
+            reject(error)
+          })
         })
     }
   } else {
