@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, ActivityIndicator } from 'react-native'
-import * as Helpers from '../../helpers'
-
 import Match from '../../components/Match'
 
 export default function MatchListView ({ navigation }) {
@@ -9,14 +7,6 @@ export default function MatchListView ({ navigation }) {
   const [matchList, setMatchList] = useState([])
 
   useEffect(() => {
-    Helpers.getDataLocally('token').then((token) => {
-      // Fetch Match list here
-      if (token) {
-        // Helpers.requestService('GET', 'matchings').then((res) => {
-        //     console.log(res)
-        // })
-      }
-    })
   }, [])
 
   if (!isLoading) {

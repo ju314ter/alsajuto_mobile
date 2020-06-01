@@ -1,5 +1,6 @@
 import { AsyncStorage } from 'react-native'
 import * as constant from './Utils/constant.js'
+import { getStorageData, setAuthorization } from './services/provider'
 
 /**
  * used to store locally some data
@@ -58,7 +59,7 @@ export function LoginCall (credentials) {
   console.log('endpoint : ' + endpoint)
   console.log('method : ' + method)
   console.log('headers : ' + JSON.stringify(headers))
-  console.log('payload : ' + credentials)
+  console.log('payload : ' + JSON.stringify(credentials))
 
   return new Promise((resolve, reject) => {
     fetch(endpoint, { method: method, headers: headers, body: JSON.stringify(credentials) }).then((response) => {
@@ -220,6 +221,8 @@ export const getMyProfilePicture = async function (token) {
  */
 export const requestService = async (endpoint, method, params = null, body = {}, token = null) => {
   token = await getDataLocally('token')
+  token = await getStorageData()
+  token = token.token
   const BaseUrl = 'https://alsatoju-dev.herokuapp.com/'
   console.log(method)
   console.log(BaseUrl + endpoint + params)
@@ -227,7 +230,7 @@ export const requestService = async (endpoint, method, params = null, body = {},
     switch (method) {
       case 'GET':
         return new Promise((resolve, reject) => {
-          fetch(BaseUrl + endpoint, {
+          fetch(BaseUrl + endpoint + params, {
             method: 'GET',
             headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }
           }).then((response) => {

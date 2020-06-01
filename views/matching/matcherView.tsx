@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, ActivityIndicator } from 'react-native';
-import { Button, Card, Icon } from 'react-native-elements';
-import { LinearGradient } from 'expo-linear-gradient';
-import CardMatch from '../../components/Card';
-import * as Helpers from '../../helpers';
+import React, { Component } from 'react'
+import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, ActivityIndicator } from 'react-native'
+import { Button, Card, Icon } from 'react-native-elements'
+import { LinearGradient } from 'expo-linear-gradient'
+import CardMatch from '../../components/Card'
+import { matchings } from '../../services/matching'
+import { getStorageData, setAuthorization } from '../../services/provider'
 
 interface Props {
   navigation: any
@@ -55,13 +56,21 @@ export default class MatcherView extends Component<Props, State> {
     });
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     this.setState({ isLoading: true })
-    Helpers.getDataLocally('userId').then((id) => { this.setState({ userId: id }) })
-    Helpers.requestService('matchings/refresh', 'GET').then((res: Array<any>) => {
-      this.setState({ potentialMatchs: res })
+    try {
+      const storedData = await getStorageData()
+      setAuthorization(storedData.token)
+      this.setState({ potentialMatchs: await matchings() })
+      this.setState({ userId: storedData.user.id })
       this.setState({ isLoading: false })
-    })
+      console.log('## STATE ##')
+      console.log(this.state)
+    } catch (e) {
+      console.log('catch ComponentDidMount MatcherView')
+      console.log(e)
+      this.setState({ isLoading: false })
+    }
   }
 
   forceSwipe(direction) {
@@ -96,7 +105,7 @@ export default class MatcherView extends Component<Props, State> {
       id: this.state.userId,
       response: true
     }
-    Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
+    // Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
   };
 
   handlePassedProfile = (match) => {
@@ -104,7 +113,7 @@ export default class MatcherView extends Component<Props, State> {
       id: this.state.userId,
       response: false
     }
-    Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
+    // Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
   };
 
   resetPosition() {

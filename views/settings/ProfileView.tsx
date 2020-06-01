@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { TextInput as PaperTextInput } from 'react-native-paper'
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { TextInput as PaperTextInput, TextInput } from 'react-native-paper'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Button, Input } from 'react-native-elements'
 import { SegmentedControls } from 'react-native-radio-buttons'
@@ -9,20 +9,13 @@ import * as Layout from '../../Utils/Layout'
 import reducer, { TEXT_CHANGE, LIST_CHANGE } from '../../components/reducer'
 import * as Helpers from '../../helpers'
 import * as constant from '../../Utils/constant'
-import { patch } from '../../services/User'
+import { patch, getMe } from '../../services/user'
 
 const ProfileView = (props) => {
-  // const [pseudo, setPseudo] = useState(null)
-  // const [gender, setGender] = useState(null)
-  // const [email, setEmail] = useState(null)
-  // const [password, setPassword] = useState(null)
-  // const [age, setAge] = useState(null)
-  // const [size, setSize] = useState(null)
-  // const [description, setDescription] = useState(null)
-  // const [avatarID, setavatarID] = useState(5)
   const [error, setError] = useState(null);
   const [userSaved, setUserSaved] = useState(props.navigation.state.params.user)
   const [tokenSaved, setTokenSaved] = useState(null)
+  const [stored, setStored] = useState(null)
   const [haveChange, setHaveChange] = useState(false);
   const [loading, setLoading] = useState(false);
   const fields = [
@@ -60,12 +53,7 @@ const ProfileView = (props) => {
   }
 
   useEffect(() => {
-    Helpers.getDataLocally('user').then(user => {
-      user = JSON.parse(user)
-    })
-    Helpers.getDataLocally('token').then(token => {
-      setTokenSaved(token)
-    })
+    
   }, [])
 
   const onSubmit = async () => {
@@ -108,8 +96,10 @@ const ProfileView = (props) => {
                   )
                 case 'textArea':
                   return (
-                    <PaperTextInput
+                    <TextInput
                       key={key}
+                      multiline
+                      numberOfLines={2}
                       mode={"outlined"}
                       label={field.label}
                       placeholder={field.placeholder ?? field.label}
@@ -129,7 +119,7 @@ const ProfileView = (props) => {
                       placeholder={field.placeholder ?? field.label}
                       secureTextEntry={field.secure}
                       value={field.value}
-                      onChangeText={(text) => changeNumber(field.name, text)}
+                      onChangeText={(number) => changeNumber(field.name, number)}
                       // required={field.required}
                       style={{ backgroundColor: "#fff", marginTop: 10 }}
                     />

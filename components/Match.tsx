@@ -107,10 +107,7 @@ export default class Match extends Component<Props, State> {
                             <Avatar
                                 rounded
                                 size='medium'
-                                source={{
-                                    uri:
-                                        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                                }}
+                                source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg' }}
                             />
                             <Text style={{ fontSize: 15, fontWeight: '500', color: 'black' }}>{name}</Text>
                             <Icon

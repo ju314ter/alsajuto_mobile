@@ -2,38 +2,37 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import { Button } from 'react-native-elements'
 import { LinearGradient } from 'expo-linear-gradient'
-import * as Helpers from '../../helpers'
+import { getStorageData, setAuthorization } from '../../services/provider'
 
-export default function SettingsView (props) {
-  const [isLoading, setLoading] = useState(true)
+export default function SettingsView(props) {
+  const [isLoading, setIsLoading] = useState(true)
   const [name, setUserName] = useState(null)
   const [age, setUserAge] = useState(null)
+  const [data, setData] = useState(null)
   const [user, setUser] = useState(null)
+
   const getAge = function (birthDate) {
     return Math.floor((new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e+10)
   }
 
   useEffect(() => {
-    Helpers.getDataLocally('user').then(user => {
-      user = JSON.parse(user)
-      setUser(user)
-      setUserName(user.username || user.firstName)
-      setUserAge(getAge(user.birthdayDate))
-      setLoading(false)
-    })
-  })
+    (async function() {
+      try {
+        const storageData = await getStorageData()
+        console.log(storageData)
+        setData(storageData)
+        setUser(storageData.user)
+        setUserAge(getAge(storageData.user.birthdayDate))
+        setUserName(storageData.user.username ?? storageData.user.firstName)
+        setIsLoading(false)
+      } catch (e) {
+        console.log('cactch SettingsView :')
+        console.log(e)
+      }
 
-  // function fetchProfilePicture() {
-  //   Helpers.getDataLocally('token').then(token => {
-  //     Helpers.getMyProfilePicture(token).then(profilePicture => {
-  //       return profilePicture
-  //     })
-  //   })
-  // }
-
-  // const submit = (form) => {
-  //   console.log(form)
-  // }
+      setIsLoading(false)
+    })()
+  }, [])
 
   return (
     <View style={styles.container}>

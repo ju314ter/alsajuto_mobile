@@ -18,25 +18,25 @@ const PreferenceView = (props) => {
   ]
 
   useEffect(() => {
-    Helpers.getDataLocally('user').then(user => {
-      user = JSON.parse(user)
-      if (user.gender === user.sexualityPref && (user.gender === 'Male' || user.gender === 'Female')) {
-        setSexuality('Homosexual')
-      } else if (user.gender !== user.sexualityPref && (user.gender === 'Male' || user.gender === 'Female')) {
-        setSexuality('Heterosexual')
-      } else {
-        setSexuality('Genderfluid')
-      }
-      const ageTargeted = user.ageTargeted.split('-')
-      setPrefAgeMin(ageTargeted[0])
-      setPrefAgeMax(ageTargeted[1])
-    })
-    Helpers.getDataLocally('token').then(token => {
-      Helpers.getLikes(token).then(likes => {
-        setLikes(likes.rows)
-        console.log(likes.rows)
-      }).catch(e => console.log(e))
-    })
+    // Helpers.getDataLocally('user').then(user => {
+    //   user = JSON.parse(user)
+    //   if (user.gender === user.sexualityPref && (user.gender === 'Male' || user.gender === 'Female')) {
+    //     setSexuality('Homosexual')
+    //   } else if (user.gender !== user.sexualityPref && (user.gender === 'Male' || user.gender === 'Female')) {
+    //     setSexuality('Heterosexual')
+    //   } else {
+    //     setSexuality('Genderfluid')
+    //   }
+    //   const ageTargeted = user.ageTargeted.split('-')
+    //   setPrefAgeMin(ageTargeted[0])
+    //   setPrefAgeMax(ageTargeted[1])
+    // })
+    // Helpers.getDataLocally('token').then(token => {
+    //   Helpers.getLikes(token).then(likes => {
+    //     setLikes(likes.rows)
+    //     console.log(likes.rows)
+    //   }).catch(e => console.log(e))
+    // })
   }, [])
 
   function handleUpdatePreference () {

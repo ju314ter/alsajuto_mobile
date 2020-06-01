@@ -19,10 +19,11 @@ export default function CardMatch(props: CardProps) {
 
   useEffect(() => {
     setIsLoading(true)
-    Helpers.requestService('app_users/' + props.match.userTwo, 'GET').then((res: any) => {
+    console.log(props.match.userTwo)
+    Helpers.requestService('app_users/', 'GET', props.match.userTwo).then((res: any) => {
       setRelationFirstName(res.firstName)
       setRelationGender(res.gender)
-      setRelationHeight(res.height)
+      setRelationHeight(res.heightheightInCentimeter ?? 'Taille')
       setIsLoading(false)
     })
   }, [])
@@ -63,18 +64,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   footer: {
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: "row"
   },
   name: {
     color: "white",
-    fontSize: 32,
+    fontSize: 25,
+    flex: 1
   },
   gender: {
     color: "white",
-    fontSize: 28,
+    fontSize: 15,
+    flex: 1
   },
   height: {
     color: "white",
-    fontSize: 24,
+    fontSize: 15,
+    flex: 1
   }
 });
