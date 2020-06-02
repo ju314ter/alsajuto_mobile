@@ -243,6 +243,7 @@ export const requestService = async (endpoint, method, params = null, body = {},
         })
       case 'POST' || 'PATCH':
         return new Promise((resolve, reject) => {
+          console.log('patch in progress')
           fetch(BaseUrl + endpoint + params, {
             method: method,
             body: JSON.stringify(body),

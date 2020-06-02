@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, ActivityInd
 import { Button, Card, Icon } from 'react-native-elements'
 import { LinearGradient } from 'expo-linear-gradient'
 import CardMatch from '../../components/Card'
-import { matchings } from '../../services/matching'
+import { matchings, patchMatch } from '../../services/matching'
 import { getStorageData, setAuthorization } from '../../services/provider'
+
+import * as Helpers from '../../helpers'
 
 interface Props {
   navigation: any
@@ -105,7 +107,8 @@ export default class MatcherView extends Component<Props, State> {
       id: this.state.userId,
       response: true
     }
-    // Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
+    // Helpers.requestService('matchings/' + match.id, 'PATCH', '', body)
+    patchMatch(match.id, body).then(res=>console.log(res));
   };
 
   handlePassedProfile = (match) => {
@@ -113,7 +116,7 @@ export default class MatcherView extends Component<Props, State> {
       id: this.state.userId,
       response: false
     }
-    // Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
+    patchMatch(match.id, body).then(res=>console.log(res));
   };
 
   resetPosition() {

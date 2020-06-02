@@ -4,6 +4,8 @@ import {
   Image, StyleSheet, View, Text, ActivityIndicator
 } from "react-native";
 import * as Helpers from '../helpers'
+import { getStorageData } from '../services/provider'
+
 
 import { Profile } from "../Models";
 
@@ -18,14 +20,21 @@ export default function CardMatch(props: CardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true)
-    console.log(props.match.userTwo)
-    Helpers.requestService('app_users/', 'GET', props.match.userTwo).then((res: any) => {
-      setRelationFirstName(res.firstName)
-      setRelationGender(res.gender)
-      setRelationHeight(res.heightheightInCentimeter ?? 'Taille')
-      setIsLoading(false)
-    })
+    let storedData;
+    let userId;
+    async function setList() {
+      setIsLoading(true)
+      storedData = await getStorageData()
+      console.log('id stored :', storedData.user.id);
+      storedData.user.id === props.match.userOne ? userId = props.match.userTwo : userId = props.match.userOne
+      Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
+        setRelationFirstName(res.firstName)
+        setRelationGender(res.gender)
+        setRelationHeight(res.heightheightInCentimeter ?? 'Taille')
+        setIsLoading(false)
+      })
+    };
+    setList();
   }, [])
 
   if (isLoading) {

@@ -8,21 +8,26 @@ export async function matchings () {
     console.log(res.data)
     return res.data
   } catch (e) {
-    console.log('Catch login(): ' + e)
+    console.log('Catch matching(): ' + e)
     throw handler(e)
   }
 }
 
-export const setAuthorization = (token) => {
-  // Apply authorization token to every request if logged in
-  if (!token) delete axios.defaults.headers.common["Authorization"]
-  else axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+export async function matchs() {
+  try {
+    const res = await axios.get(constant.MATCHS)
+    console.log(res.data)
+    return res.data
+  }
+  catch(e) {
+    console.log('Catch matchs(): ' + e)
+    throw handler(e)
+  }
 }
 
-export async function patch (param, data, token = null) {
-
+export async function patchMatch (idToPatch, data, token = null) {
   try {
-    const res = await axios.patch(constant.MATCHS + '/' + param, data)
+    const res = await axios.patch(constant.MATCHS + '/' + idToPatch, data)
     console.log('Patch :')
     console.log(res.data)
     return res.data

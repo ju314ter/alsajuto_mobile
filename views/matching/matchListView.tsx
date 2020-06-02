@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, ActivityIndicator } from 'react-native'
 import Match from '../../components/Match'
+import { matchs } from '../../services/matching';
 
 export default function MatchListView ({ navigation }) {
   const [isLoading, setLoading] = useState(false)
   const [matchList, setMatchList] = useState([])
 
   useEffect(() => {
+    (async function setList() {
+      setMatchList(await matchs());
+      console.log(matchList);
+    })();
   }, [])
 
   if (!isLoading) {
