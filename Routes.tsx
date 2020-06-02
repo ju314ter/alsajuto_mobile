@@ -15,7 +15,7 @@ import GamesView from './views/games/gamesView'
 import QuizzView from './views/games/quizzView'
 import MatchListView from './views/matching/matchListView'
 import NotificationsView from './views/notificationsView'
-import SettingsView from './views/settings/SettingsView'
+import SettingsView from './views/settings/settingsView'
 import Preference from './views/settings/PreferenceView'
 import ProfileView from './views/settings/ProfileView'
 

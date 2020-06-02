@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as constant from '../Utils/constant.js'
 import { handler } from './handler'
+import { setAuthorization } from '../services/provider'
 
 export async function login (data) {
   console.log(constant.LOGIN)

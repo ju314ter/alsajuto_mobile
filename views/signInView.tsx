@@ -29,7 +29,7 @@ export default class SignIn extends Component<Props> {
       const { email, password } = this.state
       const token = await login({ email, password })
       const data = {
-        user: await getMe(),
+        user: await getMe(token.token),
         token: token.token
       }
       await setStorageData(data)
