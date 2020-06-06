@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import { Button } from 'react-native-elements'
 import { LinearGradient } from 'expo-linear-gradient'
 import { getStorageData } from '../../services/provider'
-import { getMyProfilPicture } from '../../services/user'
+import { getMyProfilPicture, getMe } from '../../services/user'
 
 export default function SettingsView(props) {
   const [isLoading, setIsLoading] = useState(true)
@@ -22,7 +22,7 @@ export default function SettingsView(props) {
       try {
         const storageData = await getStorageData()
         setData(storageData)
-        setUser(storageData.user)
+        setUser(await getMe())
         setUserAge(getAge(storageData.user.birthdayDate))
         setUserName(storageData.user.username ?? storageData.user.firstName)
         const profilPictureUrl = await getMyProfilPicture()
