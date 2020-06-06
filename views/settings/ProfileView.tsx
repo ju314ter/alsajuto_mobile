@@ -2,32 +2,30 @@ import React, { useState, useEffect, useReducer } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { TextInput as PaperTextInput, TextInput } from 'react-native-paper'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Button, Input } from 'react-native-elements'
 import { SegmentedControls } from 'react-native-radio-buttons'
 import { ScrollView } from 'react-native-gesture-handler'
 import * as Layout from '../../Utils/Layout'
-import reducer, { TEXT_CHANGE, LIST_CHANGE } from '../../components/reducer'
-import * as Helpers from '../../helpers'
-import * as constant from '../../Utils/constant'
+import reducer, { TEXT_CHANGE } from '../../components/reducer'
 import { patch, getMe } from '../../services/user'
+import { setStorageData, getStorageData } from '../../services/provider'
 
 const ProfileView = (props) => {
   const [error, setError] = useState(null);
   const [userSaved, setUserSaved] = useState(props.navigation.state.params.user)
   const [tokenSaved, setTokenSaved] = useState(null)
-  const [stored, setStored] = useState(null)
-  const [haveChange, setHaveChange] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [haveChange, setHaveChange] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [keySaved, setKeySave] = useState([])
   const fields = [
-    { name: 'username', label: 'Username', placeholder: userSaved.username, value: userSaved.username, required: false, type: 'textFied' },
-    { name: 'firstName', label: 'Prénom', placeholder: userSaved.firstName, value: userSaved.firstName, required: false, type: 'textFied' },
-    { name: 'lastName', label: 'Nom', placeholder: userSaved.lastName, value: userSaved.lastName, required: false, type: 'textFied' },
+    { name: 'username', label: 'Username', placeholder: userSaved.username, value: userSaved.username, required: false, type: 'textFied', secure: false },
+    { name: 'firstName', label: 'Prénom', placeholder: userSaved.firstName, value: userSaved.firstName, required: false, type: 'textFied', secure: false },
+    { name: 'lastName', label: 'Nom', placeholder: userSaved.lastName, value: userSaved.lastName, required: false, type: 'textFied', secure: false },
     { name: 'Gender', label: 'Genre', placeholder: userSaved.gender, value: userSaved.gender, required: false, type: 'selector', options: ['Homme', 'Femme', 'Non binaire'] },
     { name: 'sexualityPref', label: 'Orientation sexuelle', placeholder: userSaved.sexualityPref, value: userSaved.sexualityPref, required: false, type: 'selector', options: ['Hétérosexuel', 'Homosexuel', 'Non Binaire'] },
-    { name: 'email', label: 'Email', placeholder: userSaved.email, value: userSaved.email, required: false, type: 'email' },
-    { name: 'password', label: 'Password', placeholder: '', value: '', required: false, type: 'password' },
+    { name: 'email', label: 'Email', placeholder: userSaved.email, value: userSaved.email, required: false, type: 'email', secure: false },
+    { name: 'password', label: 'Password', placeholder: '', value: '', required: false, type: 'password', secure: true },
     { name: 'description', label: 'Description', placeholder: userSaved.description, value: userSaved.description, required: false, type: 'textArea' },
-    { name: 'heightInCentimeter', label: 'Taille', placeholder: userSaved.heightInCentimeter, value: userSaved.heightInCentimeter, required: false, type: 'number' },
+    { name: 'heightInCentimeter', label: 'Taille', placeholder: userSaved.heightInCentimeter.toString(), value: userSaved.heightInCentimeter, required: false, type: 'number' },
     { name: 'avatar', label: 'ProfilePicture', placeholder: userSaved.avatar, value: userSaved.avatar, required: false, type: 'avatar' }
   ]
 
@@ -35,12 +33,23 @@ const ProfileView = (props) => {
 
   const changeText = (name, text) => {
     if (!haveChange) setHaveChange(true)
+    if (!keySaved.includes(name)) {
+      let newKeySaved = keySaved;
+      newKeySaved.push(name);
+      setKeySave(newKeySaved);
+    }
     dispatch({ type: TEXT_CHANGE, name, text })
   }
 
-  const changeNumber = (name, value) => {
+  const changeNumber = (name, text) => {
     if (!haveChange) setHaveChange(true)
-    dispatch({ type: LIST_CHANGE, name, value })
+    if (!keySaved.includes(name)) {
+      let newKeySaved = keySaved;
+      newKeySaved.push(name);
+      setKeySave(newKeySaved);
+    }
+    text = Number(text)
+    dispatch({ type: TEXT_CHANGE, name, text })
   }
 
   const getAge = function (birthDate) {
@@ -53,24 +62,60 @@ const ProfileView = (props) => {
   }
 
   useEffect(() => {
-    
+    (async function () {
+      try {
+        setUserSaved(await getMe())
+        const stData = await getStorageData()
+        setTokenSaved(stData.token)
+      } catch (e) { console.log('ProfileView.useEffect :', e) }
+    })()
   }, [])
+
+  const getPosKeySave = (name) => {
+    for (var i = 0; i < stateEncaiss.length; i++) {
+      if (stateEncaiss[i].name === name)
+        return i;
+    }
+    return -1;
+  }
+
+  const getLabelFromName = (name) => {
+    const arr = name.split(',')
+    let response = []
+    for (let x = 0; x < arr.length; x++) {
+      for (var i = 0; i < stateEncaiss.length; i++) {
+        if (stateEncaiss[i].name === arr[x])
+          response.push(stateEncaiss[i].label)
+          // return stateEncaiss[i].label
+      }
+    }
+    if (response.length) return response.toString()
+    return -1
+  }
 
   const onSubmit = async () => {
     setLoading(true)
     try {
       let data = {};
-      for (var i = 0; i < stateEncaiss.length; i++) {
-        data[stateEncaiss[i].name] = stateEncaiss[i].value;
+      console.log('list of modified keys :', keySaved);
+      // Update only the modified field
+      for (var i = 0; i < keySaved.length; i++) {
+        data[keySaved[i]] = stateEncaiss[getPosKeySave(keySaved[i])].value
       }
-      const response = await patch(userSaved.id, data, tokenSaved)
+      console.log('data updated : ')
+      console.log(data)
+      const response = await patch(userSaved.id, data)
+      if (response === data) {
+        await setStorageData({ user: response, token: tokenSaved })
+        setUserSaved(response)
+      }
       setLoading(false)
-      console.log(response)
     } catch (e) {
       setError(e.message)
       setLoading(false)
     }
     setLoading(false)
+    alert(getLabelFromName(keySaved.toString()) + ' mis à jour')
   }
 
   return (
@@ -103,10 +148,8 @@ const ProfileView = (props) => {
                       mode={"outlined"}
                       label={field.label}
                       placeholder={field.placeholder ?? field.label}
-                      secureTextEntry={field.secure}
-                      value={field.value}
+
                       onChangeText={(text) => changeText(field.name, text)}
-                      // required={field.required}
                       style={{ backgroundColor: "#fff", marginTop: 10 }}
                     />
                   )
@@ -116,12 +159,13 @@ const ProfileView = (props) => {
                       key={key}
                       mode={"outlined"}
                       label={field.label}
-                      placeholder={field.placeholder ?? field.label}
+                      placeholder={field.placeholder}
                       secureTextEntry={field.secure}
                       value={field.value}
                       onChangeText={(number) => changeNumber(field.name, number)}
-                      // required={field.required}
+                      keyboardType={"number-pad"}
                       style={{ backgroundColor: "#fff", marginTop: 10 }}
+                      maxLength={3}
                     />
                   )
                 case 'selector':
