@@ -1,90 +1,95 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useState, useEffect, useReducer } from 'react'
+import { StyleSheet, Text, View, Picker, TouchableNativeFeedbackBase, ImageBackground } from 'react-native'
 import { Button, Input } from 'react-native-elements'
-import { SegmentedControls } from 'react-native-radio-buttons'
 import { ScrollView } from 'react-native-gesture-handler'
-import * as Helpers from '../../helpers'
+import reducer, { TEXT_CHANGE, LIST_CHANGE } from '../../components/reducer'
+import { getAllPreference, getAllTypePreference } from '../../services/preference'
+// import {  } from '@react-native-community/picker';
+import { createPointerEventsContainer } from 'react-navigation-stack'
 
 const PreferenceView = (props) => {
   const [sexuality, setSexuality] = useState(null)
   const [prefAgeMin, setPrefAgeMin] = useState(null)
   const [prefAgeMax, setPrefAgeMax] = useState(null)
+  const [typePref, setTypePref] = useState(null)
+  const [pref, setPref] = useState(null)
+  const [haveChange, setHaveChange] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [likes, setLikes] = useState(null)
+  const [keySaved, setKeySave] = useState([])
+  const fields = [
 
-  const optionsSexuality = [
-    'Heterosexual',
-    'Homosexual',
-    'Genderfluid'
   ]
 
+  const [stateEncaiss, dispatch] = useReducer(reducer, fields);
+
   useEffect(() => {
-    // Helpers.getDataLocally('user').then(user => {
-    //   user = JSON.parse(user)
-    //   if (user.gender === user.sexualityPref && (user.gender === 'Male' || user.gender === 'Female')) {
-    //     setSexuality('Homosexual')
-    //   } else if (user.gender !== user.sexualityPref && (user.gender === 'Male' || user.gender === 'Female')) {
-    //     setSexuality('Heterosexual')
-    //   } else {
-    //     setSexuality('Genderfluid')
-    //   }
-    //   const ageTargeted = user.ageTargeted.split('-')
-    //   setPrefAgeMin(ageTargeted[0])
-    //   setPrefAgeMax(ageTargeted[1])
-    // })
-    // Helpers.getDataLocally('token').then(token => {
-    //   Helpers.getLikes(token).then(likes => {
-    //     setLikes(likes.rows)
-    //     console.log(likes.rows)
-    //   }).catch(e => console.log(e))
-    // })
+    (async function () {
+      console.log('useEffect()')
+      try {
+        setTypePref(await getAllTypePreference())
+        setPref(await getAllPreference())
+        setLoading(false)
+      } catch (e) {
+        console.log('ProfileView.useEffect :', e)
+        setLoading(false)
+      }
+    })()
   }, [])
 
-  function handleUpdatePreference () {
-    // TODO
+  const changePick = (name, data) => {
+    if (!haveChange) setHaveChange(true)
+    if (!keySaved.includes(name)) {
+      let newKeySaved = keySaved;
+      newKeySaved.push(name);
+      setKeySave(newKeySaved);
+    }
+    dispatch({ type: LIST_CHANGE, name, data })
   }
 
-  function setSelectedOptionsSexuality (selectedOption) {
-    setSexuality(selectedOption)
-  }
-
-  const submit = (form) => {
-    console.log(form)
-    // Helpers.requestService(constant.LIKES, constant.PATCH, userSaved.id, form, tokenSaved).then(user => {
-    //   Helpers.storeDataLocally('user', user).then(() => console.log('user updated !')).catch(e => console.log(e))
-    //   user = JSON.parse(user)
-    //   setUserSaved(user)
-    //   setPseudo(user.username)
-    //   switch (user.gender) {
-    //     case 'Male':
-    //       setGender('Homme')
-    //       break
-    //     case 'Female':
-    //       setGender('Femme')
-    //       break
-    //     default :
-    //       setGender('Non binaire')
-    //       break
+  const onSubmit = async () => {
+    setLoading(true)
+    // try {
+    //   let data = {}
+    //   console.log('list of modified keys :', keySaved)
+    //   for (var i = 0; i < keySaved.length; i++) {
+    //     data[keySaved[i]] = stateEncaiss[getPosKeySave(keySaved[i])].value
     //   }
-    //   setEmail(user.email)
-    //   setAge(getAge(user.birthdayDate))
-    //   setSize(user.heightInCentimeter)
-    //   setDescription(user.description)
-    // })
+    //   setLoading(false)
+    // } catch (e) {
+    //   console.log('Catch On Submit Preference :', e)
+    //   setLoading(false)
+    //   return <View style={{backgroundColor: 'crimson'}}></View>
+    // }
+    console.log('onSubmit')
+    setLoading(false)
   }
 
   return (
     <>
-      <View style={styles.MainView}>
-        <ScrollView style={styles.scrollView}>
-          <Text style={styles.Title}>Préférences</Text>
-          <SegmentedControls
-            options={optionsSexuality}
-            onSelection={(selectedOptions) => { setSelectedOptionsSexuality(selectedOptions) }}
-            selectedOption={sexuality}
-          />
-          {/* On a pas prévu de faire comme tinder avec la prise en compte de la distance ? */}
-          {/* Alan: Trop long à faire c'est une tanasse et on a même pas encore fini */}
-          {/* <Text style={styles.label}>Position range</Text> */}
+      <ScrollView style={styles.container}>
+        <View style={styles.contentContainer}>
+          {/* {loading ? null : <GetView {...{}} />} */}
+          {loading
+            ? null
+            : typePref.map((item, key) => {
+              console.log('key:', key)
+              return (
+                <View style={styles.row}>
+                  <Text style={styles.inputWrap}>{ item.name.toString() }</Text>
+                  <Picker
+                    style={{height: 20, width: 100, marginLeft: '10%'}}
+                    onValueChange={(itemValue, itemIndex) => changePick(itemIndex, itemValue)}
+                  >
+                    <Picker.Item label='test' value='test' />
+                    <Picker.Item label='test' value='test' />
+                    <Picker.Item label='test' value='test' />
+                  </Picker>
+                </View>
+              )
+            })
+          }
+          {/* <Text style={styles.Title}>Préférences</Text>
 
           <View style={styles.row}>
             <View style={styles.inputWrap}>
@@ -99,10 +104,10 @@ const PreferenceView = (props) => {
                 onChangeText={(value) => setPrefAgeMax(value)}
               />
             </View>
-          </View>
+          </View> */}
 
-          <View style={styles.row}>
-            <View style={styles.inputWrap}>
+          {/* <View style={styles.row}>
+            <View style={styles.inputWrap}> */}
               {/* {
                 likes.forEach(like => {
                   console.log(like)
@@ -110,45 +115,50 @@ const PreferenceView = (props) => {
                 })
               } */}
               {/* AJOUTER ICI LA MUSIQUE */}
-            </View>
+            {/* </View>
           </View>
 
           <View style={styles.row}>
-            <View style={styles.inputWrap}>
+            <View style={styles.inputWrap}> */}
               {/* AJOUTER ICI LES FILMS */}
-            </View>
-          </View>
-
-        </ScrollView>
-        <Button
-          title='Modififer' containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
-          buttonStyle={{ backgroundColor: '#8D011D' }} onPress={() => { submit({ sexuality, prefAgeMin, prefAgeMax }) }}
-        />
-      </View>
+            {/* </View>
+          </View> */}
+          <Button
+            title='Modififer' containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
+            buttonStyle={{ backgroundColor: 'crimson' }} onPress={() => { onSubmit() }}
+          />
+        </View>
+      </ScrollView>
     </>
   )
 }
 
 const styles = StyleSheet.create({
-  MainView: {
-    width: '90%',
-    height: '70%',
-    alignSelf: 'center',
-    justifyContent: 'space-between',
-    marginTop: '10%',
-    borderWidth: 5
+  container: {
+    flex: 1,
+    backgroundColor: '#fafafa',
   },
-  scrollView: {
-    width: '100%',
-    padding: '5%'
+  contentContainer: {
+    flex: 1,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 40,
+    backgroundColor: 'orange'
   },
   row: {
     flex: 1,
     flexDirection: 'row',
-    marginTop: '5%'
+    alignItems: 'flex-end',
+    marginTop: '5%',
+    backgroundColor: 'yellow',
+    height: '100%'
   },
   inputWrap: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  picker: {
+    flex: 3,
   },
   label: {
     color: 'black',
