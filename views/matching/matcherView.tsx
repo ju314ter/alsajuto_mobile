@@ -59,7 +59,6 @@ export default class MatcherView extends Component<Props, State> {
   }
 
   componentDidMount = async () => {
-    this.setState({ isLoading: true })
     try {
       const storedData = await getStorageData()
       setAuthorization(storedData.token)
@@ -206,18 +205,16 @@ export default class MatcherView extends Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#D42D4E', '#B11231', '#8D011D']}
-          style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'flex-start' }}>
-
+        <View style={styles.contentContainer}>
           <View style={styles.statusStyle}>
-            <Text style={{ color: 'yellow' }}>Index: {this.state.index}</Text>
+            <Text style={{ color: 'black' }}>Index: {this.state.index}</Text>
           </View>
           <View style={{ width: '80%' }}>
             {this.state.isLoading ? (<ActivityIndicator />) : (
               this.renderCards()
             )}
           </View>
-        </LinearGradient>
+        </View>
       </View>
     );
   }
@@ -229,6 +226,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  contentContainer: {
+    height: '100%', 
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: '#fafafa'
   },
   statusStyle: {
     padding: 15,
