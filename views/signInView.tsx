@@ -29,19 +29,14 @@ export default class SignIn extends Component<Props> {
       const { email, password } = this.state
       const token = await login({ email, password })
       const data = {
-        user: await getMe(token.token),
+        user: await getMe(),
         token: token.token
       }
       await setStorageData(data)
-      console.log('data : ')
-      console.log(data)
-      console.log('Storage data : ')
-      console.log(await getStorageData())
       this.setState({ isLoading: false })
       this.props.navigation.navigate('LogIn');
     } catch (e) {
-      console.log('catch login = async () => {...}')
-      console.log(e)
+      console.log('catch login = async () => {...}\n' + e)
       this.setState({ isLoading: false })
       alert(e.message)
     }
@@ -59,55 +54,16 @@ export default class SignIn extends Component<Props> {
   componentDidMount = async () => {
     try {
       const storageData = await getStorageData()
-      if (storageData.user || storageData.token ) {
-        console.log(storageData)
+      if (storageData) {
+        const response = await getMe() // go to catch if token dead
         this.props.navigation.navigate('LogIn');
         this.setState({ isLoading: false })
-      } else if (storageData.token && storageData.user.isEmpty()) {
-        console.log(storageData)
-        storageData.user = getMe()
-        console.log('getMe()')
-        console.log(storageData)
-        await setStorageData(storageData)
       }
-      console.log(storageData)
       this.setState({ isLoading: false })
     } catch (e) {
-      console.log(e)
+      console.log('componentDidMount : ' + e)
+      this.setState({ isLoading: false })
     }
-    // Helpers.getDataLocally('token').then((res) => {
-    //   console.log('stored TOKEN : ', res);
-    //   if (!res) {
-    //     this.setState({ isLoading: false })
-    //     return;
-    //   }
-    //   Helpers.getMyProfile(res).then((user: any) => {
-    //     if (user) {
-    //       //Store userID
-    //       const userStringify = JSON.stringify(user)
-    //       Helpers.storeDataLocally('user', userStringify).catch((err) => console.log(err));
-    //       console.log('stored user :', userStringify)
-    //       // redirect to ->
-    //       this.setState({ isLoading: false })
-    //       this.props.navigation.navigate('LogIn');
-    //       Helpers.getMyProfilePicture(res).then(profilPicture => {
-    //         if (profilPicture) {
-    //           const profilPictureStringify = JSON.stringify(profilPicture)
-    //           Helpers.storeDataLocally('profilPicutre', profilPictureStringify).catch(e => console.log(e));
-    //         }
-    //       })
-    //     } else {
-    //       console.log('trouble fetching user profile at SignInView.tsx')
-    //       this.setState({ isLoading: false })
-    //     }
-    //   }).catch(err => {
-    //     console.log(err)
-    //     this.setState({ isLoading: false })
-    //   })
-    // }).catch(err => {
-    //   console.log(err)
-    //   this.setState({ isLoading: false })
-    // })
   }
 
   render() {
