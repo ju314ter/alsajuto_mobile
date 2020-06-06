@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
+import { Image, StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import { Button } from 'react-native-elements'
 import { LinearGradient } from 'expo-linear-gradient'
-import { getStorageData, setAuthorization } from '../../services/provider'
+import { getStorageData } from '../../services/provider'
+import { getMyProfilPicture } from '../../services/user'
 
 export default function SettingsView(props) {
   const [isLoading, setIsLoading] = useState(true)
@@ -10,6 +11,7 @@ export default function SettingsView(props) {
   const [age, setUserAge] = useState(null)
   const [data, setData] = useState(null)
   const [user, setUser] = useState(null)
+  const [profilPicture, setProfilPicture]= useState({ uri: true, data: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' })
 
   const getAge = function (birthDate) {
     return Math.floor((new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e+10)
@@ -19,32 +21,34 @@ export default function SettingsView(props) {
     (async function() {
       try {
         const storageData = await getStorageData()
-        console.log(storageData)
         setData(storageData)
         setUser(storageData.user)
         setUserAge(getAge(storageData.user.birthdayDate))
         setUserName(storageData.user.username ?? storageData.user.firstName)
+        const profilPictureUrl = await getMyProfilPicture()
+        if (profilPictureUrl) {
+          setProfilPicture({ uri: false, data: profilPictureUrl })
+        }
         setIsLoading(false)
       } catch (e) {
         console.log('cactch SettingsView :')
         console.log(e)
       }
-
-      setIsLoading(false)
+      setIsLoading(false);
     })()
   }, [])
 
   return (
     <View style={styles.container}>
       {/* TODO : Faire en sorte de faire disparaitre la ligne blanche entre le header et le début du LinearGradient */}
-      <LinearGradient colors={['crimson', 'darkred', 'brown']} style={styles.linearGradient}>
+      <View style={styles.contentContainer}>
         {isLoading ? (<ActivityIndicator />) : (
           <>
             <View style={styles.TopPage}>
 
               {/* Image View */}
               <View style={styles.ImageContent}>
-                {/* <Image style={styles.image} source={)} /> */}
+                <Image style={styles.image} source={{ uri: (profilPicture.uri) ? profilPicture.data : "data:image/png;base64," + profilPicture.data }} />
               </View>
 
               {/* Below the image, name and age section */}
@@ -52,20 +56,20 @@ export default function SettingsView(props) {
                 <Text style={styles.sectionTitle}>{name ?? 'Name'}, {age ? age + ' ans' : 'age'}</Text>
               </View>
             </View>
-            <View style={styles.ButtonContainer}>
 
+            <View style={styles.ButtonContainer}>
               <View style={styles.button}>
                 <Button
-                  title='Paramètres' containerStyle={{ padding: 3 }} titleStyle={{ color: 'crimson' }}
-                  buttonStyle={{ backgroundColor: 'white' }}
+                  title='Paramètres' containerStyle={{ padding: 3 }} titleStyle={{ color: '#fafafa' }}
+                  buttonStyle={{ backgroundColor: 'crimson' }}
                   onPress={() => props.navigation.navigate('Profile', { user: user })}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
-                  title='Préférences' containerStyle={{ padding: 3 }} titleStyle={{ color: 'crimson' }}
-                  buttonStyle={{ backgroundColor: 'white' }}
+                  title='Préférences' containerStyle={{ padding: 3 }} titleStyle={{ color: '#fafafa' }}
+                  buttonStyle={{ backgroundColor: 'crimson' }}
                   onPress={() => props.navigation.navigate('Preference')}
                 />
               </View>
@@ -73,32 +77,31 @@ export default function SettingsView(props) {
 
           </>
         )}
-      </LinearGradient>
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    height: '100%',
-    width: '100%'
+    flex: 1,
+    backgroundColor: '#fafafa',
   },
-  linearGradient: {
-    height: '100%',
-    width: '100%'
+  contentContainer: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20
   },
   TopPage: {
     height: '60%',
-    backgroundColor: '#eee',
     marginLeft: '10%',
     marginRight: '10%',
-    marginTop: '5%',
     justifyContent: 'flex-end',
     alignItems: 'flex-start'
   },
   label: {
-    color: 'lightgrey',
+    color: 'white',
     fontSize: 16
   },
   ImageContent: {
@@ -115,8 +118,10 @@ const styles = StyleSheet.create({
     height: undefined
   },
   sectionTitle: {
-    margin: '3%',
-    color: 'black',
+    // margin: '3%',
+    padding: '5%',
+    color: 'crimson',
+    backgroundColor: '#fafafa',
     fontSize: 18,
     fontWeight: 'bold'
   },
