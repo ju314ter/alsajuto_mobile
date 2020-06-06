@@ -17,3 +17,5 @@ export const USERS = `${API_URL}/app_users`
 export const MY_PROFIL = `${USERS}/myProfile`
 export const LIKES = `${API_URL}/likes`
 export const PROFIL_PICTURE = `${API_URL}/my_profil_picture`
+export const TYPE_PREFERENCE = `${API_URL}/type_preferences`
+export const PREFERENCE = `${API_URL}/preferences`
