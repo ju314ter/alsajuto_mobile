@@ -1,13 +1,9 @@
 // @flow
-import React, { useState, useEffect, useReducer } from 'react';
-import {
-  Image, StyleSheet, View, Text, ActivityIndicator
-} from "react-native";
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import * as Helpers from '../helpers'
 import { getStorageData } from '../services/provider'
-
-
-import { Profile } from "../Models";
+import { getMyProfilPicture } from '../services/user'
 
 interface CardProps {
   match: any;
@@ -18,21 +14,31 @@ export default function CardMatch(props: CardProps) {
   const [gender, setRelationGender] = useState('');
   const [height, setRelationHeight] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [urlProfilePicture, setUrlProfilePicture] = useState({ uri: true, data: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' })
 
   useEffect(() => {
     let storedData;
     let userId;
     async function setList() {
       setIsLoading(true)
-      storedData = await getStorageData()
-      console.log('id stored :', storedData.user.id);
-      storedData.user.id === props.match.userOne ? userId = props.match.userTwo : userId = props.match.userOne
-      Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
-        setRelationFirstName(res.firstName)
-        setRelationGender(res.gender)
-        setRelationHeight(res.heightheightInCentimeter ?? 'Taille')
+      try {
+        const profilPictureUrl = await getMyProfilPicture()
+        if (profilPictureUrl) {
+          setUrlProfilePicture({ uri: false, data: profilPictureUrl })
+        }
+        storedData = await getStorageData()
+        console.log('id stored :', storedData.user.id);
+        storedData.user.id === props.match.userOne ? userId = props.match.userTwo : userId = props.match.userOne
+        Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
+          setRelationFirstName(res.firstName)
+          setRelationGender(res.gender)
+          setRelationHeight(res.heightheightInCentimeter ?? 'Taille')
+          setIsLoading(false)
+        })
+      } catch (e) {
+        console.log('catch Card:', e)
         setIsLoading(false)
-      })
+      }
     };
     setList();
   }, [])
@@ -41,13 +47,13 @@ export default function CardMatch(props: CardProps) {
     return <ActivityIndicator />
   } else {
     return (
-      <View style={{ height: 450 }}>
-        <Image style={styles.image} source={{ uri: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' }} />
+      <View style={styles.TopPage}>
+        <Image style={styles.image} source={{ uri: (urlProfilePicture.uri) ? urlProfilePicture.data : "data:image/png;base64," + urlProfilePicture.data }} />
         <View style={styles.overlay}>
           <View style={styles.footer}>
-            <Text style={styles.name}>{firstName}</Text>
-            <Text style={styles.gender}>{gender}</Text>
-            <Text style={styles.height}>{height}</Text>
+            <Text style={styles.sectionTitle}>
+              {firstName}, { height }
+            </Text>
           </View>
         </View>
       </View>
@@ -57,6 +63,13 @@ export default function CardMatch(props: CardProps) {
 };
 
 const styles = StyleSheet.create({
+  TopPage: {
+    height: 450,
+    marginLeft: '5%',
+    marginRight: '5%',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start'
+  },
   image: {
     ...StyleSheet.absoluteFillObject,
     width: undefined,
@@ -74,21 +87,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: '100%',
-    flexDirection: "row"
+    flexDirection: "row",
+    backgroundColor: '#fafafa'
   },
-  name: {
-    color: "white",
-    fontSize: 25,
-    flex: 1
+  sectionTitle: {
+    padding: '5%',
+    color: 'crimson',
+    backgroundColor: '#fafafa',
+    fontSize: 18,
+    fontWeight: 'bold'
   },
-  gender: {
-    color: "white",
-    fontSize: 15,
-    flex: 1
-  },
-  height: {
-    color: "white",
-    fontSize: 15,
-    flex: 1
-  }
 });
