@@ -1,8 +1,12 @@
-import React, { Component } from 'react';
-import * as Helpers from './helpers';
-
+import { setStorageData, setAuthorization } from './services/provider'
 
 export default function logout({ navigation }) {
-    Helpers.clearLocalData().then((res) => console.log(res.message))
+    try {
+      setStorageData(null).then().catch(e => { console.log('Logout setStorageData:', e) })
+      setAuthorization(null)
+    } catch (e) {
+      console.log('Logout :', e)
+    }
+
     return navigation.navigate('SignIn')
 }

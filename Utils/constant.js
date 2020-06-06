@@ -1,4 +1,5 @@
 export const API_URL = process.env.API_URL || 'https://alsatoju-dev.herokuapp.com'
+//export const API_URL = 'http://localhost:3000'
 
 // Keyword
 export const TOKEN = 'token'
@@ -15,4 +16,4 @@ export const GAMES = `${API_URL}/games`
 export const USERS = `${API_URL}/app_users`
 export const MY_PROFIL = `${USERS}/myProfile`
 export const LIKES = `${API_URL}/likes`
-export const PROFIL_PICTURE = `${API_URL}/my_profile_picture`
+export const PROFIL_PICTURE = `${API_URL}/my_profil_picture`
