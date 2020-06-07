@@ -17,13 +17,13 @@ const ProfileView = (props) => {
   const [loading, setLoading] = useState(false)
   const [keySaved, setKeySave] = useState([])
   const fields = [
-    { name: 'username', label: 'Username', placeholder: userSaved.username, value: userSaved.username, required: false, type: 'textFied', secure: false },
-    { name: 'firstName', label: 'Prénom', placeholder: userSaved.firstName, value: userSaved.firstName, required: false, type: 'textFied', secure: false },
-    { name: 'lastName', label: 'Nom', placeholder: userSaved.lastName, value: userSaved.lastName, required: false, type: 'textFied', secure: false },
+    { name: 'username', label: 'Username', placeholder: userSaved.username, value: userSaved.username, required: false, type: 'textField', secure: false },
+    { name: 'firstName', label: 'Prénom', placeholder: userSaved.firstName, value: userSaved.firstName, required: false, type: 'textField', secure: false },
+    { name: 'lastName', label: 'Nom', placeholder: userSaved.lastName, value: userSaved.lastName, required: false, type: 'textField', secure: false },
     { name: 'Gender', label: 'Genre', placeholder: userSaved.gender, value: userSaved.gender, required: false, type: 'selector', options: ['Homme', 'Femme', 'Non binaire'] },
     { name: 'sexualityPref', label: 'Orientation sexuelle', placeholder: userSaved.sexualityPref, value: userSaved.sexualityPref, required: false, type: 'selector', options: ['Hétérosexuel', 'Homosexuel', 'Non Binaire'] },
-    { name: 'email', label: 'Email', placeholder: userSaved.email, value: userSaved.email, required: false, type: 'email', secure: false },
-    { name: 'password', label: 'Password', placeholder: '', value: '', required: false, type: 'password', secure: true },
+    { name: 'email', label: 'Email', placeholder: userSaved.email, value: userSaved.email, required: false, type: 'textField', secure: false },
+    { name: 'password', label: 'Password', placeholder: '', value: '', required: false, type: 'textField', secure: true },
     { name: 'description', label: 'Description', placeholder: userSaved.description, value: userSaved.description, required: false, type: 'textArea' },
     { name: 'heightInCentimeter', label: 'Taille', placeholder: userSaved.heightInCentimeter.toString(), value: userSaved.heightInCentimeter, required: false, type: 'number' },
     { name: 'avatar', label: 'ProfilePicture', placeholder: userSaved.avatar, value: userSaved.avatar, required: false, type: 'avatar' }
@@ -124,8 +124,10 @@ const ProfileView = (props) => {
         <View style={styles.contentContainer}>
           {
             stateEncaiss.map((field, key) => {
+              console.log(field.type)
               switch (field.type) {
-                case 'textFied':
+                case 'textField':
+                  console.log('field :', field)
                   return (
                     <PaperTextInput
                       key={key}
@@ -135,8 +137,9 @@ const ProfileView = (props) => {
                       secureTextEntry={field.secure}
                       value={field.value}
                       onChangeText={(text) => changeText(field.name, text)}
+                      theme={{colors: { primary: 'crimson', background: '#fff'}}}
                       // required={field.required}
-                      style={{ backgroundColor: "#fff", marginTop: 10 }}
+                      style={{ marginTop: 10 }}
                     />
                   )
                 case 'textArea':
@@ -148,9 +151,9 @@ const ProfileView = (props) => {
                       mode={"outlined"}
                       label={field.label}
                       placeholder={field.placeholder ?? field.label}
-
                       onChangeText={(text) => changeText(field.name, text)}
-                      style={{ backgroundColor: "#fff", marginTop: 10 }}
+                      theme={{colors: { primary: 'crimson', background: '#fff'}}}
+                      style={{ marginTop: 10 }}
                     />
                   )
                 case 'number':
@@ -164,7 +167,8 @@ const ProfileView = (props) => {
                       value={field.value}
                       onChangeText={(number) => changeNumber(field.name, number)}
                       keyboardType={"number-pad"}
-                      style={{ backgroundColor: "#fff", marginTop: 10 }}
+                      style={{ marginTop: 10 }}
+                      theme={{colors: { primary: 'crimson', background: '#fff'}}}
                       maxLength={3}
                     />
                   )
@@ -174,6 +178,7 @@ const ProfileView = (props) => {
                       key={key}
                       mode={"outlined"}
                       label={field.label}
+                      tint={'crimson'}
                       options={field.options}
                       placeholder={field.placeholder ?? field.label}
                       secureTextEntry={field.secure}
@@ -187,24 +192,10 @@ const ProfileView = (props) => {
                       containerBorderRadius={10}
                     />
                   )
-                default:
-                  return (
-                    <PaperTextInput
-                      key={key}
-                      mode={"outlined"}
-                      label={field.label}
-                      placeholder={field.placeholder ?? field.label}
-                      secureTextEntry={field.secure}
-                      value={field.value}
-                      onChangeText={(text) => changeText(field.name, text)}
-                      // required={field.required}
-                      style={{ backgroundColor: "#fff", marginTop: 10 }}
-                    />
-                  )
               }
             })}
           <TouchableOpacity disabled={!haveChange} style={{ justifyContent: "center", marginTop: 20, marginLeft: 0, opacity: (haveChange) ? 1 : 0.3 }} onPress={() => onSubmit()}>
-            <LinearGradient start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} colors={["#0093FF", "#00DEFF"]} style={styles.button} >
+            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} colors={["crimson", "black"]} style={styles.button} >
               {loading ? (
                 <ActivityIndicator size="large" color="#fff" />
               ) : (

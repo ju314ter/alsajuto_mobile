@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     slidableContent: {
         width: '100%',
         height: 80,
-        backgroundColor: '#fafafa',
+        backgroundColor: 'white',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
