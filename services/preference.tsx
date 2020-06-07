@@ -4,7 +4,7 @@ import { handler } from './handler'
 
 export async function patch (param, data) {
 try {
-  const res = await axios.patch(constant.type_preferences + '/' + param, data)
+  const res = await axios.patch(constant.TYPE_PREFERENCE + '/' + param, data)
   return res.data
   } catch (e) {
     console.log('Catch PATCH type_preferences: ' + e)
