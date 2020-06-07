@@ -36,9 +36,20 @@ export async function getMe() {
   }
 }
 
+export async function getProfilPicture(id) {
+  try {
+    const res = await axios.get(constant.IMAGES + '/' + id)
+    if (res.data) return res.data
+    else return null
+  } catch (e) {
+    console.log('catch GetProfilPicture : ', e)
+    throw handler(e)
+  }
+}
+
 export async function getMyProfilPicture() {
   try {
-    const res = await axios.get(constant.PROFIL_PICTURE)
+    const res = await axios.get(constant.MY_PROFIL_PICTURE)
     if (res.data) return res.data
     else return null
   } catch (e) {

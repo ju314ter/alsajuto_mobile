@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import * as Helpers from '../helpers'
 import { getStorageData } from '../services/provider'
-import { getMyProfilPicture } from '../services/user'
+import { getProfilPicture } from '../services/user'
 
 interface CardProps {
   match: any;
@@ -22,13 +22,14 @@ export default function CardMatch(props: CardProps) {
     async function setList() {
       setIsLoading(true)
       try {
-        const profilPictureUrl = await getMyProfilPicture()
-        if (profilPictureUrl) {
-          setUrlProfilePicture({ uri: false, data: profilPictureUrl })
-        }
         storedData = await getStorageData()
         console.log('id stored :', storedData.user.id);
         storedData.user.id === props.match.userOne ? userId = props.match.userTwo : userId = props.match.userOne
+        const profilPictureUrl = await getProfilPicture(userId)
+        if (profilPictureUrl) {
+          setUrlProfilePicture({ uri: false, data: profilPictureUrl })
+        }
+        
         Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
           setRelationFirstName(res.firstName)
           setRelationGender(res.gender)
