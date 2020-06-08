@@ -12,7 +12,7 @@ interface CardProps {
 export default function CardMatch(props: CardProps) {
   const [firstName, setRelationFirstName] = useState('');
   const [gender, setRelationGender] = useState('');
-  const [height, setRelationHeight] = useState();
+  const [height, setRelationHeight] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [urlProfilePicture, setUrlProfilePicture] = useState({ uri: true, data: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' })
 
@@ -21,25 +21,25 @@ export default function CardMatch(props: CardProps) {
     let userId;
     async function setList() {
       setIsLoading(true)
+      storedData = await getStorageData()
+      console.log('id stored :', storedData.user.id);
+      storedData.user.id === props.match.userOne ? userId = props.match.userTwo : userId = props.match.userOne
       try {
-        storedData = await getStorageData()
-        console.log('id stored :', storedData.user.id);
-        storedData.user.id === props.match.userOne ? userId = props.match.userTwo : userId = props.match.userOne
         const profilPictureUrl = await getProfilPicture(userId)
         if (profilPictureUrl) {
           setUrlProfilePicture({ uri: false, data: profilPictureUrl })
         }
-        
-        Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
-          setRelationFirstName(res.firstName)
-          setRelationGender(res.gender)
-          setRelationHeight(res.heightheightInCentimeter ?? 'Taille')
-          setIsLoading(false)
-        })
       } catch (e) {
-        console.log('catch Card:', e)
-        setIsLoading(false)
+        console.log(e)
       }
+      Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
+        console.log('getting card props : ', res)
+        setRelationFirstName(res.firstName)
+        setRelationGender(res.gender)
+        setRelationHeight(res.heightheightInCentimeter ?? 'Taille')
+        setIsLoading(false)
+      })
+      setIsLoading(false)
     };
     setList();
   }, [])
@@ -53,7 +53,7 @@ export default function CardMatch(props: CardProps) {
         <View style={styles.overlay}>
           <View style={styles.footer}>
             <Text style={styles.sectionTitle}>
-              {firstName}, { height }
+              {firstName}, {height}
             </Text>
           </View>
         </View>
