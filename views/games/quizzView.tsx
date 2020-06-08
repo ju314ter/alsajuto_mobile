@@ -31,7 +31,7 @@ export default function QuizzView(props) {
             if (status == '0') {
                 console.log('creating a game')
                 const res = await axios.post(constant.GAMES, { creatorId: myId, challengedId: userId })
-                await axios.patch(constant.MATCHS, + '/' + matchId, { data: { gameId: res.data.id } })
+                // await axios.patch(constant.MATCHS, + '/' + matchId, { data: { gameId: res.data.id } })
             } else {
                 console.log('retrieving the game')
             }
@@ -47,10 +47,6 @@ export default function QuizzView(props) {
                 {
                     isLoading ? (<ActivityIndicator />) : (
                         <React.Fragment>
-                            <Text>
-                                otherParam:
-                                {JSON.stringify(navigation.getParam('matchId', 'default value'))}
-                            </Text>
                             <QuizzDisplayer></QuizzDisplayer>
                         </React.Fragment>
                     )

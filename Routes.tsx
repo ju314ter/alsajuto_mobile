@@ -88,9 +88,6 @@ const DrawerNavigator = createDrawerNavigator({
         </View>)
     }
   },
-  Games: {
-    screen: GamesNavigator
-  },
   Notifications: {
     screen: NotificationsView,
     navigationOptions: {
@@ -155,7 +152,8 @@ const AppNavigator = createStackNavigator(
     SignIn: { screen: SignIn },
     SignUp: { screen: SignUp },
     RecoverPwd: { screen: RecoverAccount },
-    LogIn: { screen: DrawerNavigator }
+    LogIn: { screen: DrawerNavigator },
+    Games: { screen: GamesNavigator, navigationOptions: { headerShown: false } },
   },
   {
     initialRouteName: 'SignIn',
