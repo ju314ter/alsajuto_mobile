@@ -10,9 +10,9 @@ export default function MatchListView({ navigation }) {
   useEffect(() => {
     (async function setList() {
       setLoading(true);
-      setMatchList(await matchs());
+      await setMatchList(await matchs());
       setLoading(false);
-      console.log('matchList : ', matchList);
+      console.log('matchList length : ', matchList.length);
     })();
   }, [])
 

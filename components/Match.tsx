@@ -70,6 +70,7 @@ export default class Match extends Component<Props, State> {
 
     componentDidMount = async () => {
         console.log('match props : ', this.props.match)
+        console.log('match id : ', this.props.match.id)
         const storedData = await getStorageData()
         let userId;
         storedData.user.id === this.props.match.userOne ? userId = this.props.match.userTwo : userId = this.props.match.userOne
@@ -130,16 +131,14 @@ export default class Match extends Component<Props, State> {
                 <View style={styles.rightContainer}>
                     <Text>Où en êtes-vous ?</Text>
                     {
-                        () => {
-                            switch (status) {
-                                case 0:
-                                    return <Button title='Lancez-vous !' />
-                                    break;
-                                case 1:
-                                    return <Button title='Reprendre la partie' />
-                                    break;
-                            }
-                        }
+                        status === 0 ?
+                            <Button title='Lancez-vous !' onPress={() => {
+                                this.props.navigation.navigate('Quizz', {
+                                    matchId: `${match.id}`,
+                                })
+                            }} />
+                            :
+                            <Button title='Reprendre la partie' />
                     }
                 </View>
                 <Animated.View style={[{ ...this.position.getLayout() }, { position: 'absolute', width: '100%' }]}
