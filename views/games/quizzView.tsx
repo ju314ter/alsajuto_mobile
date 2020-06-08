@@ -6,6 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import QuizzDisplayer from '../../components/quizzDisplayer';
 import axios from 'axios';
 import * as constant from '../../Utils/constant';
+import { getStorageData } from '../../services/provider';
+
 
 export default function QuizzView(props) {
     const [isLoading, setLoading] = useState(false);
@@ -13,10 +15,29 @@ export default function QuizzView(props) {
 
     useEffect(() => {
         const matchId = navigation.getParam('matchId');
-        (async function setList() {
+        const status = navigation.getParam('gameStatus');
+        const userOne = navigation.getParam('userOne', 'NO-ID');
+        const userTwo = navigation.getParam('userTwo', 'NO-ID');
+
+        (async function setQuizz() {
             setLoading(true);
+
+            const storedData = await getStorageData()
+            let userId;
+            let myId;
+            storedData.user.id === userOne ? userId = userTwo : userId = userOne
+            storedData.user.id !== userOne ? myId = userTwo : myId = userOne
+
+            if (status == '0') {
+                console.log('creating a game')
+                const res = await axios.post(constant.GAMES, { creatorId: myId, challengedId: userId })
+                await axios.patch(constant.MATCHS, + '/' + matchId, { data: { gameId: res.data.id } })
+            } else {
+                console.log('retrieving the game')
+            }
+
             console.log('matchID : ', matchId)
-            await axios.get(constant.GAMES)
+            await axios.get(constant.GAMES + '/' + matchId)
             setLoading(false);
         })();
     }, [])

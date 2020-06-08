@@ -5,6 +5,9 @@ import { getStorageData } from '../services/provider';
 import { getProfilPicture } from '../services/user';
 import * as Helpers from '../helpers';
 import ProfileView from '../views/settings/ProfileView';
+import Axios from 'axios';
+import * as constant from '../Utils/constant';
+
 
 
 interface Props {
@@ -82,6 +85,11 @@ export default class Match extends Component<Props, State> {
         } catch (e) {
             console.log(e)
         }
+        try {
+            // await Axios.get(constant.GAMES + '/' + )
+        } catch (e) {
+            console.log(e)
+        }
 
         Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
             console.log(res)
@@ -135,6 +143,9 @@ export default class Match extends Component<Props, State> {
                             <Button title='Lancez-vous !' onPress={() => {
                                 this.props.navigation.navigate('Quizz', {
                                     matchId: `${match.id}`,
+                                    gameStatus: `${status}`,
+                                    userOne: this.props.match.userOne,
+                                    userTwo: this.props.match.userTwo,
                                 })
                             }} />
                             :
