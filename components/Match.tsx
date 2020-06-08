@@ -13,7 +13,7 @@ interface Props {
 }
 
 interface State {
-    status: string;
+    status: number;
     matchname: string;
     profilePic: any;
     profile: any;
@@ -33,7 +33,7 @@ export default class Match extends Component<Props, State> {
         super(props);
 
         this.state = {
-            status: 'Lancez votre challenge !',
+            status: 0,
             matchname: 'Matchname',
             profilePic: {
                 uri: true,
@@ -129,7 +129,18 @@ export default class Match extends Component<Props, State> {
                 </View>
                 <View style={styles.rightContainer}>
                     <Text>Où en êtes-vous ?</Text>
-                    <Button title={status} />
+                    {
+                        () => {
+                            switch (status) {
+                                case 0:
+                                    return <Button title='Lancez-vous !' />
+                                    break;
+                                case 1:
+                                    return <Button title='Reprendre la partie' />
+                                    break;
+                            }
+                        }
+                    }
                 </View>
                 <Animated.View style={[{ ...this.position.getLayout() }, { position: 'absolute', width: '100%' }]}
                     {...this._panResponder.panHandlers}>

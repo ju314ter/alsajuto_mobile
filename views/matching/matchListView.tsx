@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, ActivityIndicator, Text } from 'react-native'
 import Match from '../../components/Match'
 import { matchs } from '../../services/matching';
 
@@ -9,7 +9,9 @@ export default function MatchListView({ navigation }) {
 
   useEffect(() => {
     (async function setList() {
+      setLoading(true);
       setMatchList(await matchs());
+      setLoading(false);
       console.log('matchList : ', matchList);
     })();
   }, [])
@@ -19,9 +21,9 @@ export default function MatchListView({ navigation }) {
       <View style={styles.container}>
         <>
           {
-            matchList.map((match, index) => {
+            matchList.length !== 0 ? matchList.map((match, index) => {
               return <Match navigation={navigation} match={match} key={match.id}>.</Match>
-            })
+            }) : <Text style={styles.nomatch}>Pas de nouveaux match :/</Text>
           }
         </>
       </View>
@@ -36,5 +38,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     height: '100%'
+  },
+  nomatch: {
+    textAlign: 'center',
+    fontSize: 42,
+    fontWeight: '600',
+    paddingTop: 50,
   }
 })
