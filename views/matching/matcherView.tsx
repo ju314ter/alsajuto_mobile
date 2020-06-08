@@ -66,7 +66,7 @@ export default class MatcherView extends Component<Props, State> {
       this.setState({ userId: storedData.user.id })
       this.setState({ isLoading: false })
       console.log('## STATE ##')
-      console.log(this.state)
+      console.log('matcher state : ', this.state)
     } catch (e) {
       console.log('catch ComponentDidMount MatcherView')
       console.log(e)
@@ -107,7 +107,7 @@ export default class MatcherView extends Component<Props, State> {
       response: true
     }
     // Helpers.requestService('matchings/' + match.id, 'PATCH', '', body)
-    patchMatch(match.id, body).then(res=>console.log(res));
+    patchMatch(match.id, body).then(res => console.log(res));
   };
 
   handlePassedProfile = (match) => {
@@ -115,7 +115,7 @@ export default class MatcherView extends Component<Props, State> {
       id: this.state.userId,
       response: false
     }
-    patchMatch(match.id, body).then(res=>console.log(res));
+    patchMatch(match.id, body).then(res => console.log(res));
   };
 
   resetPosition() {
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   contentContainer: {
-    height: '100%', 
+    height: '100%',
     width: '100%',
     alignItems: 'center',
     justifyContent: 'flex-start',

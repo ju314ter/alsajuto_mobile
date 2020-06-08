@@ -25,7 +25,7 @@ const ProfileView = (props) => {
     { name: 'email', label: 'Email', placeholder: userSaved.email, value: userSaved.email, required: false, type: 'textField', secure: false },
     { name: 'password', label: 'Password', placeholder: '', value: '', required: false, type: 'textField', secure: true },
     { name: 'description', label: 'Description', placeholder: userSaved.description, value: userSaved.description, required: false, type: 'textArea' },
-    { name: 'heightInCentimeter', label: 'Taille', placeholder: userSaved.heightInCentimeter.toString(), value: userSaved.heightInCentimeter, required: false, type: 'number' },
+    { name: 'heightInCentimeter', label: 'Taille', placeholder: userSaved.heightInCentimeter.toString() || 'taille', value: userSaved.heightInCentimeter, required: false, type: 'number' },
     { name: 'avatar', label: 'ProfilePicture', placeholder: userSaved.avatar, value: userSaved.avatar, required: false, type: 'avatar' }
   ]
 
@@ -86,7 +86,7 @@ const ProfileView = (props) => {
       for (var i = 0; i < stateEncaiss.length; i++) {
         if (stateEncaiss[i].name === arr[x])
           response.push(stateEncaiss[i].label)
-          // return stateEncaiss[i].label
+        // return stateEncaiss[i].label
       }
     }
     if (response.length) return response.toString()
@@ -137,7 +137,7 @@ const ProfileView = (props) => {
                       secureTextEntry={field.secure}
                       value={field.value}
                       onChangeText={(text) => changeText(field.name, text)}
-                      theme={{colors: { primary: 'crimson', background: '#fff'}}}
+                      theme={{ colors: { primary: 'crimson', background: '#fff' } }}
                       // required={field.required}
                       style={{ marginTop: 10 }}
                     />
@@ -152,7 +152,7 @@ const ProfileView = (props) => {
                       label={field.label}
                       placeholder={field.placeholder ?? field.label}
                       onChangeText={(text) => changeText(field.name, text)}
-                      theme={{colors: { primary: 'crimson', background: '#fff'}}}
+                      theme={{ colors: { primary: 'crimson', background: '#fff' } }}
                       style={{ marginTop: 10 }}
                     />
                   )
@@ -168,7 +168,7 @@ const ProfileView = (props) => {
                       onChangeText={(number) => changeNumber(field.name, number)}
                       keyboardType={"number-pad"}
                       style={{ marginTop: 10 }}
-                      theme={{colors: { primary: 'crimson', background: '#fff'}}}
+                      theme={{ colors: { primary: 'crimson', background: '#fff' } }}
                       maxLength={3}
                     />
                   )

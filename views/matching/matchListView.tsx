@@ -3,14 +3,14 @@ import { StyleSheet, View, ActivityIndicator } from 'react-native'
 import Match from '../../components/Match'
 import { matchs } from '../../services/matching';
 
-export default function MatchListView ({ navigation }) {
+export default function MatchListView({ navigation }) {
   const [isLoading, setLoading] = useState(false)
   const [matchList, setMatchList] = useState([])
 
   useEffect(() => {
     (async function setList() {
       setMatchList(await matchs());
-      console.log(matchList);
+      console.log('matchList : ', matchList);
     })();
   }, [])
 
@@ -18,8 +18,11 @@ export default function MatchListView ({ navigation }) {
     return (
       <View style={styles.container}>
         <>
-          <Match navigation={navigation} name='Catherine'>.</Match>
-          <Match navigation={navigation} name='Jennyfer'>.</Match>
+          {
+            matchList.map((match, index) => {
+              return <Match navigation={navigation} match={match} key={match.id}>.</Match>
+            })
+          }
         </>
       </View>
     )
