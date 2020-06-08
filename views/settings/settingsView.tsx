@@ -11,27 +11,27 @@ export default function SettingsView(props) {
   const [age, setUserAge] = useState(null)
   const [data, setData] = useState(null)
   const [user, setUser] = useState(null)
-  const [profilPicture, setProfilPicture]= useState({ uri: true, data: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' })
+  const [profilPicture, setProfilPicture] = useState({ uri: true, data: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' })
 
   const getAge = function (birthDate) {
     return Math.floor((new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e+10)
   }
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       try {
         const storageData = await getStorageData()
         setData(storageData)
         setUser(await getMe())
         setUserAge(getAge(storageData.user.birthdayDate))
-        setUserName(storageData.user.username ?? storageData.user.firstName)
+        setUserName(storageData.user.firstName ?? storageData.user.firstName)
         const profilPictureUrl = await getMyProfilPicture()
         if (profilPictureUrl) {
           setProfilPicture({ uri: false, data: profilPictureUrl })
         }
         setIsLoading(false)
       } catch (e) {
-        console.log('cactch SettingsView :')
+        console.log('catch SettingsView :')
         console.log(e)
       }
       setIsLoading(false);
