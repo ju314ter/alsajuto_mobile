@@ -141,7 +141,7 @@ export default class Match extends Component<Props, State> {
                     {
                         status === 0 ?
                             <Button title='Lancez-vous !' onPress={() => {
-                                this.props.navigation.navigate('Quizz', {
+                                this.props.navigation.navigate('GameChoice', {
                                     matchId: `${match.id}`,
                                     gameStatus: `${status}`,
                                     userOne: this.props.match.userOne,

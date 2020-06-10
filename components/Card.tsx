@@ -76,6 +76,8 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'red'
   },
   overlay: {
     flex: 1,
