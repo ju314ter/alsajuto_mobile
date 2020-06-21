@@ -2,7 +2,7 @@ import axios from 'axios'
 import * as constant from '../Utils/constant.js'
 import { handler } from './handler'
 
-export async function login(data) {
+export async function login (data) {
   try {
     if (axios.defaults.headers.common["Authorization"]) { delete axios.defaults.headers.common["Authorization"] }
     const res = await axios.post(constant.LOGIN, data)
@@ -14,7 +14,7 @@ export async function login(data) {
   }
 }
 
-export async function patch(param, data) {
+export async function patch (param, data) {
   try {
     const res = await axios.patch(constant.USERS + '/' + param, data)
     return res.data
@@ -24,7 +24,7 @@ export async function patch(param, data) {
   }
 }
 
-export async function getMe() {
+export async function getMe () {
   try {
     const res = await axios.get(constant.MY_PROFIL)
     console.log('getMe :')
@@ -36,7 +36,7 @@ export async function getMe() {
   }
 }
 
-export async function getProfilPicture(id) {
+export async function getProfilPicture (id) {
   try {
     const res = await axios.get(constant.IMAGES + '/' + id)
     if (res.data) return res.data
@@ -47,7 +47,7 @@ export async function getProfilPicture(id) {
   }
 }
 
-export async function getMyProfilPicture() {
+export async function getMyProfilPicture () {
   try {
     const res = await axios.get(constant.MY_PROFIL_PICTURE)
     if (res.data) return res.data

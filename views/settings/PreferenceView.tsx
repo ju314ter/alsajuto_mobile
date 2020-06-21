@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Modal } from 'react-native'
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
 import reducer, { LIST_CHANGE } from '../../components/reducer'
 import { getAllPreference, getAllTypePreference } from '../../services/preference'
-import { getAllLikes } from '../../services/like'
+import { getAllLikes, patchLike } from '../../services/like'
 import { LinearGradient } from 'expo-linear-gradient'
 
 const PreferenceView = (props) => {
@@ -16,7 +16,7 @@ const PreferenceView = (props) => {
   const [pref, setPref] = useState(null)
   const [haveChange, setHaveChange] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [modal, setModal] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
   const [likes, setLikes] = useState(null)
   const [keySaved, setKeySave] = useState([])
   const fields = [
@@ -31,7 +31,6 @@ const PreferenceView = (props) => {
         setTypePreferences(await getAllTypePreference())
         setPreferences(await getAllPreference())
         setLikes(await getAllLikes())
-        console.log('use Effect')
         setLoading(false)
       } catch (e) {
         console.log('ProfileView.useEffect :', e)
@@ -59,7 +58,7 @@ const PreferenceView = (props) => {
   function PreferenceModal(item) {
     return (
       <Modal
-        visible={modal}
+        visible={isModalVisible}
         transparent={true}
         animationType={"slide"}
         onRequestClose={() => console.log('Close was requested')}
@@ -85,7 +84,6 @@ const PreferenceView = (props) => {
                         style={{ paddingTop: 4, paddingBottom: 4, alignItems: 'center' }}
                         underlayColor='crimson'
                         onPress={() => {
-                          setModal(!modal)
                         }}
                       >
                         <Text style={{ color: 'crimson' }}>{value.style}</Text>
@@ -99,7 +97,9 @@ const PreferenceView = (props) => {
                     style={{ paddingTop: 4, paddingBottom: 4, alignItems: 'center' }}
                     underlayColor='crimson'
                     onPress={() => {
-                      setModal(!modal)
+                      console.log({preferenceId: value.id, typeId: value.typeId})
+                      patchLike({preferenceId: value.id, typeId: value.typeId})
+                      setIsModalVisible(!isModalVisible)
                     }}
                   >
                     <Text>{value.style}</Text>
@@ -108,7 +108,7 @@ const PreferenceView = (props) => {
               }
             })
           }
-          <TouchableHighlight onPress={() => setModal(!modal)} style={{ paddingTop: 4, paddingBottom: 4, alignItems: 'center' }}>
+          <TouchableHighlight onPress={() => setIsModalVisible(!isModalVisible)} style={{ paddingTop: 4, paddingBottom: 4, alignItems: 'center' }}>
             <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Cancel</Text>
           </TouchableHighlight>
         </ScrollView>
@@ -132,7 +132,7 @@ const PreferenceView = (props) => {
                 >
                   <TouchableHighlight
                     onPress={(key) => {
-                      setModal(!modal)
+                      setIsModalVisible(!isModalVisible)
                       setType(item)
                     }}
                     underlayColor='crimson'
@@ -144,7 +144,7 @@ const PreferenceView = (props) => {
               )
             })
           }
-          {modal ? PreferenceModal(type) : null}
+          {isModalVisible ? PreferenceModal(type) : null}
         </View>
       </ScrollView>
     </>
