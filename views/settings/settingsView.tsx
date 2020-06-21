@@ -24,15 +24,14 @@ export default function SettingsView(props) {
         setData(storageData)
         setUser(await getMe())
         setUserAge(getAge(storageData.user.birthdayDate))
-        setUserName(storageData.user.firstName ?? storageData.user.firstName)
+        setUserName(storageData.user.username || storageData.user.firstName)
         const profilPictureUrl = await getMyProfilPicture()
         if (profilPictureUrl) {
           setProfilPicture({ uri: false, data: profilPictureUrl })
         }
         setIsLoading(false)
       } catch (e) {
-        console.log('catch SettingsView :')
-        console.log(e)
+        console.log('catch SettingsView :' + e)
       }
       setIsLoading(false);
     })()
