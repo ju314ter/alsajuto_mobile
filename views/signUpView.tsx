@@ -6,7 +6,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Helpers from '../helpers';
 import { ScrollView } from 'react-native-gesture-handler';
 
-
 interface Props {
     navigation: any
 }
@@ -142,7 +141,6 @@ const styles = StyleSheet.create({
     },
     form: {
         marginTop: '40%',
-
         width: '100%',
         height: '80%',
         justifyContent: 'space-between'

@@ -1,123 +1,139 @@
-import React, { useState, useEffect, useReducer } from 'react'
-import { StyleSheet, Text, Image, View, ScrollView, ActivityIndicator } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import React, { useState, useEffect } from 'react'
+import { Image, StyleSheet, Text, View, ActivityIndicator } from 'react-native'
+import { Button } from 'react-native-elements'
 import { LinearGradient } from 'expo-linear-gradient'
-import * as Helpers from '../../helpers'
+import { getStorageData } from '../../services/provider'
+import { getMyProfilPicture, getMe } from '../../services/user'
 
 export default function SettingsView(props) {
-    const [isLoading, setLoading] = useState(false)
-    const [name, setUserName] = useState('julien')
-    const [age, setUserAge] = useState(27)
+  const [isLoading, setIsLoading] = useState(true)
+  const [name, setUserName] = useState(null)
+  const [age, setUserAge] = useState(null)
+  const [data, setData] = useState(null)
+  const [user, setUser] = useState(null)
+  const [profilPicture, setProfilPicture] = useState({ uri: true, data: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg' })
 
-    useEffect(() => {
-        /* 
-            Remplacer le call a l'id en dur par un id dynamique, recuperer toutes les infos et les passer aux vues appropriées
-            Dans chaque vue passer un appel en put pour patch le user avec les nouveaux inputs
-        */
-        Helpers.requestService('app_users/3', 'GET').then((res: any) => {
-            setUserName(res.firstName)
-        })
-    }, [])
+  const getAge = function (birthDate) {
+    return Math.floor((new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e+10)
+  }
 
-    const navigationOptions = {
-        drawerLabel: <Icon
-            name='user-cog'
-            iconStyle={{ fontSize: 40, margin: 10 }}
-            size={40}
-            type='font-awesome'
-            color='red' />
-    };
+  useEffect(() => {
+    (async function () {
+      try {
+        const storageData = await getStorageData()
+        setData(storageData)
+        setUser(await getMe())
+        setUserAge(getAge(storageData.user.birthdayDate))
+        setUserName(storageData.user.username || storageData.user.firstName)
+        const profilPictureUrl = await getMyProfilPicture()
+        if (profilPictureUrl) {
+          setProfilPicture({ uri: false, data: profilPictureUrl })
+        }
+        setIsLoading(false)
+      } catch (e) {
+        console.log('catch SettingsView :' + e)
+      }
+      setIsLoading(false);
+    })()
+  }, [])
 
-    const submit = (form) => {
-        console.log(form)
-    }
+  return (
+    <View style={styles.container}>
 
-    return (
-        <View style={styles.container}>
-            <LinearGradient colors={['#D42D4E', '#B11231', '#8D011D']}>
-                {
-                    isLoading ? (<ActivityIndicator />) : (
-                        <React.Fragment>
-                            <View style={{ height: '70%', backgroundColor: '#eee', marginLeft: '10%', marginRight: '10%', marginTop: 10, justifyContent: 'flex-end', alignItems: 'flex-start' }}>
-                                <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', position: 'absolute', overflow: 'hidden' }}>
-                                    {/* <Image style={styles.image} source={profiles[1].profile} /> */}
-                                </View>
-                                <View>
-                                    <Text style={styles.sectionTitle}>{name}, {age}</Text>
-                                </View>
-                            </View>
-                            <View style={{ height: '30%', width: '100%', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                <View style={{ overflow: 'visible' }}>
-                                    <View style={[styles.button, styles.buttonOverlay]}>
-                                    </View>
-                                    <TouchableOpacity onPress={() => { props.navigation.navigate('Params') }}>
-                                        <View style={styles.button}>
-                                            <Text>I-Pa</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ overflow: 'visible', top: 70 }}>
-                                    <View style={[styles.button, styles.buttonOverlay]}>
-                                    </View>
-                                    <TouchableOpacity onPress={() => { props.navigation.navigate('Prefs') }}>
-                                        <View style={styles.button}>
-                                            <Text>I-Pr</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ overflow: 'visible' }}>
-                                    <View style={[styles.button, styles.buttonOverlay]}>
-                                    </View>
-                                    <TouchableOpacity onPress={() => { props.navigation.navigate('DisplayedParams') }}>
-                                        <View style={styles.button}>
-                                            <Text>I-DI</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+      <View style={styles.contentContainer}>
+        {isLoading ? (<ActivityIndicator />) : (
+          <>
+            <View style={styles.TopPage}>
 
-                        </React.Fragment>
-                    )
-                }
-            </LinearGradient>
-        </View>
-    )
+              {/* Image View */}
+              <View style={styles.ImageContent}>
+                <Image style={styles.image} source={{ uri: (profilPicture.uri) ? profilPicture.data : "data:image/png;base64," + profilPicture.data }} />
+              </View>
+
+              {/* Bottom of the image, name and age section */}
+              <View>
+                <Text style={styles.sectionTitle}>{name ?? 'Name'}, {age ? age + ' ans' : 'age'}</Text>
+              </View>
+            </View>
+
+            {/* Profile & Preference Buttons */}
+            <View style={styles.ButtonContainer}>
+              <View style={styles.button}>
+                <Button
+                  title='Paramètres' containerStyle={{ padding: 3 }} titleStyle={{ color: '#fafafa' }}
+                  buttonStyle={{ backgroundColor: 'crimson' }}
+                  onPress={() => props.navigation.navigate('Profile', { user: user })}
+                />
+              </View>
+
+              <View style={styles.button}>
+                <Button
+                  title='Préférences' containerStyle={{ padding: 3 }} titleStyle={{ color: '#fafafa' }}
+                  buttonStyle={{ backgroundColor: 'crimson' }}
+                  onPress={() => props.navigation.navigate('Preference')}
+                />
+              </View>
+            </View>
+
+          </>
+        )}
+      </View>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        height: '100%',
-        width: '100%',
-    },
-    label: {
-        color: 'lightgrey',
-        fontSize: 16
-    },
-    image: {
-        ...StyleSheet.absoluteFillObject,
-        width: undefined,
-        height: undefined,
-    },
-    sectionTitle: {
-        margin: 10,
-        color: 'blue',
-        fontSize: 18
-    },
-    button: {
-        margin: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f2f2f2',
-        borderRadius: 40,
-        padding: 5,
-        width: 80,
-        height: 80
-    },
-    buttonOverlay: {
-        backgroundColor: '#e3e3e3',
-        position: 'absolute',
-        top: 2
-    }
+  container: {
+    flex: 1,
+    backgroundColor: '#fafafa',
+  },
+  contentContainer: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20
+  },
+  TopPage: {
+    height: '60%',
+    marginLeft: '10%',
+    marginRight: '10%',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start'
+  },
+  label: {
+    color: 'white',
+    fontSize: 16
+  },
+  ImageContent: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    overflow: 'hidden'
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    width: undefined,
+    height: undefined
+  },
+  sectionTitle: {
+    // margin: '3%',
+    padding: '5%',
+    color: 'crimson',
+    backgroundColor: '#fafafa',
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  button: {
+    margin: 5,
+    overflow: 'visible'
+  },
+  ButtonContainer: {
+    height: '30%',
+    width: '100%',
+    marginTop: '5%',
+    flexDirection: 'column',
+    padding: '8%'
+  }
 })

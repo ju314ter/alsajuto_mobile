@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, ActivityIndicator } from 'react-native';
-import { Button, Card, Icon } from 'react-native-elements';
-import { LinearGradient } from 'expo-linear-gradient';
-import CardMatch from '../../components/Card';
-import * as Helpers from '../../helpers';
+import React, { Component } from 'react'
+import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, ActivityIndicator } from 'react-native'
+import { Button, Card, Icon } from 'react-native-elements'
+import { LinearGradient } from 'expo-linear-gradient'
+import CardMatch from '../../components/Card'
+import { matchings, patchMatch } from '../../services/matching'
+import { getStorageData, setAuthorization } from '../../services/provider'
+
+import * as Helpers from '../../helpers'
 
 interface Props {
   navigation: any
@@ -55,13 +58,20 @@ export default class MatcherView extends Component<Props, State> {
     });
   }
 
-  componentDidMount() {
-    this.setState({ isLoading: true })
-    Helpers.getDataLocally('userId').then((id) => { this.setState({ userId: id }) })
-    Helpers.requestService('matchings', 'GET').then((res: Array<any>) => {
-      this.setState({ potentialMatchs: res })
+  componentDidMount = async () => {
+    try {
+      const storedData = await getStorageData()
+      setAuthorization(storedData.token)
+      this.setState({ potentialMatchs: await matchings() })
+      this.setState({ userId: storedData.user.id })
       this.setState({ isLoading: false })
-    })
+      console.log('## STATE ##')
+      console.log('matcher state : ', this.state)
+    } catch (e) {
+      console.log('catch ComponentDidMount MatcherView')
+      console.log(e)
+      this.setState({ isLoading: false })
+    }
   }
 
   forceSwipe(direction) {
@@ -96,7 +106,8 @@ export default class MatcherView extends Component<Props, State> {
       id: this.state.userId,
       response: true
     }
-    Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
+    // Helpers.requestService('matchings/' + match.id, 'PATCH', '', body)
+    patchMatch(match.id, body).then(res => console.log(res));
   };
 
   handlePassedProfile = (match) => {
@@ -104,7 +115,7 @@ export default class MatcherView extends Component<Props, State> {
       id: this.state.userId,
       response: false
     }
-    Helpers.requestService('matchings/' + match.id, 'PATCH', '', body).then(res => console.log('réponse : ', res))
+    patchMatch(match.id, body).then(res => console.log(res));
   };
 
   resetPosition() {
@@ -194,18 +205,16 @@ export default class MatcherView extends Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#D42D4E', '#B11231', '#8D011D']}
-          style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'flex-start' }}>
-
+        <View style={styles.contentContainer}>
           <View style={styles.statusStyle}>
-            <Text style={{ color: 'yellow' }}>Index: {this.state.index}</Text>
+            <Text style={{ color: 'black' }}>Index: {this.state.index}</Text>
           </View>
           <View style={{ width: '80%' }}>
             {this.state.isLoading ? (<ActivityIndicator />) : (
               this.renderCards()
             )}
           </View>
-        </LinearGradient>
+        </View>
       </View>
     );
   }
@@ -217,6 +226,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  contentContainer: {
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: '#fafafa'
   },
   statusStyle: {
     padding: 15,

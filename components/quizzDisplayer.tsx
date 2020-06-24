@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, Card } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SegmentedControls } from 'react-native-radio-buttons'
 
@@ -27,18 +27,18 @@ export default function QuizzDisplayer(props) {
             },
             {
                 label: 'Montréal est la capitale du Canada ?',
-                answers: ['Vrai', 'Faux', 'Peut-être'],
+                answers: ['Vrai', 'Faux', 'tabernac'],
                 correctAnswer: 1
             },
             {
-                label: 'La bite a thomas est elle ?',
-                answers: ['Vrai', 'Faux', 'Peut-être'],
-                correctAnswer: 1
+                label: 'oui ?',
+                answers: ['Vrai', 'Faux', 'Plait-il ?'],
+                correctAnswer: 0
             },
             {
                 label: 'Sais-tu que tu ne sais pas ?',
-                answers: ['Vrai', 'Faux', 'Peut-être'],
-                correctAnswer: 3
+                answers: ['Vrai', 'Faux', 'Ceci est un paradoxe'],
+                correctAnswer: 2
             },
             {
                 label: 'Satisfait de ce quizz ?',
@@ -51,7 +51,7 @@ export default function QuizzDisplayer(props) {
     const quizzRecap = {
         quizzTemplateId: quizzTemplate.idTemplate,
         quizzId: 45876,
-        userScore: [1, 0], //utilisateur a répondu a deux question, bon a la première, faux a la deuxième
+        userScore: [], //array des score, 1 = bonne réponse, 0 = mauvaise réponse
     }
 
     const currentQuestion = quizzTemplate.questions[index - 1]; //Alias for current question
@@ -59,8 +59,8 @@ export default function QuizzDisplayer(props) {
     let correctionDisplay = null; //Component to display when correcting answer
     if (showAnswer == true) {
         correctionDisplay = (
-            <React.Fragment>
-                <Text>{answer}</Text>
+            <Card title='Correction :' containerStyle={styles.cardContainerStyle}>
+                <Text style={styles.answerStyle}>{answer}</Text>
                 <Button title="Next" containerStyle={{ padding: 5 }} titleStyle={{ color: '#eeeeee' }}
                     buttonStyle={{ backgroundColor: '#8D011D' }}
                     onPress={() => {
@@ -68,7 +68,7 @@ export default function QuizzDisplayer(props) {
                         setCorrectionDisplay(false);
                     }
                     } />
-            </React.Fragment>
+            </Card>
         )
     } else {
         correctionDisplay = null;
@@ -77,14 +77,13 @@ export default function QuizzDisplayer(props) {
     let questionDisplay = null; // Component to display when answering question
     if (showAnswer == false && index !== 0 && index <= quizzTemplate.questions.length) {
         questionDisplay = (
-            <React.Fragment>
-                <Text>{currentQuestion.label}</Text>
+            <Card title={currentQuestion.label} containerStyle={styles.cardContainerStyle}>
                 <SegmentedControls
                     options={currentQuestion.answers}
                     direction='column'
                     onSelection={(selectedOptions, i) => { checkAnswers(i) }}
                 />
-            </React.Fragment>
+            </Card>
         )
     } else {
         questionDisplay = null;
@@ -94,10 +93,10 @@ export default function QuizzDisplayer(props) {
         setCorrectionDisplay(true);
         if (answerIndex == currentQuestion.correctAnswer) {
             setScore(score + 1);
-            setAnswer('Correct !')
+            setAnswer('Bien joué !')
             quizzRecap.userScore.push(1);
         } else {
-            setAnswer(`Wrong ! Correct answer was ${currentQuestion.answers[currentQuestion.correctAnswer]}`)
+            setAnswer(`Raté ! la bonne réponse était : ${currentQuestion.answers[currentQuestion.correctAnswer]}`)
             quizzRecap.userScore.push(0);
         }
     }
@@ -116,10 +115,12 @@ export default function QuizzDisplayer(props) {
             {
                 index !== 0 && index <= quizzTemplate.questions.length ? (
                     <View style={styles.answersWrapper}>
-                        <Text>Score : {score}</Text>
-                        {questionDisplay}
-                        {correctionDisplay}
-                        <Text>{index} / {quizzTemplate.questions.length}</Text>
+                        <Text style={styles.score}>Score : {score}</Text>
+                        <View style={styles.cardWrapper}>
+                            {questionDisplay}
+                            {correctionDisplay}
+                        </View>
+                        <Text style={styles.pagination}>{index} / {quizzTemplate.questions.length}</Text>
                     </View>
                 ) : (
                         index > quizzTemplate.questions.length ? (
@@ -152,5 +153,27 @@ const styles = StyleSheet.create({
     },
     answersWrapper: {
         width: '80%',
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    answerStyle: {
+        fontSize: 20,
+        padding: 10
+    },
+    score: {
+        fontSize: 25,
+        color: 'white'
+    },
+    pagination: {
+        fontSize: 20,
+        color: 'white'
+    },
+    cardWrapper: {
+        width: '90%'
+    },
+    cardContainerStyle: {
+        width: '100%',
     }
 })
