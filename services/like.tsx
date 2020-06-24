@@ -2,9 +2,9 @@ import axios from 'axios'
 import * as constant from '../Utils/constant.js'
 import { handler } from './handler'
 
-export async function patch (param, data) {
+export async function patchLike (data) {
 try {
-  const res = await axios.patch(constant.LIKES + '/' + param, data)
+  const res = await axios.patch(constant.LIKES, data)
   return res.data
   } catch (e) {
     console.log('Catch PATCH type_preferences: ' + e)

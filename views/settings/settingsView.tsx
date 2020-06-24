@@ -24,15 +24,14 @@ export default function SettingsView(props) {
         setData(storageData)
         setUser(await getMe())
         setUserAge(getAge(storageData.user.birthdayDate))
-        setUserName(storageData.user.firstName ?? storageData.user.firstName)
+        setUserName(storageData.user.username || storageData.user.firstName)
         const profilPictureUrl = await getMyProfilPicture()
         if (profilPictureUrl) {
           setProfilPicture({ uri: false, data: profilPictureUrl })
         }
         setIsLoading(false)
       } catch (e) {
-        console.log('catch SettingsView :')
-        console.log(e)
+        console.log('catch SettingsView :' + e)
       }
       setIsLoading(false);
     })()
@@ -40,7 +39,7 @@ export default function SettingsView(props) {
 
   return (
     <View style={styles.container}>
-      {/* TODO : Faire en sorte de faire disparaitre la ligne blanche entre le header et le début du LinearGradient */}
+
       <View style={styles.contentContainer}>
         {isLoading ? (<ActivityIndicator />) : (
           <>
@@ -51,12 +50,13 @@ export default function SettingsView(props) {
                 <Image style={styles.image} source={{ uri: (profilPicture.uri) ? profilPicture.data : "data:image/png;base64," + profilPicture.data }} />
               </View>
 
-              {/* Below the image, name and age section */}
+              {/* Bottom of the image, name and age section */}
               <View>
                 <Text style={styles.sectionTitle}>{name ?? 'Name'}, {age ? age + ' ans' : 'age'}</Text>
               </View>
             </View>
 
+            {/* Profile & Preference Buttons */}
             <View style={styles.ButtonContainer}>
               <View style={styles.button}>
                 <Button
