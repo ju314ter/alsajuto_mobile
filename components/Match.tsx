@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, PanResponder, Dimensions, Animated, UIManager, LayoutAnimation } from 'react-native';
 import { Icon, Button, Avatar } from 'react-native-elements';
+import { getStorageData } from '../services/provider';
+import { getProfilPicture } from '../services/user';
+import * as Helpers from '../helpers';
+import ProfileView from '../views/settings/ProfileView';
+import Axios from 'axios';
+import * as constant from '../Utils/constant';
+
+
 
 interface Props {
-    navigation: any
-    name: string;
+    navigation: any;
+    match: any;
 }
 
 interface State {
-    status: string
+    status: number;
+    matchname: string;
+    profilePic: any;
+    profile: any;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -25,7 +36,13 @@ export default class Match extends Component<Props, State> {
         super(props);
 
         this.state = {
-            status: 'Lancez votre challenge !',
+            status: 0,
+            matchname: 'Matchname',
+            profilePic: {
+                uri: true,
+                data: 'https://i1.sndcdn.com/artworks-000244718297-hgnnd2-t500x500.jpg'
+            },
+            profile: {}
         }
 
         this.position = new Animated.ValueXY();
@@ -54,6 +71,33 @@ export default class Match extends Component<Props, State> {
         }
     }
 
+    componentDidMount = async () => {
+        console.log('match props : ', this.props.match)
+        console.log('match id : ', this.props.match.id)
+        const storedData = await getStorageData()
+        let userId;
+        storedData.user.id === this.props.match.userOne ? userId = this.props.match.userTwo : userId = this.props.match.userOne
+        try {
+            const profilPictureUrl = await getProfilPicture(userId)
+            if (profilPictureUrl) {
+                this.setState({ profilePic: { uri: false, data: profilPictureUrl } })
+            }
+        } catch (e) {
+            console.log(e)
+        }
+        try {
+            // await Axios.get(constant.GAMES + '/' + )
+        } catch (e) {
+            console.log(e)
+        }
+
+        Helpers.requestService('app_users/', 'GET', userId).then((res: any) => {
+            console.log(res)
+            this.setState({ profile: res })
+        })
+
+    }
+
     forceSwipe(direction) {
         const x = direction === 'right' ? SCREEN_WIDTH / 2 : -SCREEN_WIDTH / 2;
         Animated.timing(this.position, {
@@ -69,13 +113,14 @@ export default class Match extends Component<Props, State> {
     }
 
     render() {
-        const { name } = this.props;
-        const { status } = this.state;
+        const { match } = this.props;
+        const { status, profile } = this.state;
 
         return (
             <View style={styles.container}>
                 <View style={styles.leftContainer}>
                     <Icon
+                        raised
                         iconStyle={{ fontSize: 40 }}
                         containerStyle={{ margin: 15 }}
                         name='trash'
@@ -83,6 +128,7 @@ export default class Match extends Component<Props, State> {
                         type='font-awesome'
                         onPress={() => { console.log('match deleted') }} />
                     <Icon
+                        raised
                         iconStyle={{ fontSize: 40 }}
                         containerStyle={{ margin: 15 }}
                         name='exclamation-triangle'
@@ -92,7 +138,19 @@ export default class Match extends Component<Props, State> {
                 </View>
                 <View style={styles.rightContainer}>
                     <Text>Où en êtes-vous ?</Text>
-                    <Button title={status} />
+                    {
+                        status === 0 ?
+                            <Button title='Lancez-vous !' onPress={() => {
+                                this.props.navigation.navigate('GameChoice', {
+                                    matchId: `${match.id}`,
+                                    gameStatus: `${status}`,
+                                    userOne: this.props.match.userOne,
+                                    userTwo: this.props.match.userTwo,
+                                })
+                            }} />
+                            :
+                            <Button title='Reprendre la partie' />
+                    }
                 </View>
                 <Animated.View style={[{ ...this.position.getLayout() }, { position: 'absolute', width: '100%' }]}
                     {...this._panResponder.panHandlers}>
@@ -105,12 +163,10 @@ export default class Match extends Component<Props, State> {
                             <Avatar
                                 rounded
                                 size='medium'
-                                source={{
-                                    uri:
-                                        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                                }}
+                                source={{ uri: (this.state.profilePic.uri) ? this.state.profilePic.data : "data:image/png;base64," + this.state.profilePic.data }}
                             />
-                            <Text style={{ fontSize: 15, fontWeight: '500', color: 'black' }}>{name}</Text>
+
+                            <Text style={{ fontSize: 15, fontWeight: '500', color: 'black' }}>{profile.firstName}</Text>
                             <Icon
                                 name='caret-right'
                                 type='font-awesome'

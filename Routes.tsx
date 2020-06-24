@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
-import { StyleSheet, Text, View, Dimensions } from 'react-native'
+import React from 'react'
+import { View, Dimensions, Text } from 'react-native'
 import { createAppContainer, withNavigation } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import SignUp from './views/signUpView'
 import SignIn from './views/signInView'
+import Logout from './logout'
 import RecoverAccount from './views/recoverAccountView'
 import { Icon } from 'react-native-elements'
 
@@ -12,20 +13,18 @@ import { TransitionConfiguration } from './TransitionsApp'
 import MatcherView from './views/matching/matcherView'
 import GamesView from './views/games/gamesView'
 import QuizzView from './views/games/quizzView'
-import SettingsView from './views/settings/settingsView'
 import MatchListView from './views/matching/matchListView'
 import NotificationsView from './views/notificationsView'
-import prefsView from './views/settings/prefView'
-import paramsView from './views/settings/paramsView'
-import displayedParamsView from './views/settings/displayedView'
+import SettingsView from './views/settings/settingsView'
+import Preference from './views/settings/PreferenceView'
+import ProfileView from './views/settings/ProfileView'
 
 const ProfileNavigator = createStackNavigator({
-  Profile: { screen: SettingsView },
-  DisplayedParams: { screen: displayedParamsView },
-  Params: { screen: paramsView },
-  Prefs: { screen: prefsView }
+  Settings: { screen: SettingsView },
+  Profile: { screen: ProfileView },
+  Preference: { screen: Preference }
 }, {
-  initialRouteName: 'Profile',
+  initialRouteName: 'Settings',
   transitionConfig: TransitionConfiguration,
   defaultNavigationOptions: {
     headerShown: false
@@ -89,9 +88,6 @@ const DrawerNavigator = createDrawerNavigator({
         </View>)
     }
   },
-  Games: {
-    screen: GamesNavigator
-  },
   Notifications: {
     screen: NotificationsView,
     navigationOptions: {
@@ -106,14 +102,36 @@ const DrawerNavigator = createDrawerNavigator({
           />
         </View>)
     }
+  },
+  Logout: {
+    screen: Logout,
+    navigationOptions: {
+      drawerLabel: (
+        <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+          <Icon
+            name='logout-variant'
+            iconStyle={{ fontSize: 40, margin: 10 }}
+            size={40}
+            type='material-community'
+            color='red'
+          />
+        </View>)
+    }
   }
 }, {
-  initialRouteName: 'Matchlist',
+  initialRouteName: 'Matcher',
   drawerType: 'back',
   drawerWidth: Dimensions.get('screen').width / 4,
   navigationOptions: {
     headerLeft: withNavigation(({ navigation, props }) => (
-      <View style={styles.MatchListStyle}>
+      <View style={{
+        width: Dimensions.get('screen').width,
+        height: '100%',
+        backgroundColor: 'red',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+      }}>
         <Icon
           raised
           name='heartbeat'
@@ -122,37 +140,25 @@ const DrawerNavigator = createDrawerNavigator({
           size={20}
           type='font-awesome'
           color='#f50'
-          onPress={() => { navigation.toggleDrawer() }}
-        />
+          onPress={() => { navigation.toggleDrawer() }} />
         <Text style={{ fontSize: 35, color: 'white', marginRight: 10 }}>Love On</Text>
       </View>
     ))
   }
-}
-)
+})
 
 const AppNavigator = createStackNavigator(
   {
     SignIn: { screen: SignIn },
     SignUp: { screen: SignUp },
     RecoverPwd: { screen: RecoverAccount },
-    LogIn: { screen: DrawerNavigator }
+    LogIn: { screen: DrawerNavigator },
+    Games: { screen: GamesNavigator, navigationOptions: { headerShown: false } },
   },
   {
     initialRouteName: 'SignIn',
     transitionConfig: TransitionConfiguration
   }
 )
-
-const styles = StyleSheet.create({
-  MatchListStyle: {
-    width: Dimensions.get('screen').width,
-    height: '100%',
-    backgroundColor: 'red',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
-})
 
 export const SignInContainer = createAppContainer(AppNavigator)
